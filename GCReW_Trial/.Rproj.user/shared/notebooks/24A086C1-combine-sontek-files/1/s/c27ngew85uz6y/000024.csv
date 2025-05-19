@@ -1,0 +1,7 @@
+"0",""
+"0","sontek_lite <- sontek %>%"
+"0","  select(c(timestamp, water_depth, flowrate)) "
+"0",""
+"0","sontek_lite$flag <-  ifelse(sontek_lite$water_depth >= 2, 'OOR', 'NA')"
+"0",""
+"0","head(sontek_lite)"

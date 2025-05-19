@@ -1,0 +1,8 @@
+"0",""
+"0","#select the columns we need "
+"0","chem_lite1 <- chem_lite %>%"
+"0","  select(c(date, time_sampled_est, DIC_umolL, DOC_umolL, TA_umolL))"
+"0",""
+"0","#write out the file for use "
+"0","write.csv(chem_lite1, ""combined-raw-data/chem-sample-data.csv"")"
+"0",""

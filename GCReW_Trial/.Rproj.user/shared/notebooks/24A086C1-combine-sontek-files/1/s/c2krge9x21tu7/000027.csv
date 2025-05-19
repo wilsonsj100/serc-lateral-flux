@@ -1,0 +1,426 @@
+"0",""
+"0","setwd(""raw-sontek-data/"")"
+"2","Warning: The working directory was changed to S:/Biogeochemistry/People/Wilson (Steph)/Data/RAD7/NASA Synthesis Trial/GCReW_Trial/raw-sontek-data inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","path <- ""raw-sontek-data/"""
+"0",""
+"0","#list all the files in the directory"
+"0","#create a list of the files there "
+"0","sontek_files <- dir(pattern = ""dat$"", full.names = FALSE)"
+"0",""
+"0","# 3. Function ---------"
+"0",""
+"0","## baby function"
+"0","get_colnames <- function(path){"
+"0","  read_delim(path[[1]], skip = 1) %>% "
+"0","    slice(3:n()) %>% ## remove dead header rows"
+"0","    clean_names() %>% "
+"0","    colnames()"
+"0","}"
+"0",""
+"0","get_colnames(sontek_files)"
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"1"," [1]"
+"1"," ""timestamp""        "
+"1"," ""record""           "
+"1"," ""sontek_id""        "
+"1"," ""sample_number""    "
+"1"," ""yyyy""             "
+"1"," ""mm""               "
+"1","
+"
+"1"," [7]"
+"1"," ""dd""               "
+"1"," ""hh""               "
+"1"," ""minute""           "
+"1"," ""ss""               "
+"1"," ""flowrate""         "
+"1"," ""stage""            "
+"1","
+"
+"1","[13]"
+"1"," ""mean_velocity""    "
+"1"," ""total_volume""     "
+"1"," ""water_depth""      "
+"1"," ""index_velocity""   "
+"1"," ""cross_area""       "
+"1"," ""water_temperature"""
+"1","
+"
+"1","[19]"
+"1"," ""system_status""    "
+"1"," ""velocity_x_zxc""   "
+"1"," ""velocity_x_zzc""   "
+"1"," ""velocity_x_zx_l""  "
+"1"," ""velocity_x_zx_r""  "
+"1"," ""batt_vol_sontek""  "
+"1","
+"
+"1","[25]"
+"1"," ""pitch_angle""      "
+"1"," ""roll_angle""       "
+"1"," ""perc_submergance"" "
+"1"," ""ice_score""        "
+"1","
+"
+"0","## Function to read in sontek You can rinse and repeat w other instruments, just change cols"
+"0","read_sontek <- function(path){"
+"0","  "
+"0","  cols = c(""water_depth"", ""flowrate"", ""cross_area"", ""mean_velocity"", ""total_volume""  ) ## CHANGE ME"
+"0","  "
+"0","  read_delim(path, skip = 1) %>% "
+"0","    slice(3:n()) %>% ## remove dead header rows"
+"0","    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster"
+"0","    clean_names() %>% ## from janitor pkg, make column names nice"
+"0","    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% "
+"0","    mutate(timestamp = parse_date(timestamp)) } #%>% "
+"0","    #mutate(datetime_15min = round_date(datetime_raw, ""15 min"")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15"
+"0","    #mutate(datetime_15min = floor_date(datetime_raw, ""15 min"")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30"
+"0","    #select(datetime_15min, all_of(cols)) %>%"
+"0","    #mutate(across(where(is.character), as.numeric)) %>% "
+"0","    #group_by(datetime_15min) %>% "
+"0","    #summarize(across(where(is.numeric), mean, na.rm = T))"
+"0","#}"
+"0",""
+"0","## Create a dataframe"
+"0","sontek <- sontek_files %>% "
+"0","  map(read_sontek) %>% "
+"0","  bind_rows()"
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6577[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6867[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6721[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6717[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m3377[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m2817[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m8163[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6722[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m7682[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m6681[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"2","Warning: [38;5;255mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m8162[39m [1mColumns: [22m[34m28[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (20): TIMESTAMP, RECORD, Flowrate, Stage, Mean_velocity, Total_volume, Water_depth, Index_velocity, Cross_area, Water_temp...
+[32mdbl[39m  (7): Sample_number, yyyy, MM, dd, hh, Minute, ss
+[33mlgl[39m  (1): SONTEK_ID"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"0","## Check plot"
+"0","sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + "
+"0","                      geom_point() + theme_classic() + labs(x=""Time Stamp"", y=""Water Depth (m)"")"
+"0","sontek_chkplot_all"

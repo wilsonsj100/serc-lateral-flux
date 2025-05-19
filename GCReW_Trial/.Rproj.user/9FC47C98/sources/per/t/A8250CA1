@@ -1,0 +1,27 @@
+{
+    "id": "A8250CA1",
+    "path": "S:/Biogeochemistry/People/Wilson (Steph)/Data/RAD7/NASA Synthesis Trial/GCReW_Trial/combine-sontek-files.Rmd",
+    "project_path": "combine-sontek-files.Rmd",
+    "type": "r_markdown",
+    "hash": "4172025452",
+    "contents": "",
+    "dirty": false,
+    "created": 1746540121726.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "201,0",
+        "scrollLine": "0",
+        "last_setup_crc32": ""
+    },
+    "folds": "131|7|186|0|\n214|21|242|0|\n245|21|254|0|\n",
+    "lastKnownWriteTime": 1746559011,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1747427011964,
+    "read_only": false,
+    "read_only_alternatives": []
+}

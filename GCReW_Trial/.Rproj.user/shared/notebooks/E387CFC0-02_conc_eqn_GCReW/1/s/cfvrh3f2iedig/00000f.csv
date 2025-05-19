@@ -1,0 +1,6 @@
+"0","rm(list=ls())"
+"0","DIC_bottle_data <- read.csv(""derived-data/DIC_bottle_data.csv"")"
+"0","DOC_bottle_data <- read.csv(""derived-data/DOC_bottle_data.csv"")"
+"0","sensor_data <- read.csv(""derived-data/sensor_data.csv"")"
+"0","if(""DIC"" %in% colnames(sensor_data))"
+"0","{sensor_data=select(sensor_data, -DIC, -DOC)}"

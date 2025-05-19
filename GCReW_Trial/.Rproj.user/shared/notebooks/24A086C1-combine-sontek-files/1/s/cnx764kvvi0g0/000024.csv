@@ -1,0 +1,6 @@
+"0",""
+"0",""
+"0","#need to clean up the timestamp so that we can join them "
+"0","exo <- exo %>%"
+"0","  mutate(timestamp = force_tz(parsedate::parse_date(timestamp_utc), tzone = common_tz))"
+"0",""

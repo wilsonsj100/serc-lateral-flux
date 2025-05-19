@@ -1,0 +1,8 @@
+"0","DIC_ts <- 10^predict(DIC_model, sensor_data)"
+"0","DOC_ts_a <- 10^predict(DOC_modela, sensor_data) #with fDOM"
+"0","DOC_ts_b <- 10^predict(DOC_modelb, sensor_data)"
+"0",""
+"0","#fDOM should be within 0.9 to 80 QSU"
+"0","DOC_ts <- ifelse(is.na(DOC_ts_a), DOC_ts_b, DOC_ts_a)"
+"0",""
+"0","sensor_data <- tibble(sensor_data, DIC = DIC_ts, DOC = DOC_ts)"

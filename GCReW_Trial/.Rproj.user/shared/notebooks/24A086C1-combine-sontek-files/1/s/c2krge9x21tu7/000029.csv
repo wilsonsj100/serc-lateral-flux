@@ -1,0 +1,4 @@
+"0",""
+"0","sontek_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + "
+"0","                      geom_point() + theme_classic() + labs(x=""Time Stamp"", y=""Water Depth (m)"") + ylim(-0.5,5)"
+"0","sontek_chkplot"

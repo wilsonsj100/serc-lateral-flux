@@ -1,0 +1,657 @@
+---
+title: "Flume_Data_Updater: Past Data & Analysis"
+author: "Stephanie J. Wilson"
+date: '2023-06-13'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+
+
+
+```
+
+## EXO Data 
+```{r}
+# 1. Setup ---------
+## Load packages
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+#set dropbox wd
+setwd("C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA")
+
+directory_path <- "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA"
+
+# Replace "your_phrase" with the phrase you want to find in file titles
+phrase_to_find <- "GCREW_MARSH_OUTLET_ExoTable_"
+
+# Use list.files() with the pattern argument to find files containing the phrase
+files_with_phrase <- list.files(path = directory_path, pattern = phrase_to_find, recursive = TRUE)
+
+exo_files <- files_with_phrase
+
+
+#exo_files1 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                     #  pattern = "GCREW_MARSH_OUTLET_ExoTable_202305", 
+                     #  all.files = FALSE)
+exo_files2 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_ExoTable_202306", 
+                       all.files = TRUE)
+exo_files3 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_ExoTable_202307", 
+                       all.files = FALSE)
+exo_files4 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_ExoTable_202308", 
+                       all.files = FALSE)
+exo_files5 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_ExoTable_202309", 
+                       all.files = FALSE)
+exo_files6 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_ExoTable_202310", 
+                       all.files = FALSE)
+
+#exo_files <- c(exo_files1, exo_files2, exo_files3)
+exo_files <- c( exo_files2, exo_files3, exo_files4, exo_files5, exo_files6)
+head(exo_files)
+
+## List your paths - DID THIS ABOVE
+#exo_files <- list.files("/Users/regi350/Downloads/GCREW_LOGGERNET_DATA", full.names = T)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(exo_files)
+
+## Function to read in exo. You can rinse and repeat w other instruments, just change cols
+read_exo <- function(path){
+  
+  cols = c("depth_m","temp_c", "salinity_ppt", "odo_mg_l", "chlorophyll_ug_l", "p_h" ) ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) %>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    select(datetime_15min, all_of(cols)) %>%
+    mutate(across(where(is.character), as.numeric)) %>% 
+    group_by(datetime_15min) %>% 
+    summarize(across(where(is.numeric), mean, na.rm = T))
+}
+
+## Create a dataframe
+exo <- exo_files %>% 
+  map(read_exo) %>% 
+  bind_rows()
+
+## Check plot
+ggplot(exo, aes(datetime_15min, depth_m)) + geom_point()
+
+
+
+```
+
+## Sontek Data 
+```{r}
+# Load necessary packages 
+# 1. Setup ---------
+## Load packages
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+#set dropbox wd
+setwd("C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA")
+
+#sontek_files1 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                          #  pattern = "GCREW_MARSH_OUTLET_SontekTable_202305", 
+                          #  all.files = FALSE)
+sontek_files2 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                            pattern = "GCREW_MARSH_OUTLET_SontekTable_202306", 
+                            all.files = FALSE)
+sontek_files3 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                            pattern = "GCREW_MARSH_OUTLET_SontekTable_202307", 
+                            all.files = FALSE)
+sontek_files4 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                            pattern = "GCREW_MARSH_OUTLET_SontekTable_202308", 
+                            all.files = FALSE)
+sontek_files5 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                            pattern = "GCREW_MARSH_OUTLET_SontekTable_202309", 
+                            all.files = FALSE)
+sontek_files6 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                            pattern = "GCREW_MARSH_OUTLET_SontekTable_202310", 
+                            all.files = FALSE)
+
+#sontek_files <- c(sontek_files1, sontek_files2, sontek_files3)
+sontek_files <- c(sontek_files2, sontek_files3, sontek_files4, sontek_files5, sontek_files6)
+head(sontek_files)
+
+## List your paths - DID THIS ABOVE
+#exo_files <- list.files("/Users/regi350/Downloads/GCREW_LOGGERNET_DATA", full.names = T)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(sontek_files)
+
+## Function to read in sontek You can rinse and repeat w other instruments, just change cols
+read_sontek <- function(path){
+  
+  cols = c("water_depth", "flowrate", "cross_area", "mean_velocity", "total_volume"  ) ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) %>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    select(datetime_15min, all_of(cols)) %>%
+    mutate(across(where(is.character), as.numeric)) %>% 
+    group_by(datetime_15min) %>% 
+    summarize(across(where(is.numeric), mean, na.rm = T))
+}
+
+## Create a dataframe
+sontek <- sontek_files %>% 
+  map(read_sontek) %>% 
+  bind_rows()
+
+## Check plot
+ggplot(sontek, aes(datetime_15min, water_depth)) + geom_point()
+
+
+```
+
+## Raw FLUX - LGR Data 
+```{r}
+## Load packages
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+#set dropbox wd
+setwd("C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA")
+
+#flux1 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+          #             pattern = "GCREW_MARSH_OUTLET_FLUX_202305", 
+            #           all.files = FALSE)
+flux2 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_FLUX_202306", 
+                       all.files = FALSE)
+flux3 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_FLUX_202307", 
+                       all.files = FALSE)
+flux4 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_FLUX_202308", 
+                       all.files = FALSE)
+flux5 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_FLUX_202309", 
+                       all.files = FALSE)
+flux6 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_FLUX_202310", 
+                       all.files = FALSE)
+
+#flux_files <- c(flux1, flux2, flux3)
+flux_files <- c( flux2, flux3, flux4, flux5, flux6)
+head(flux_files)
+
+## List your paths - DID THIS ABOVE
+#flux_files <- list.files("/Users/regi350/Downloads/GCREW_LOGGERNET_DATA", full.names = T)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(flux_files)
+
+## Function to read in exo. You can rinse and repeat w other instruments, just change cols
+read_flux <- function(path){
+  
+  cols = c("amb_t_c","ch4d_ppm", "co2d_ppm", "h2o_ppm") ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) %>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    select(datetime_15min, all_of(cols)) %>%
+    mutate(across(where(is.character), as.numeric)) %>% 
+    group_by(datetime_15min) %>% 
+    summarize(across(where(is.numeric), mean, na.rm = T))
+}
+
+## Create a dataframe
+flux <- flux_files %>% 
+  map(read_flux) %>% 
+  bind_rows()
+
+## Check plot
+ggplot(flux, aes(datetime_15min, ch4d_ppm)) + geom_point()
+
+
+```
+
+## Raw Radon Data  
+```{r}
+# 1. Setup ---------
+## Load packages
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+#set dropbox wd
+setwd("C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA")
+
+#rad_files1 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                     #  pattern = "GCREW_MARSH_OUTLET_Rad7Table_202305", 
+                     #  all.files = FALSE)
+rad_files2 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_Rad7Table_202306", 
+                       all.files = FALSE)
+rad_files3 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_Rad7Table_202307", 
+                       all.files = FALSE)
+rad_files4 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_Rad7Table_202308", 
+                       all.files = FALSE)
+rad_files5 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_Rad7Table_202309", 
+                       all.files = FALSE)
+rad_files6 <- list.files(path = "C:/Users/wilsonsj/Dropbox (Smithsonian)/GCREW_LOGGERNET_DATA", 
+                       pattern = "GCREW_MARSH_OUTLET_Rad7Table_202310", 
+                       all.files = FALSE)
+
+#exo_files <- c(rad_files1, rad_files2, rad_files3)
+rad_files <- c(rad_files2, rad_files3, rad_files4, rad_files5, rad_files6)
+head(rad_files)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(rad_files)
+
+## Function to read in exo. You can rinse and repeat w other instruments, just change cols
+read_rad <- function(path){
+  
+  cols = c("radon_concentration_rad7","radon_concentration_uncertainty_rad7", "rh_sample_rad7", "total_counts_rad7") ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) %>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    select(datetime_15min, all_of(cols)) %>%
+    mutate(across(where(is.character), as.numeric)) %>% 
+    group_by(datetime_15min) %>% 
+    summarize(across(where(is.numeric), mean, na.rm = T))
+}
+
+## Create a dataframe
+rad <- rad_files %>% 
+  map(read_rad) %>% 
+  bind_rows()
+
+## Check plot
+ggplot(rad, aes(datetime_15min, radon_concentration_rad7)) + geom_point()
+
+
+
+
+```
+
+## Pull all 15min data together
+```{r}
+
+#load required packages 
+dat <- full_join(exo, flux, by = "datetime_15min") %>% 
+  full_join(rad, by = "datetime_15min") %>% #pseudo-code
+ full_join(sontek, by = "datetime_15min") #%>% #pseudo-code
+
+head(dat)
+  
+#if you want to add in a lag
+## laggin
+#exo %>% 
+  #mutate(depth_m_lag1 = lag(depth_m, 1), 
+     #    depth_m_lead1 = lead(depth_m, 1))
+
+```
+
+## Pull all 15min data together
+```{r}
+head(dat)
+
+#remove salinity values that were read as zeros - make them NAs 
+library(dplyr)  
+dat$salinity_ppt <- na_if(dat$salinity_ppt, 0)
+dat$temp_c <- na_if(dat$temp_c, 0)
+dat$radon_concentration_rad7 <- na_if(dat$radon_concentration_rad7, 0)
+dat$radon_concentration_rad7 <- na_if(dat$radon_concentration_rad7, NaN)
+
+head(dat)
+  
+```
+
+
+
+## Convert to CH4 in water  
+```{r}
+
+#test set 
+#flux <- as.data.frame(c(134.32, 1290, 2.2))
+#colnames(flux)<-c('CH4d_ppm')
+
+#Check dataframe you made earlier
+head(flux)
+
+######################### Mixing Ratio #########################
+
+# ln pH20 = 24.4543-(6745.09/T)-4.8489*Ln(T/100)-0.000544*S
+k = 273.15
+e <- as.numeric(2.7182818)
+
+#temp <- 25   #need to change this to the exo data 
+#sal <- 13   #need to change this to the exo data 
+P <- 1020    #need to change this to? maybe we can get this from the weather station! 
+
+# change temp to Kelvin
+dat$temp_k <- k + dat$temp_c 
+
+#Sat Vapor (EQ)
+dat$ln_pH2O <- as.numeric(24.4543-(6745.09/dat$temp_k)-4.8489*log(dat$temp_k/100))
+
+dat$pH2O  <- e^dat$ln_pH2O   
+
+#p(CH4)TE,wet = xCH4(P-VPH20)
+dat$pCH4_uatm <- dat$ch4d_ppm*(1-dat$pH2O)
+
+#################################################################
+
+########################### Henry's Law #########################
+
+# Hcp = ca/p
+# Hcp =	Henry's Law Solubility Constant (M/atm)
+# ca = 	Concentration of species in aqueous phase (Moles/L , M)
+# p	 = partial pressure of species (atm)
+
+Hcp <- 0.00146484 #(at 1ATM and 25C)
+CH4_mw <- 16.04  #(in g/mole)
+
+#convert uatm CH4 to atm CH4 
+dat$pCH4_atm <- dat$pCH4_uatm * (10^-6)
+
+#convert to moles per L 
+dat$CH4_M <- dat$pCH4_atm * Hcp
+
+#convert to nmoles per L 
+dat$CH4_nM <- dat$CH4_M * (10^9)
+
+#convert to g/L 
+dat$CH4_gL <- dat$CH4_M * CH4_mw
+
+#convert to mg/L
+dat$CH4_mgL <- dat$CH4_gL * (10^3) 
+
+#convert to ug/L 
+dat$CH4_ugL <- dat$CH4_gL * (10^6)
+
+#Note on units:		
+#Unit	1 atm = 	101325 pa
+#mol/m3*Pa	1 m3 = 	1000 L
+#.74 nmol/L = 	0.1ppmv
+
+
+#Note: for reference, partial pressure of CH4 [uatm] approximates the mixing ratio [ppmv] measured from gas analyzer. pCH4 can be calculated from xCH4 on accompanying spreadsheet
+#Hcp for CH4 is from Sander R (2015) Compilation of Henry's Law constants (Ver 4.0) for water as solvent. Atmos. Chem. Phys. 15:4399-4981
+#Saturation of CH4 in water at 1 ATM and 10C = 29.9mg/L, 20C = 26.0 mg/L, and 25C = 22.8 mg/L
+
+#################################################################
+
+
+######################### EQ Solubility #########################
+
+#Ths contains constants for EQ solubilities for CH4 according to T (K) and Salinity (Weisenburg and Guinasso 1979)
+# Equations C* and Kh are published in Roberts and Shiller (2015) Determination of dissolved methane in natural waters using headspace analysis with cavity ring-down spectroscopy. Anlyitica Chimica Act 856:68-73
+#http://www.cen-sun.com/ueditor/php/upload/file/20190822/1566458176805313.pdf 
+
+#Definitions:	
+#C*	dissolved conc. Of CH4 in equilibrium with pCH4 at temperature T (K) and salinity (S).
+#Constants for Calculation of Solubility (CH4 in water) [nmol/L]	
+A1 <-	-415.2807
+A2 <-	596.8104
+A3 <-	379.2599
+A4 <-	-62.0757
+B1 <-	-0.0591600
+B2 <-	0.0321740
+B3 <-	-0.0048198
+
+#C* = 	exp[ln((pCH4  x 10^-6)) + A1 + A2(100/T) + A3ln(T/100) + A4(T/100) + S(B1 + B2/100 + B3(T/100)^2)]
+# C* = nmol/L
+dat$C_CH4_nM = exp((log((dat$pCH4_uatm*(10^-6))) + (A1 + (A2*(100/dat$temp_k)) + (A3*(log(dat$temp_k/100))) + (A4*(dat$temp_k/100))) + 
+                      (dat$salinity_ppt*(B1 + B2*(dat$temp_k/100) + B3*((dat$temp_k/100)^2)))))
+
+#Kh = (C* x 10^-9)/(pCH4 x 10^-6)
+dat$Kh = (dat$C_CH4_nM * 10^-9)/(dat$pCH4_uatm * 10^-6)
+
+#################################################################
+
+head(dat)
+
+```
+
+## Convert to CO2 in water - TBD later
+
+## Convert to Radon in water  
+```{r}
+
+# bring in radon in air data from equilibrator 
+#15 min sniff cycle	
+
+#test set 
+#rad <- as.data.frame(c(234, 80, 111))
+#colnames(rad)<-c('Radon_concentration_Rad7')
+#rad$Radon_concentration_uncertainty_Rad7 <- c(64, 80, 90)
+#$temp_k <- as.data.frame(c(291.46, 294.30, 294.34))
+#rad$sal <- as.data.frame(c(18.15, 18.3, 18.3))
+
+head(dat)
+
+#Schubert et al 2012:	
+  a1 <-	-76.14
+	a2 <-	120.36
+	a3 <-	31.26
+	b1 <-	-0.2631
+	b2 <-	0.1673
+	b3 <-	-0.027
+
+#calculate Bunsen Coefficient
+# Part 1 Beta =a1+(a2*(100/T))+(a3*LN(T/100))
+dat$Beta1 <- a1+(a2*(100/dat$temp_k))+(a3*(log(dat$temp_k/100)))
+
+# Part 2 Beta =sal*(b1+(b2*(T/100))+(b3*(T/100)^2))
+dat$Beta2 <- dat$salinity_ppt*(b1+(b2*(dat$temp_k/100))+(b3*(dat$temp_k/100)^2))
+
+#Beta 
+dat$Beta <- exp(dat$Beta1 + dat$Beta2)
+
+# Kw / air
+# Kw =(Beta*T)/273.15
+dat$Kw <- (dat$Beta * dat$temp_k)/273.15
+
+# C water 
+# Cw=Cair*Kw/air
+dat$Rad_w_Bqm3 <- dat$radon_concentration_rad7*dat$Kw
+dat$Rad_err_w_Bqm3 <- as.numeric(dat$radon_concentration_uncertainty_rad7)*dat$Kw
+
+	
+head(dat)
+
+```
+
+## Plot these data up 
+```{r}
+#setwd("S:/Biogeochemistry/People/Wilson (Steph)/Data/RAD7/July 2023 Tidal Survey/Survey Data")
+#write.csv(dat, "combined_data.csv")
+
+# Plot Radon and CH4 overtime at the flume
+P1 <-  ggplot() + 
+    geom_line(data=dat, aes(x=datetime_15min, y=C_CH4_nM/5, color="CH4"), size=0.75) +
+    geom_line(data=dat, aes(x=datetime_15min, y=Rad_w_Bqm3, color="Radon"), size=0.75) + 
+    scale_color_manual(values = c("black", "#72BDA3")) +
+       scale_y_continuous(
+    "Radon (Bq/m3)", limits = c(0,300),
+    sec.axis = sec_axis(~ . *5, name = "CH4 (nM)")) + 
+    labs(x="Date", title = "") + 
+    theme_classic() + 
+    theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom") +
+    labs(color=NULL)
+P1
+
+# CH4 vs. Radon concentrations 
+lm2 <- lm(data=dat, C_CH4_nM~Rad_w_Bqm3)
+summary(lm2)
+
+P2 <- ggplot(dat, aes(Rad_w_Bqm3, C_CH4_nM)) + geom_point() + 
+      labs(x= "Radon (Bq/m3)", y="CH4 (nM)", title="") +
+      geom_smooth(method=lm , color="#72BDA3", fill="lightgray", se=TRUE) +
+      theme_classic() + 
+       theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom")
+P2 + annotate("text", x=60, y=5000, label= "R2 = 0.4117")
+
+
+
+
+# Plot Sontek Depth vs. Radon concentrations  
+lm3 <- lm(data=dat, Rad_w_Bqm3~water_depth)
+summary(lm3)
+
+P3 <- ggplot(dat, aes(water_depth, Rad_w_Bqm3)) + geom_point() + 
+      labs(y= "Radon (Bq/m3)", x="Depth (m)", title="") +
+      #geom_smooth(method=lm , color="#72BDA3", fill="lightgray", se=TRUE) +
+      xlim(0.25,1.5) +
+      theme_classic() + 
+       theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom")
+P3
+
+# Plot Sontek Depth vs. Radon concentrations  
+lm4 <- lm(data=dat, Rad_w_Bqm3~flowrate)
+summary(lm4)
+
+P4 <- ggplot(dat, aes(flowrate, Rad_w_Bqm3)) + geom_point() + 
+      labs(y= "Radon (Bq/m3)", x="Flow Rate (m/s)", title="") +
+      #geom_smooth(method=lm , color="#72BDA3", fill="lightgray", se=TRUE) +
+      #xlim(0.25,1.5) +
+      theme_classic() + 
+       theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom")
+P4
+
+
+# Plot Sontek Depth vs. Radon concentrations  
+lm5 <- lm(data=dat, Rad_w_Bqm3~salinity_ppt)
+summary(lm5)
+
+P5 <- ggplot(dat, aes(salinity_ppt, Rad_w_Bqm3)) + geom_point() + 
+      labs(y= "Radon (Bq/m3)", x="Salinity (ppt)", title="") +
+      #geom_smooth(method=lm , color="#72BDA3", fill="lightgray", se=TRUE) +
+      #xlim(0.25,1.5) +
+      theme_classic() + #xlim(5,18) +
+       theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom")
+P5
+
+# Plot Sontek Depth vs. Radon concentrations  
+lm6 <- lm(data=dat, Rad_w_Bqm3~salinity_ppt)
+summary(lm6)
+
+P6 <- ggplot(dat, aes(salinity_ppt, Rad_w_Bqm3)) + geom_point() + 
+      labs(y= "Radon (Bq/m3)", x="Salinity (ppt)", title="") +
+      #geom_smooth(method=lm , color="#72BDA3", fill="lightgray", se=TRUE) +
+      #xlim(0.25,1.5) +
+      theme_classic() + #xlim(5,18) +
+       theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+          legend.text=element_text(size=12), legend.title=element_blank(),
+          strip.background = element_rect(color = "black", size = 1),
+        plot.margin = margin(t=0.1, r=0.1, l=0.1, b=0.1, "cm"),
+          axis.text=element_text(size=12),axis.title=element_text(size=12),
+        legend.position = "bottom")
+P6
+
+```
+
+ 

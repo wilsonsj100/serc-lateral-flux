@@ -1,0 +1,108 @@
+---
+title: "GCReW Data Cleaning"
+author: "Qipei Shangguan & Stephanie J. Wilson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.duplicate.label = "allow")
+rm(list=ls())
+```
+
+```{r packages, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(zoo)
+library(fuzzyjoin)
+```
+
+## Clean Sensor Data
+
+```{r clean sensor data}
+sensor_data <- read.csv("combined-raw-data/sensor-data.csv")
+
+sensor_data <- sensor_data %>% mutate_all(~ifelse(is.nan(.), NA, .))
+
+#sensor_data <- sensor_data%>%
+  #mutate(Collection_Date=mdy(Collection_Date))%>%
+  #mutate(Collection_Time_UTC=hm(Collection_Time_UTC))%>%
+  #mutate(datetime_UTC=Collection_Date+Collection_Time_UTC)%>%
+  #mutate(datetime_UTC=na.approx(datetime_UTC))%>% #there are some gaps in sensor datetime
+  #mutate(datetime=with_tz(datetime, "EST"))
+
+sensor_data <- sensor_data%>%
+  select(datetime, odo_mg_l, fdom_qsu,  salinity_ppt , ph, #ORP_mV, (don't have)
+         water_depth, water_temperature_c, flowrate )%>%
+  #mutate(DO_mgL=DO_mgL/32*1000)%>% #unit conversion
+  rename(DO = odo_mg_l, fDOM = fdom_qsu,  flow = flowrate, #ORP = ORP_mV,
+         S = salinity_ppt, H = water_depth, T = water_temperature_c, pH = ph)
+
+
+write.csv(sensor_data, "derived-data/sensor_data.csv")
+```
+
+## Clean Bottle Data
+
+```{r clean bottle data}
+DIC_bottle_data <- read.csv("combined-raw-data/chem-sample-data.csv")
+
+#need to make a time stamp from the date and time sampled 
+datetime_str <- paste(DIC_bottle_data$date, DIC_bottle_data$time_sampled_est)
+
+# Parse with mdy_hm for month/day/year format and hours:minutes
+DIC_bottle_data$datetime <- mdy_hm(datetime_str)
+
+DIC_bottle_data <- DIC_bottle_data %>%
+  #filter(method=='TS')%>% #remove groundwater samples
+  select(datetime, TA_umolL, DIC_umolL) %>%
+  rename(datetime = datetime, DIC = DIC_umolL, TA = TA_umolL)#, salinity, temperature_C, pH, DO_mgL, water_depth_m)%>%
+
+
+#get DOC
+DOC_bottle_data <- read.csv("combined-raw-data/chem-sample-data.csv")
+
+#need to make a time stamp from the date and time sampled 
+datetime_str <- paste(DOC_bottle_data$date, DOC_bottle_data$time_sampled_est)
+
+# Parse with mdy_hm for month/day/year format and hours:minutes
+DOC_bottle_data$datetime <- mdy_hm(datetime_str)
+
+DOC_bottle_data <- DOC_bottle_data%>%
+  select(datetime, DOC_umolL)%>%
+  rename(datetime = datetime, DOC = DOC_umolL) #%>%
+  #mutate(datetime=mdy_hm(datetime))%>%
+  #mutate(datetime=with_tz(datetime, "EST"))%>%
+  #filter(datetime < as.POSIXct("2017-01-01 00:00"))
+
+#write.csv(DIC_bottle_data, "../../Data/Derivative/SLP_USGS_WHOI/DIC_bottle_data.csv")
+```
+
+## Combine bottle data with sensor data
+
+```{r add sensor data}
+#To match bottle and sensor data, round to 5 mins
+DIC_bottle_data$datetime<- round_date(DIC_bottle_data$datetime, "5 minutes")
+DOC_bottle_data$datetime<- round_date(DOC_bottle_data$datetime, "5 minutes")
+
+#extract sensor data at discrete time
+sensor_IC_subset<-subset(sensor_data,datetime %in% DIC_bottle_data$datetime)
+sensor_OC_subset<-subset(sensor_data,datetime %in% DOC_bottle_data$datetime)
+
+DIC_bottle_data$datetime <- as.character(DIC_bottle_data$datetime)
+DOC_bottle_data$datetime <- as.character(DOC_bottle_data$datetime)
+
+#sensor_IC_subset$datetime <- as.POSIXct(sensor_IC_subset$datetime)
+#sensor_OC_subset$datetime <- as.POSIXct(sensor_OC_subset$datetime)
+
+DIC_bottle_data <- left_join(DIC_bottle_data, sensor_IC_subset, by="datetime")
+DOC_bottle_data <- left_join(DOC_bottle_data, sensor_OC_subset, by="datetime")
+
+#low salinity samples are not ideal for MLR at Sage Lot Pond so not doing for GCReW
+    #DIC_bottle_data<-filter(DIC_bottle_data, S>19)
+    #DOC_bottle_data<-filter(DOC_bottle_data, S>19)
+
+write.csv(DIC_bottle_data, "derived-data/DIC_bottle_data.csv")
+write.csv(DOC_bottle_data, "derived-data/DOC_bottle_data.csv")
+```

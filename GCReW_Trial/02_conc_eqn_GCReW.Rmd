@@ -1,0 +1,98 @@
+---
+title: "SLP Concentration Equations"
+author: "Qipei Shangguan"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.duplicate.label = "allow")
+```
+
+```{r packages, warning=FALSE,include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ModelMetrics)
+library(rmarkdown)
+```
+
+```{r read data,include=FALSE}
+rm(list=ls())
+DIC_bottle_data <- read.csv("derived-data/DIC_bottle_data.csv")
+DOC_bottle_data <- read.csv("derived-data/DOC_bottle_data.csv")
+sensor_data <- read.csv("derived-data/sensor_data.csv")
+if("DIC" %in% colnames(sensor_data))
+{sensor_data=select(sensor_data, -DIC, -DOC)}
+```
+
+## DIC model
+
+```{r fit DIC model}
+DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO), 
+                data = DIC_bottle_data, na.action=na.omit)
+summary(DIC_model)
+print('DIC model RMSE')
+rmse(10^DIC_model$fitted.values, DIC_bottle_data$DIC)
+```
+
+## DOC model
+
+fDOM improves the model performance, yet with a lower data coverage.
+
+The two model versions (a and b) differs by whether fDOM will be used.
+
+```{r fit DOC model, echo=TRUE}
+#version a
+DOC_bottle_data_fDOM <- filter(DOC_bottle_data, fDOM > 0)
+DOC_modela <- lm(log10(DOC) ~ log10(pH) + log10(T) + log(fDOM), 
+                 data = DOC_bottle_data_fDOM)
+summary(DOC_modela)
+print('DOC modela RMSE')
+rmse(10^DOC_modela$fitted.values, DOC_bottle_data_fDOM$DOC)
+
+#version b
+DOC_modelb <- lm(log10(DOC) ~ log10(pH) + log10(T), 
+                 data = DOC_bottle_data, na.action=na.omit)
+summary(DOC_modelb)
+print('DOC modelb RMSE')
+rmse(10^DOC_modelb$fitted.values, DOC_bottle_data$DOC)
+```
+
+```{r add concentration to sensor data, warning=FALSE}
+DIC_ts <- 10^predict(DIC_model, sensor_data)
+DOC_ts_a <- 10^predict(DOC_modela, sensor_data) #with fDOM
+DOC_ts_b <- 10^predict(DOC_modelb, sensor_data)
+
+#fDOM should be within 0.9 to 80 QSU
+DOC_ts <- ifelse(is.na(DOC_ts_a), DOC_ts_b, DOC_ts_a)
+
+sensor_data <- tibble(sensor_data, DIC = DIC_ts, DOC = DOC_ts)
+```
+
+
+```{#r clean sensor data}
+# removing calculated DIC/DOC concentrations where predictors are out of bounds
+
+#DIC
+a <- which(sensor_data$pH<6.8 | sensor_data$pH>8.5)
+b <- which(sensor_data$S<19 | sensor_data$S>32)
+DIC_filter <- c(a, b)
+sensor_data$DIC[DIC_filter] <- NA
+rm(a, b)
+
+#DOC
+c <- which(sensor_data$T<2.5 | sensor_data$T>30)
+d <- which(sensor_data$pH<6.8 | sensor_data$pH>8.5)
+DOC_filter <- c(c, d)
+sensor_data$DOC[DOC_filter] <- NA
+rm(c,d)
+
+sensor_data <- sensor_data %>% mutate_all(~ifelse(is.nan(.), NA, .))
+sensor_data <- sensor_data %>% mutate_all(~ifelse(is.infinite(.), NA, .))
+
+#write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv")
+```
+
+
+       

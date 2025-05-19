@@ -1,0 +1,258 @@
+---
+title: "Flume_Data_Updater: Past Data & Analysis"
+author: "Stephanie J. Wilson"
+date: '2023-06-13'
+output: html_document
+---
+#Set up
+```{r setup, include=FALSE}
+
+# Load necessary packages 
+# 1. Setup ---------
+## Load packages
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+
+```
+
+#Sontek
+
+## Combine all raw sontek files  
+```{r}
+
+setwd("raw-sontek-data/")
+path <- "raw-sontek-data/"
+
+#list all the files in the directory
+#create a list of the files there 
+sontek_files <- dir(pattern = "dat$", full.names = FALSE)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(sontek_files)
+
+## Function to read in sontek You can rinse and repeat w other instruments, just change cols
+read_sontek <- function(path){
+  
+  cols = c("water_depth", "flowrate", "cross_area", "mean_velocity", "total_volume"  ) ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(3:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) } #%>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    #mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    #select(datetime_15min, all_of(cols)) %>%
+    #mutate(across(where(is.character), as.numeric)) %>% 
+    #group_by(datetime_15min) %>% 
+    #summarize(across(where(is.numeric), mean, na.rm = T))
+#}
+
+## Create a dataframe
+sontek <- sontek_files %>% 
+  map(read_sontek) %>% 
+  bind_rows()
+
+## Check plot
+sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+sontek_chkplot_all
+
+sontek_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,5)
+sontek_chkplot
+
+
+```
+
+## Pull out columns that we need & flag based on cutoffs  
+```{r}
+
+
+head(sontek)
+
+sontek_lite <- sontek %>%
+  select(c(timestamp, water_depth, flowrate)) 
+
+sontek_lite$flag <-  ifelse(sontek_lite$water_depth >= 2, 'OOR', 'NA')
+
+head(sontek_lite)
+
+write.csv(sontek_lite, "derived-data/sontek.csv")
+
+
+```
+
+
+#Exo Sonde 
+
+## Combine all exo files  
+```{r}
+
+setwd("raw-exo-data/")
+path <- "raw-exo-data/"
+
+#list all the files in the directory
+#create a list of the files there 
+  #exo_files <- dir(pattern = "csv$", full.names = FALSE)
+
+## Create a dataframe
+exo <- read.csv("2024_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
+
+## Check plot
+exo_chkplot_all <- ggplot(exo, aes(as.POSIXct(timestamp_utc), as.numeric(salinity_ppt))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Salinity (ppt)")
+exo_chkplot_all
+
+
+#need to clean up the timestamp so that we can join them 
+exo <- exo %>%
+  mutate(timestamp = force_tz(parsedate::parse_date(timestamp_utc), tzone = common_tz))
+
+```
+
+#Flux (GHGs)
+
+## Combine all raw flux files  - needs some work so pause on this 
+```{#r}
+
+setwd("raw-ghg-data/")
+path <- "raw-ghg-data/"
+
+#list all the files in the directory
+#create a list of the files there 
+ghg_files <- dir(pattern = "dat$", full.names = FALSE)
+
+# 3. Function ---------
+
+## baby function
+get_colnames <- function(path){
+  read_delim(path[[1]], skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    clean_names() %>% 
+    colnames()
+}
+
+get_colnames(ghg_files)
+
+## Function to read in flux files 
+read_ghg <- function(path){
+  
+  cols = c("amb_t_c","ch4d_ppm", "co2d_ppm", "h2o_ppm") ## CHANGE ME
+  
+  read_delim(path, skip = 1) %>% 
+    slice(2:n()) %>% ## remove dead header rows
+    #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
+    clean_names() %>% ## from janitor pkg, make column names nice
+    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    mutate(timestamp = parse_date(timestamp)) } #%>% 
+    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+    #mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+    #select(datetime_15min, all_of(cols)) %>%
+    #mutate(across(where(is.character), as.numeric)) %>% 
+    #group_by(datetime_15min) %>% 
+    #summarize(across(where(is.numeric), mean, na.rm = T))
+#}
+
+## Create a dataframe
+ghg <- ghg_files %>% 
+  map(read_ghg) %>% 
+  bind_rows()
+
+## Check plot
+#sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+                    #  geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+#sontek_chkplot_all
+
+#sontek_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+                     # geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,5)
+#sontek_chkplot
+
+
+```
+
+#Combine sensor data and write it out
+```{r, include=FALSE}
+
+exo$datetime<-round_date(exo$timestamp, "5 minutes")
+sontek$datetime<-round_date(sontek$timestamp, "5 minutes")
+
+
+#pull all the data together 
+dat <- full_join(
+  exo %>% distinct(datetime, .keep_all = TRUE),
+  sontek %>% distinct(datetime, .keep_all = TRUE),
+  by = "datetime"
+)
+
+head(dat)
+
+write.csv(dat, "combined-raw-data/sensor-data.csv")
+
+
+```
+
+
+
+#Discrete Chem Samples
+
+## pull in chemical data and convert units 
+```{r, include=FALSE}
+
+#pull in the chemical data files and combine if needed / pull out the columns we need 
+setwd("raw-chem-data/")
+path <- "raw-chem-data/"
+
+#list all the files in the directory
+#create a list of the files there 
+  #exo_files <- dir(pattern = "csv$", full.names = FALSE)
+
+## Create a dataframe
+chem <- read.csv("LatT_GCW_AllData_forNASATrial.csv")
+head(chem)
+
+#Pull out only the columns that we need from the file 
+chem_lite <- chem %>%
+  filter(sample_type == 'SW') %>%
+  select(c(site, sample_type, date, time_sampled_est, DIC..mg.L., NPOC..mg.L., TA..mmol.L.)) %>%
+  mutate(DIC_umolL = ((DIC..mg.L. / 1000)/12.011)*1000000)%>%
+  mutate(DOC_umolL = ((NPOC..mg.L. / 1000)/12.011)*1000000)%>%
+  mutate(TA_umolL = (TA..mmol.L. * 1000))
+
+#need to make a time stamp from the date and time sampled 
+#datetime_str <- paste(chem_lite$date, chem_lite$time_sampled_est)
+
+# Parse with mdy_hm for month/day/year format and hours:minutes
+#chem_lite$timestamp <- mdy_hm(datetime_str)
+
+```
+
+## write out chem sample data to combined data folder 
+```{r, include=FALSE}
+
+#select the columns we need 
+chem_lite1 <- chem_lite %>%
+  select(c(date, time_sampled_est, DIC_umolL, DOC_umolL, TA_umolL))
+
+#write out the file for use 
+write.csv(chem_lite1, "combined-raw-data/chem-sample-data.csv")
+
+```
+
+
+
