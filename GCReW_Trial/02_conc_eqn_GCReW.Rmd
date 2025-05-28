@@ -29,8 +29,9 @@ if("DIC" %in% colnames(sensor_data))
 ## DIC model
 
 ```{r fit DIC model}
-DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO), 
-                data = DIC_bottle_data, na.action=na.omit)
+#DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
+               # data = DIC_bottle_data, na.action=na.omit)
+
 summary(DIC_model)
 print('DIC model RMSE')
 rmse(10^DIC_model$fitted.values, DIC_bottle_data$DIC)
