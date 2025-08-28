@@ -13,8 +13,17 @@ options(knitr.duplicate.label = "allow")
 ```{r packages, warning=FALSE,include=FALSE}
 library(tidyverse)
 library(lubridate)
-library(ModelMetrics)
 library(rmarkdown)
+library(rmarkdown)
+library(performance)
+library(randomForest)
+library(ggpmisc)
+library(RColorBrewer)
+library(seacarb)
+library(viridis)
+library(patchwork)
+library(Metrics)
+
 ```
 
 ```{r read data,include=FALSE}
@@ -27,73 +36,288 @@ if("DIC" %in% colnames(sensor_data))
 ```
 
 ## DIC model
-
 ```{r fit DIC model}
+
+clean_dic_data <- DIC_bottle_data %>% 
+  filter(!is.na(DIC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
+
 DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
-                data = DIC_bottle_data, na.action=na.omit)
+                data = clean_dic_data)
 
 summary(DIC_model)
-print('DIC model RMSE')
-rmse(10^DIC_model$fitted.values, DIC_bottle_data$DIC)
+plot(DIC_model)
+
+
+#model performance
+DIC_predicted <- predict(DIC_model, clean_dic_data)
+a <- Metrics::rmse(10^DIC_model$fitted.values, clean_dic_data$DIC)
+b <- summary(DIC_model)$r.squared
+paste("DIC model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
+
+
+plot_DIC <- as.data.frame(10^DIC_model$fitted.values)
+plot_DIC$DIC_meas <- clean_dic_data$DIC
+
+p_model_DIC<-ggplot(plot_DIC,aes(x=10^DIC_model$fitted.values,y=DIC_meas))+
+  geom_point(size=3) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
+  labs(x = expression(paste("Measured DIC"," (",mu,"mol"," L"^-1,")")),
+       y = expression(paste("Predicted DIC"," (",mu,"mol"," L"^-1,")")),
+       color="",
+       tag = "")+
+  stat_smooth(method = "lm",se = FALSE)+
+  theme_bw()+
+  theme(aspect.ratio = 1,
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5), 
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title =  element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 12))
+p_model_DIC
+
 ```
 
 ## DOC model
-
 fDOM improves the model performance, yet with a lower data coverage.
-
-The two model versions (a and b) differs by whether fDOM will be used.
-
 ```{r fit DOC model, echo=TRUE}
-#version a
-DOC_bottle_data_fDOM <- filter(DOC_bottle_data, fDOM > 0)
-DOC_modela <- lm(log10(DOC) ~ log10(pH) + log10(T) + log(fDOM), 
-                 data = DOC_bottle_data_fDOM)
-summary(DOC_modela)
-print('DOC modela RMSE')
-rmse(10^DOC_modela$fitted.values, DOC_bottle_data_fDOM$DOC)
 
-#version b
-DOC_modelb <- lm(log10(DOC) ~ log10(pH) + log10(T), 
-                 data = DOC_bottle_data, na.action=na.omit)
-summary(DOC_modelb)
-print('DOC modelb RMSE')
-rmse(10^DOC_modelb$fitted.values, DOC_bottle_data$DOC)
+clean_doc_data <- DOC_bottle_data %>% 
+  filter(!is.na(DOC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO) & !is.na(fDOM))
+
+#DOC model 
+DOC_bottle_data_fDOM <- filter(DOC_bottle_data, fDOM > 0)
+DOC_model <- lm(log10(DOC) ~ log10(pH) + log10(T) + log10(S) +  log(fDOM), 
+                 data = clean_doc_data)
+
+
+summary(DOC_model)
+plot(DOC_model)
+
+
+#model performance
+DOC_predicted <- predict(DOC_model, clean_doc_data)
+a <- Metrics::rmse(10^DOC_model$fitted.values, clean_doc_data$DOC)
+b <- summary(DOC_model)$r.squared
+paste("DOC_model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
+
+
+plot_DOC <- as.data.frame(10^DOC_model$fitted.values)
+plot_DOC$DOC_meas <- clean_doc_data$DOC
+
+p_model_DOC<-ggplot(plot_DOC,aes(x=10^DOC_model$fitted.values,y=DOC_meas))+
+  geom_point(size=3) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
+  labs(x = expression(paste("Measured DOC"," (",mu,"mol"," L"^-1,")")),
+       y = expression(paste("Predicted DOC"," (",mu,"mol"," L"^-1,")")),
+       color="",
+       tag = "")+
+  stat_smooth(method = "lm",se = FALSE)+
+  theme_bw()+
+  theme(aspect.ratio = 1,
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5), 
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title =  element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 12))
+p_model_DOC
+
+
 ```
 
+## TA model
+```{r fit DIC model}
+clean_ta_data <- DIC_bottle_data %>% 
+  filter(!is.na(TA) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
+
+TA_model <- lm(log10(TA) ~ log10(pH) + log10(T) + log10(S), 
+                data = clean_ta_data, na.action=na.omit)
+
+summary(TA_model)
+plot(TA_model)
+
+
+#model performance
+TA_predicted <- predict(TA_model, clean_ta_data)
+a <- Metrics::rmse(10^TA_model$fitted.values, clean_ta_data$TA)
+b <- summary(TA_model)$r.squared
+paste("TA model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
+
+
+plot_TA <- as.data.frame(10^TA_model$fitted.values)
+plot_TA$TA_meas <- clean_ta_data$TA
+
+p_model_TA<-ggplot(plot_TA,aes(x=10^TA_model$fitted.values,y=TA_meas))+
+  geom_point(size=3) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
+  labs(x = expression(paste("Measured TA"," (",mu,"mol"," L"^-1,")")),
+       y = expression(paste("Predicted TA"," (",mu,"mol"," L"^-1,")")),
+       color="",
+       tag = "")+
+  stat_smooth(method = "lm",se = FALSE)+
+  theme_bw()+
+  theme(aspect.ratio = 1,
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5), 
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title =  element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 12))
+p_model_TA
+
+
+```
+
+
+#predict vars over the whole sensor dataset 
 ```{r add concentration to sensor data, warning=FALSE}
-DIC_ts <- 10^predict(DIC_model, sensor_data)
-DOC_ts_a <- 10^predict(DOC_modela, sensor_data) #with fDOM
-DOC_ts_b <- 10^predict(DOC_modelb, sensor_data)
+DIC_ts <- 10^predict(DIC_model, sensor_data, na.action = na.roughfix)
+DOC_ts <- 10^predict(DOC_model, sensor_data, na.action = na.roughfix) #with fDOM
+TA_ts  <- 10^predict(TA_model, sensor_data, na.action = na.roughfix)
 
 #fDOM should be within 0.9 to 80 QSU
-DOC_ts <- ifelse(is.na(DOC_ts_a), DOC_ts_b, DOC_ts_a)
+#DOC_ts <- ifelse(is.na(DOC_ts_a), DOC_ts_b, DOC_ts_a)
 
-sensor_data <- tibble(sensor_data, DIC = DIC_ts, DOC = DOC_ts)
+sensor_data_withpreds <- tibble(sensor_data, DIC_ts, DOC_ts, TA_ts)
 ```
 
 
-```{#r clean sensor data}
-# removing calculated DIC/DOC concentrations where predictors are out of bounds
+#Remove predicted values when critical predictors are not there or out of bounds
+```{r clean sensor data}
 
-#DIC
-a <- which(sensor_data$pH<6.8 | sensor_data$pH>8.5)
-b <- which(sensor_data$S<19 | sensor_data$S>32)
-DIC_filter <- c(a, b)
-sensor_data$DIC[DIC_filter] <- NA
+#remove data when critical predictors are missing
+  #DIC
+DIC_ts[which((is.na(sensor_data$fDOM)==TRUE)&(is.na(sensor_data$DO)==TRUE))]<-NA
+DIC_ts[which(is.na(sensor_data$S)==TRUE)]<-NA
+  #DOC
+DOC_ts[which((is.na(sensor_data$fDOM)==TRUE)&(is.na(sensor_data$pH)==TRUE))]<-NA
+#DOC_ts[which(is.na(sensor_data$fDOM)==TRUE)]<-NA
+  #TA
+TA_ts[which((is.na(sensor_data$pH)==TRUE)&(is.na(sensor_data$S)==TRUE))]<-NA
+TA_ts[which(is.na(sensor_data$S)==TRUE)]<-NA
+
+
+# removing modeled concentrations where predictors are out of bounds
+a <- which(sensor_data$pH<5 | sensor_data$pH>9)
+b <- which(sensor_data$S<2 | sensor_data$S>20)
+c <- which(sensor_data$T<2.5 | sensor_data$T>30)
+d <- which(sensor_data$DO<0.2 | sensor_data$DO>11)
+e <- which(sensor_data$fDOM<2 | sensor_data$fDOM>80)
+filter <- unique(c(a, b, c, d, e))
+DIC_ts[filter] <- NA
+DOC_ts[filter] <- NA
+TA_ts[filter] <- NA
 rm(a, b)
 
-#DOC
-c <- which(sensor_data$T<2.5 | sensor_data$T>30)
-d <- which(sensor_data$pH<6.8 | sensor_data$pH>8.5)
-DOC_filter <- c(c, d)
-sensor_data$DOC[DOC_filter] <- NA
-rm(c,d)
-
-sensor_data <- sensor_data %>% mutate_all(~ifelse(is.nan(.), NA, .))
-sensor_data <- sensor_data %>% mutate_all(~ifelse(is.infinite(.), NA, .))
-
-#write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv")
+all_data <- tibble(sensor_data_withpreds, DIC = DIC_ts, TA = TA_ts, DOC = DOC_ts)
 ```
 
 
+```{r save sensor data}
+all_data <- all_data %>% mutate_all(~ifelse(is.nan(.), NA, .))
+all_data <- all_data %>% mutate_all(~ifelse(is.infinite(.), NA, .))
+write.csv(all_data, "derived-data/all_data.csv", 
+          row.names = FALSE)
+```
+
+
+```{r plot all data, echo=FALSE, warning=FALSE}
+all_data <- mutate(all_data, year=year(datetime))
+all_data$year <- as.factor(all_data$year)
+all_data$datetime<-as.POSIXct(all_data$datetime)
+
+
+xbreak<-seq(as.POSIXct("2000-01-01"), as.POSIXct("2000-12-31"),"1 month")
+labels<-month(xbreak,label=TRUE)
+lims<-c(as.POSIXct('2000-01-01'), as.POSIXct('2000-12-31'))
+labels<-month(xbreak,label=TRUE)
+
+p1<- ggplot(data=all_data)+
+  geom_line(aes(x=datetime,y=DIC,group=year,color = year),size=0.5)+
+  scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
+  labs(x = "Month",
+       y = expression(atop("DIC",paste("(",mu,"mol ","L"^-1,")"))),
+       color = "year",
+       group = "year")+
+  #guides(color = guide_legend(title="year"))+
+  theme_bw()+
+  #scale_y_continuous(breaks = seq(1600,2600,200),limits=c(1600,2600))+
+  #scale_x_datetime(breaks = xbreak,limits = lims,date_labels = "%b")+
+  theme(legend.position = "right",
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank())
+
+p2<- ggplot(data=all_data)+
+  geom_line(aes(x=datetime,y=TA,group=year,color = year),size=0.5)+
+  scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
+  labs(x = "Month",
+       y = expression(atop("TA",paste("(",mu,"mol ","L"^-1,")"))),
+       color = "year",
+       group = "year")+
+  #guides(color = guide_legend(title="year"))+
+  theme_bw()+
+  #scale_y_continuous(breaks = seq(1600,2600,200),limits=c(1600,2600))+
+  #scale_x_datetime(breaks = xbreak,limits = lims,date_labels = "%b")+
+  theme(legend.position = "right",
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        axis.title.x = element_blank(),
+        axis.text.x = element_blank())
+
+p3<- ggplot(data=all_data)+
+  geom_line(aes(x=datetime,y=DOC,group=year,color = year),size=0.5)+
+  scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
+  labs(x = "Month",
+       y = expression(atop("DOC",paste("(",mu,"mol ","L"^-1,")"))),
+       color = "year",
+       group = "year")+
+  #guides(color = guide_legend(title="year"))+
+  theme_bw()+
+  scale_y_continuous(limits=c(0,4000))+
+  #scale_x_datetime(breaks = xbreak,limits = lims,date_labels = "%b")+
+  theme(legend.position = "right",
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        panel.border = element_rect(colour = "black", fill=NA, size=1),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 12))
+
+p.ts <- (p1/p2/p3) + plot_layout(guides = "collect")
+p.ts
+```       
+
+
+       
        
