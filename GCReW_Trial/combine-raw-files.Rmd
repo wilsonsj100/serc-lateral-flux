@@ -45,28 +45,75 @@ get_colnames <- function(path){
 get_colnames(sontek_files)
 
 ## Function to read in sontek You can rinse and repeat w other instruments, just change cols
-read_sontek <- function(path){
+read_sontek <- function(path) {
+  dat <- suppressWarnings(
+    readr::read_delim(
+      file = path,
+      skip = 1,
+      show_col_types = FALSE
+    )
+  ) %>%
+    janitor::clean_names() %>%
+    dplyr::slice(3:dplyr::n()) %>%
+    dplyr::mutate(
+      # Ensure consistent types for datetime columns
+      yyyy       = as.character(yyyy),
+      mm         = as.character(mm),
+      dd         = as.character(dd),
+      hh         = as.character(hh),
+      minute     = as.character(minute),
+      ss         = as.character(ss),
+      
+      # Also force sample_number and sontek_id to character
+      sample_number = as.character(sample_number),
+      sontek_id     = as.character(sontek_id),
+
+      # Parse timestamp safely (adjust if needed)
+      timestamp = parsedate::parse_date(timestamp),
+      datetime_raw = lubridate::force_tz(timestamp, tzone = common_tz),
+
+      # Convert some numeric columns explicitly
+      flowrate       = as.numeric(flowrate),
+      stage          = as.numeric(stage),
+      mean_velocity  = as.numeric(mean_velocity),
+      total_volume   = as.numeric(total_volume),
+      water_depth    = as.numeric(water_depth),
+      index_velocity = as.numeric(index_velocity),
+      cross_area     = as.numeric(cross_area),
+      water_temperature = as.numeric(water_temperature)
+    )
+
+  return(dat)
+}
+
+## Function to read in sontek You can rinse and repeat w other instruments, just change cols
+##read_sontek <- function(path){
   
-  cols = c("water_depth", "flowrate", "cross_area", "mean_velocity", "total_volume"  ) ## CHANGE ME
+  ##cols = c("water_depth", "flowrate", "cross_area", "mean_velocity", "total_volume"  ) ## CHANGE ME
   
-  read_delim(path, skip = 1) %>% 
-    slice(3:n()) %>% ## remove dead header rows
+  ##read_delim(path, skip = 1) %>% 
+    ##slice(3:n()) %>% ## remove dead header rows
     #slice(1:100) %>%  ## use this if something breaks, it'll make reading in MUCH faster
-    clean_names() %>% ## from janitor pkg, make column names nice
-    mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
-    mutate(timestamp = parse_date(timestamp)) } #%>% 
-    #mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
-    #mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
-    #select(datetime_15min, all_of(cols)) %>%
-    #mutate(across(where(is.character), as.numeric)) %>% 
-    #group_by(datetime_15min) %>% 
-    #summarize(across(where(is.numeric), mean, na.rm = T))
+    ##clean_names() %>% ## from janitor pkg, make column names nice
+    ##mutate(datetime_raw = force_tz(parsedate::parse_date(timestamp), tzone = common_tz)) %>% 
+    ##mutate(timestamp = parse_date(timestamp)) } #%>% 
+#mutate(datetime_15min = round_date(datetime_raw, "15 min")) %>%  ## Use me if you want 7:10 and 7:20 = 7:15
+#mutate(datetime_15min = floor_date(datetime_raw, "15 min")) %>% ## Use me if you want 7:10 = 7:15 and 7:16 = 7:30
+#select(datetime_15min, all_of(cols)) %>%
+#mutate(across(where(is.character), as.numeric)) %>% 
+#group_by(datetime_15min) %>% 
+#summarize(across(where(is.numeric), mean, na.rm = T))
 #}
 
 ## Create a dataframe
+#sontek <- sontek_files %>% 
+  #map(read_sontek) %>% 
+ # bind_rows()
+#test <- read_sontek("raw-sontek-data/GCREW_MARSH_OUTLET_SontekTable_20240807020028.dat")
+
 sontek <- sontek_files %>% 
-  map(read_sontek) %>% 
-  bind_rows()
+  purrr::map(read_sontek) %>% 
+  dplyr::bind_rows()
 
 ## Check plot
 sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
@@ -232,9 +279,10 @@ head(chem)
 #Pull out only the columns that we need from the file 
 chem_lite <- chem %>%
   filter(sample_type == 'SW') %>%
+  #mutate(NPOC..mg.L. == 'SW') %>% #need to remove TBDs from TN data 
   select(c(site, sample_type, date, time_sampled_est, DIC..mg.L., NPOC..mg.L., TA..mmol.L.)) %>%
   mutate(DIC_umolL = ((DIC..mg.L. / 1000)/12.011)*1000000)%>%
-  mutate(DOC_umolL = ((NPOC..mg.L. / 1000)/12.011)*1000000)%>%
+  mutate(DOC_umolL = ((as.numeric(NPOC..mg.L.) / 1000)/12.011)*1000000)%>%
   mutate(TA_umolL = (TA..mmol.L. * 1000))
 
 #need to make a time stamp from the date and time sampled 
