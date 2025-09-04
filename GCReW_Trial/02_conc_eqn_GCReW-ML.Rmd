@@ -1,10 +1,9 @@
 ---
-title: "SLP Concentration Equations"
-author: "Qipei Shangguan"
-date: "`r Sys.Date()`"
-output: html_document
+title: "02_conc_eqn_ML"
+author: "Stephanie J. Wilson"
+date: "2025-09-04"
+output: pdf_document
 ---
-
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 options(knitr.duplicate.label = "allow")
@@ -13,16 +12,15 @@ options(knitr.duplicate.label = "allow")
 ```{r packages, warning=FALSE,include=FALSE}
 library(tidyverse)
 library(lubridate)
+library(ModelMetrics)
 library(rmarkdown)
-library(rmarkdown)
-library(performance)
+#library(caret)
 library(randomForest)
 library(ggpmisc)
 library(RColorBrewer)
 library(seacarb)
 library(viridis)
 library(patchwork)
-library(Metrics)
 
 ```
 
@@ -35,51 +33,43 @@ if("DIC" %in% colnames(sensor_data))
 {sensor_data=select(sensor_data, -DIC, -DOC)}
 ```
 
-## DIC model
+## DIC model - Machine Learning To be changed
 ```{r fit DIC model}
 
 clean_dic_data <- DIC_bottle_data %>% 
   filter(!is.na(DIC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
 
-DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
-                data = clean_dic_data)
+#notes from convo with Qipei 
+  #pay attention to if you data coverage and what is missing, but be cautious
+  #if critical data is missing then you might want to not allow it to predict 
+  #determine which parameter is more important if it is NA then remove the prediction
+  #na.action is related to this
 
-summary(DIC_model)
-plot(DIC_model)
+  #cross validation is the 5 in the 
 
+  #after you have the time series and look at the range and see what 
+
+
+#model equations
+control <- trainControl(method="repeatedcv",number=5,repeats=3,search="random")
+DIC_RF_model <- train(DIC~DO+fDOM+ORP+S+pH+T+H+day,
+                      data=DIC_bottle_data,method="rf",na.action = na.roughfix,
+                      metric="RMSE",tuneLength=15, trControl=control)
+TA_RF_model <- train(TA~DO+fDOM+ORP+S+pH+T+H+day,
+                      data=DIC_bottle_data,method="rf",na.action = na.roughfix,
+                      metric="RMSE",tuneLength=15, trControl=control)
 
 #model performance
-DIC_predicted <- predict(DIC_model, clean_dic_data)
-a <- Metrics::rmse(10^DIC_model$fitted.values, clean_dic_data$DIC)
-b <- summary(DIC_model)$r.squared
+DIC_predicted <- predict(DIC_RF_model,DIC_bottle_data,na.action = na.roughfix)
+a <- rmse(DIC_predicted,DIC_bottle_data$DIC)
+b <- R2(DIC_predicted,DIC_bottle_data$DIC)
 paste("DIC model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
 
-
-plot_DIC <- as.data.frame(10^DIC_model$fitted.values)
-plot_DIC$DIC_meas <- clean_dic_data$DIC
-plot_DIC$date <- month(clean_dic_data$datetime)
-
-p_model_DIC<-ggplot(plot_DIC,aes(x=10^DIC_model$fitted.values,y=DIC_meas, color=date))+
-  geom_point(size=3) +
-  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
-  labs(x = expression(paste("Measured DIC"," (",mu,"mol"," L"^-1,")")),
-       y = expression(paste("Predicted DIC"," (",mu,"mol"," L"^-1,")")),
-       color="",
-       tag = "")+
-  stat_smooth(method = "lm",se = FALSE)+
-  theme_bw()+
-  theme(aspect.ratio = 1,
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 12),
-        plot.title = element_text(hjust = 0.5), 
-        axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.text = element_text(size = 12),
-        axis.title =  element_text(size = 12),
-        axis.title.x = element_text(size = 12),
-        axis.text.x = element_text(size = 12))
-p_model_DIC
+TA_predicted <- predict(TA_RF_model,DIC_bottle_data,na.action = na.roughfix)
+c <- rmse(TA_predicted,DIC_bottle_data$TA)
+d <- R2(TA_predicted,DIC_bottle_data$TA)
+paste("TA model statistics"," R2","=",round(d,digit=2), "RMSE","=",round(c,digit=0))
+rm(a, b, c, d)
 
 ```
 
@@ -247,7 +237,7 @@ lims<-c(as.POSIXct('2000-01-01'), as.POSIXct('2000-12-31'))
 labels<-month(xbreak,label=TRUE)
 
 p1<- ggplot(data=all_data)+
-  geom_point(aes(x=datetime,y=DIC,group=year,color = year),size=0.5)+
+  geom_line(aes(x=datetime,y=DIC,group=year,color = year),size=0.5)+
   scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
   labs(x = "Month",
        y = expression(atop("DIC",paste("(",mu,"mol ","L"^-1,")"))),
@@ -270,7 +260,7 @@ p1<- ggplot(data=all_data)+
         axis.text.x = element_blank())
 
 p2<- ggplot(data=all_data)+
-  geom_point(aes(x=datetime,y=TA,group=year,color = year),size=0.5)+
+  geom_line(aes(x=datetime,y=TA,group=year,color = year),size=0.5)+
   scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
   labs(x = "Month",
        y = expression(atop("TA",paste("(",mu,"mol ","L"^-1,")"))),
@@ -293,7 +283,7 @@ p2<- ggplot(data=all_data)+
         axis.text.x = element_blank())
 
 p3<- ggplot(data=all_data)+
-  geom_point(aes(x=datetime,y=DOC,group=year,color = year),size=0.5)+
+  geom_line(aes(x=datetime,y=DOC,group=year,color = year),size=0.5)+
   scale_colour_manual(values=c("darkblue", "deeppink4"))+ 
   labs(x = "Month",
        y = expression(atop("DOC",paste("(",mu,"mol ","L"^-1,")"))),
@@ -317,10 +307,5 @@ p3<- ggplot(data=all_data)+
 
 p.ts <- (p1/p2/p3) + plot_layout(guides = "collect")
 p.ts
-
-#check on the datetime and see what is going on with the horizontal line here 
 ```       
 
-
-       
-       
