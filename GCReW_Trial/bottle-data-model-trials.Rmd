@@ -35,7 +35,7 @@ if("DIC" %in% colnames(sensor_data))
   
 ```{r plot DIC data and look for vars that are important}
 
-DIC1 <- ggplot(data=DIC_bottle_data, aes(x=H, y=DIC)) + 
+DIC1 <- ggplot(data=DIC_bottle_data, aes(x=pH, y=DIC)) + 
   geom_point(size=3, col="blue")  + theme_classic()
 DIC1
 
@@ -61,8 +61,8 @@ DIC5
 ## DIC model
 
 ```{r fit DIC model}
-#DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
-               # data = DIC_bottle_data, na.action=na.omit)
+DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
+                data = DIC_bottle_data, na.action=na.omit)
 
 summary(DIC_model)
 print('DIC model RMSE')

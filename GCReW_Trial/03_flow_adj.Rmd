@@ -1,0 +1,154 @@
+---
+title: "SLP Flow Adjustments"
+author: "Stephanie J. Wilson"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.duplicate.label = "allow")
+```
+
+```{r packages, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ModelMetrics)
+library(rmarkdown)
+library(Tides)
+library(pracma)
+library(zoo)
+```
+
+```{r read data, include=FALSE}
+rm(list=ls())
+sensor_data <- read.csv("derived-data/sensor_data.csv")
+  #GEPsy <- read.csv("../../Data/Original/SLP_USGS_WHOI/WBsy2.csv")
+if("X" %in% colnames(sensor_data))
+{sensor_data=select(sensor_data, -X)}
+if("tide_num" %in% colnames(sensor_data))
+{sensor_data=select(sensor_data, -tide_num)}
+source("flux_processing_functions.R")
+```
+
+## Overland Flow Corrections
+
+# We don't have a quadratic overland flow correction for SERC 
+# linear overland flood correction
+H>5
+
+```{r Overland flow}
+sensor_data <- mutate(sensor_data, 
+                      flow_land = if_else(H>0.5, (H*9.170833-1.320587)*flow, flow))
+
+  #where do the numbers here come from? The 9.170833 and 1.32058??
+
+#ggplot(data=sensor_data, aes(x=datetime, y=H)) + geom_point()
+
+```
+
+## Assigning tide numbers
+
+```{r add concentration to sensor data, warning=FALSE}
+#dataframe for Tide package
+sensor_data<-sensor_data%>%
+  mutate(datetime=ymd_hms(datetime, truncated = 3))
+
+h<-tibble(time=sensor_data$datetime, h=sensor_data$H)
+h<-na.omit(h)
+datetime2<-h$time #used in Line 67
+h0<-mean(sensor_data$H, na.rm=TRUE)
+tidal_dat <- TidalCharacteristics(h=h, h0 = h0, 
+                          T2 = 5 * 60 * 60, hoffset = 0,
+                          filtconst = 1, dtMax = 30, unit = "mins", 
+                          Tavg = 12 * 60, removegaps = "All")
+#extract result
+HL<-tidal_dat$h$HL
+halftide_num<-tidal_dat$h$N
+tide_num<-idivide(halftide_num, 2, "round")
+tidal_dat_sub<-tibble(datetime=datetime2, HL, halftide_num, tide_num)
+sensor_data<-left_join(sensor_data,tidal_dat_sub,by="datetime")
+```
+
+## Remove tides with severely unbalanced water budgets
+
+The cutoff value is 5000 m$^3$ per tide. Tides with unbalanced water budgets
+greater than 5000 m$^3$ per tide won't be considered for further analysis.
+
+Compared to previously used 1000, I relax the threshold.
+
+```{r check water budgets, warning=FALSE, message=FALSE}
+water_check <- sensor_data%>%
+  group_by(tide_num)%>%#300s=5min
+  summarise(flow_tide_sum=sum(flow_land)*300)%>%
+  filter(abs(flow_tide_sum)>5000)
+rm_inst <- which(sensor_data$tide_num %in% water_check$tide_num)
+sensor_data$flow_land[rm_inst]<-NA
+print("how many tides are removed?")
+nrow(water_check)
+rm(rm_inst)
+
+#TA check
+TA_check<-sensor_data%>%
+  select(tide_num,flow_land,TA)%>%
+  mutate(flux=TA*flow_land)%>%
+  group_by(tide_num)%>%
+  summarize(N=length(na.omit(flux)),
+            N_t=length(na.omit(tide_num)))%>%
+  mutate(A.pct=N/N_t*100)%>%
+  filter(A.pct>80) #note here, the threshold is relaxed
+
+sensor_data$flow_land[which(!(sensor_data$tide_num %in% TA_check$tide_num))]<-NA
+#sensor_data$TA[which(!(sensor_data$tide_num %in% TA_check$tide_num))]<-NA
+
+water_check2 <- sensor_data%>%
+  group_by(tide_num)%>%#300s=5min
+  summarise(flow_tide_sum=sum(flow_land)*300)
+
+p_water_check2<-ggplot(water_check2, aes(x=flow_tide_sum)) + 
+  geom_histogram(color="black", fill="white") +
+  labs(x = expression(paste("Tidal water budgets"," (m"^3,")")))
+  
+p_water_check2
+```
+
+## Flow adjustments based on the salt budget
+
+```{r salt budgets, error=FALSE, message=FALSE}
+#To determine groundwater inputs based on salt balance. 
+#Adjustments only apply to ebb flows.
+sensor_data$flow_corr <- sensor_data$flow_land
+sensor_data$month <- month(sensor_data$datetime)
+sensor_data$year <- year(sensor_data$datetime)
+sensor_data$season <- month2season(sensor_data$month)
+
+#shift_corr is a factor applied to ebb tides
+m_list <- group_by_at(sensor_data, c("year","month"))%>%summarize()
+m_list <- na.omit(m_list)
+shift_corr <- rep(NA,nrow(m_list))
+
+#create a 'for' loop to process every season each year
+for(i in 1:length(shift_corr)){
+  M <- m_list$month[i]
+  Y <- m_list$year[i]
+  month <- filter(sensor_data, month == M, year == Y)
+  water_budget <- filter(GEPsy, year == Y, season == month2season(M))
+  #determine shift_corr
+  ebb_mean <- mean(month$flow_land[which(month$flow_land<0)],na.rm=TRUE)
+  flood_mean <- mean(month$flow_land[which(month$flow_land>0)],na.rm=TRUE)
+  tot_mean <- mean(month$flow_land,na.rm=TRUE)
+  ebb_n <- length(which(month$flow_land<0))
+  flood_n <- length(which(month$flow_land>0))
+  tot_n <- ebb_n+flood_n
+  shift_corr[i] <- (water_budget$salt_bal_m3s-(flood_n*flood_mean)/tot_n)*
+    (tot_n/(ebb_n*ebb_mean))
+  #
+  ebbs <- which(sensor_data$flow_land<0 & sensor_data$month == M & sensor_data$year == Y)
+  sensor_data$flow_corr[ebbs] <- sensor_data$flow_land[ebbs]*shift_corr[i]
+}
+```
+
+```{r save data}
+write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv",
+          row.names = FALSE)
+```
