@@ -34,14 +34,19 @@ source("flux_processing_functions.R")
 ## Overland Flow Corrections
 
 # We don't have a quadratic overland flow correction for SERC 
-# linear overland flood correction
+# linear overland flood correction - we are skipping for now
 H>5
 
-```{r Overland flow}
+```{#r Overland flow}
 sensor_data <- mutate(sensor_data, 
                       flow_land = if_else(H>0.5, (H*9.170833-1.320587)*flow, flow))
 
   #where do the numbers here come from? The 9.170833 and 1.32058??
+      #these numbers are specific to the DEM model for their site and the waterdrop analysis
+
+#maybe worth asking Emily - Qipei will talk to Emily and then report back to me with 
+  #a protocol for figuring out how the waterdrop and DEM data can be used to do it for GCReW 
+  #for now we will assume no overland flow 
 
 #ggplot(data=sensor_data, aes(x=datetime, y=H)) + geom_point()
 
