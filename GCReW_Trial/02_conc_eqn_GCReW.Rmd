@@ -35,13 +35,15 @@ if("DIC" %in% colnames(sensor_data))
 {sensor_data=select(sensor_data, -DIC, -DOC)}
 ```
 
-## DIC model
+## DIC model - try detrending the temp and pH then try MLR - look at partial dependence plots
+  #look at a pca or something 
 ```{r fit DIC model}
 
 clean_dic_data <- DIC_bottle_data %>% 
-  filter(!is.na(DIC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
+  rename(temp = 'T') %>%
+  filter(!is.na(DIC) & !is.na(pH) & !is.na(temp) & !is.na(S) & !is.na(DO))
 
-DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
+DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(temp) + log10(S) + log10(DO) , 
                 data = clean_dic_data)
 
 summary(DIC_model)

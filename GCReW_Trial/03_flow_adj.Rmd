@@ -50,6 +50,12 @@ sensor_data <- mutate(sensor_data,
 
 #ggplot(data=sensor_data, aes(x=datetime, y=H)) + geom_point()
 
+
+#we might be able to use NAVD88 creek edge measurements 
+  #we would need to make sure that the exo data is also NAVD88 reffed 
+  
+#can just take a estimate of double what is reasonable for now. 
+
 ```
 
 ## Assigning tide numbers
