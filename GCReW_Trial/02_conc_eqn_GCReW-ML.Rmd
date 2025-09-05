@@ -14,7 +14,7 @@ library(tidyverse)
 library(lubridate)
 library(ModelMetrics)
 library(rmarkdown)
-#library(caret)
+library(caret)
 library(randomForest)
 library(ggpmisc)
 library(RColorBrewer)
@@ -33,11 +33,16 @@ if("DIC" %in% colnames(sensor_data))
 {sensor_data=select(sensor_data, -DIC, -DOC)}
 ```
 
-## DIC model - Machine Learning To be changed
+## DIC model - Machine Learning
 ```{r fit DIC model}
 
 clean_dic_data <- DIC_bottle_data %>% 
-  filter(!is.na(DIC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
+  rename(temp = 'T') %>%
+  filter(!is.na(DIC) & !is.na(pH) & !is.na(temp) & !is.na(S) & !is.na(DO))
+
+clean_dic_data$datetime <- as.POSIXct(clean_dic_data$datetime, format = "%Y-%m-%d %H:%M:%S")
+clean_dic_data$day_of_year <- as.numeric(format(clean_dic_data$datetime, "%j"))
+
 
 #notes from convo with Qipei 
   #pay attention to if you data coverage and what is missing, but be cautious
@@ -52,59 +57,36 @@ clean_dic_data <- DIC_bottle_data %>%
 
 #model equations
 control <- trainControl(method="repeatedcv",number=5,repeats=3,search="random")
-DIC_RF_model <- train(DIC~DO+fDOM+ORP+S+pH+T+H+day,
-                      data=DIC_bottle_data,method="rf",na.action = na.roughfix,
+DIC_RF_model <- train(DIC~DO+fDOM+S+pH+temp+H+day_of_year,
+                      data=clean_dic_data,method="rf",na.action = na.roughfix,
                       metric="RMSE",tuneLength=15, trControl=control)
-TA_RF_model <- train(TA~DO+fDOM+ORP+S+pH+T+H+day,
-                      data=DIC_bottle_data,method="rf",na.action = na.roughfix,
+TA_RF_model <- train(TA~DO+fDOM+S+pH+temp+H+day_of_year,
+                      data=clean_dic_data,method="rf",na.action = na.roughfix,
                       metric="RMSE",tuneLength=15, trControl=control)
 
 #model performance
-DIC_predicted <- predict(DIC_RF_model,DIC_bottle_data,na.action = na.roughfix)
-a <- rmse(DIC_predicted,DIC_bottle_data$DIC)
-b <- R2(DIC_predicted,DIC_bottle_data$DIC)
+DIC_predicted <- predict(DIC_RF_model,clean_dic_data,na.action = na.roughfix)
+a <- rmse(DIC_predicted,clean_dic_data$DIC)
+b <- R2(DIC_predicted,clean_dic_data$DIC)
 paste("DIC model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
 
-TA_predicted <- predict(TA_RF_model,DIC_bottle_data,na.action = na.roughfix)
-c <- rmse(TA_predicted,DIC_bottle_data$TA)
-d <- R2(TA_predicted,DIC_bottle_data$TA)
+TA_predicted <- predict(TA_RF_model,clean_dic_data,na.action = na.roughfix)
+c <- rmse(TA_predicted,clean_dic_data$TA)
+d <- R2(TA_predicted,clean_dic_data$TA)
 paste("TA model statistics"," R2","=",round(d,digit=2), "RMSE","=",round(c,digit=0))
 rm(a, b, c, d)
 
-```
-
-## DOC model
-fDOM improves the model performance, yet with a lower data coverage.
-```{r fit DOC model, echo=TRUE}
-
-clean_doc_data <- DOC_bottle_data %>% 
-  filter(!is.na(DOC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO) & !is.na(fDOM))
-
-#DOC model 
-DOC_bottle_data_fDOM <- filter(DOC_bottle_data, fDOM > 0)
-DOC_model <- lm(log10(DOC) ~ log10(pH) + log10(T) + log10(S) +  log(fDOM), 
-                 data = clean_doc_data)
 
 
-summary(DOC_model)
-plot(DOC_model)
+#plot the model predicted vs. measured 
+plot_DIC <- as.data.frame(DIC_predicted)
+plot_DIC$DIC_meas <- clean_dic_data$DIC
 
-
-#model performance
-DOC_predicted <- predict(DOC_model, clean_doc_data)
-a <- Metrics::rmse(10^DOC_model$fitted.values, clean_doc_data$DOC)
-b <- summary(DOC_model)$r.squared
-paste("DOC_model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
-
-
-plot_DOC <- as.data.frame(10^DOC_model$fitted.values)
-plot_DOC$DOC_meas <- clean_doc_data$DOC
-
-p_model_DOC<-ggplot(plot_DOC,aes(x=10^DOC_model$fitted.values,y=DOC_meas))+
+p_model_DIC<-ggplot(plot_DIC,aes(x=DIC_predicted,y=DIC_meas))+
   geom_point(size=3) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
-  labs(x = expression(paste("Measured DOC"," (",mu,"mol"," L"^-1,")")),
-       y = expression(paste("Predicted DOC"," (",mu,"mol"," L"^-1,")")),
+  labs(x = expression(paste("Measured DIC"," (",mu,"mol"," L"^-1,")")),
+       y = expression(paste("Predicted DIC"," (",mu,"mol"," L"^-1,")")),
        color="",
        tag = "")+
   stat_smooth(method = "lm",se = FALSE)+
@@ -120,34 +102,15 @@ p_model_DOC<-ggplot(plot_DOC,aes(x=10^DOC_model$fitted.values,y=DOC_meas))+
         axis.title =  element_text(size = 12),
         axis.title.x = element_text(size = 12),
         axis.text.x = element_text(size = 12))
-p_model_DOC
+p_model_DIC
 
 
-```
-
-## TA model
-```{r fit DIC model}
-clean_ta_data <- DIC_bottle_data %>% 
-  filter(!is.na(TA) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
-
-TA_model <- lm(log10(TA) ~ log10(pH) + log10(T) + log10(S), 
-                data = clean_ta_data, na.action=na.omit)
-
-summary(TA_model)
-plot(TA_model)
 
 
-#model performance
-TA_predicted <- predict(TA_model, clean_ta_data)
-a <- Metrics::rmse(10^TA_model$fitted.values, clean_ta_data$TA)
-b <- summary(TA_model)$r.squared
-paste("TA model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
+plot_TA <- as.data.frame(TA_predicted)
+plot_TA$TA_meas <- clean_dic_data$TA
 
-
-plot_TA <- as.data.frame(10^TA_model$fitted.values)
-plot_TA$TA_meas <- clean_ta_data$TA
-
-p_model_TA<-ggplot(plot_TA,aes(x=10^TA_model$fitted.values,y=TA_meas))+
+p_model_TA<-ggplot(plot_TA,aes(x=TA_predicted ,y=TA_meas))+
   geom_point(size=3) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
   labs(x = expression(paste("Measured TA"," (",mu,"mol"," L"^-1,")")),
@@ -169,11 +132,75 @@ p_model_TA<-ggplot(plot_TA,aes(x=10^TA_model$fitted.values,y=TA_meas))+
         axis.text.x = element_text(size = 12))
 p_model_TA
 
+```
+
+
+## DOC model - Machine Learning
+```{r fit DOC model}
+
+clean_doc_data <- DOC_bottle_data %>% 
+  rename(temp = 'T') %>%
+  filter(!is.na(DIC) & !is.na(pH) & !is.na(temp) & !is.na(S) & !is.na(DO))
+
+clean_doc_data$datetime <- as.POSIXct(clean_doc_data$datetime, format = "%Y-%m-%d %H:%M:%S")
+clean_doc_data$day_of_year <- as.numeric(format(clean_doc_data$datetime, "%j"))
+
+
+#notes from convo with Qipei 
+  #pay attention to if you data coverage and what is missing, but be cautious
+  #if critical data is missing then you might want to not allow it to predict 
+  #determine which parameter is more important if it is NA then remove the prediction
+  #na.action is related to this
+
+  #cross validation is the 5 in the 
+
+  #after you have the time series and look at the range and see what 
+
+
+#model equations
+control <- trainControl(method="repeatedcv",number=5,repeats=3,search="random")
+DOC_RF_model <- train(DIC~DO+fDOM+S+pH+temp+H+day_of_year,
+                      data=clean_doc_data,method="rf",na.action = na.roughfix,
+                      metric="RMSE",tuneLength=15, trControl=control)
+
+#model performance
+DOC_predicted <- predict(DOC_RF_model,clean_doc_data,na.action = na.roughfix)
+a <- rmse(DOC_predicted, clean_doc_data$DOC)
+b <- R2(DOC_predicted, clean_doc_data$DOC)
+paste("DOC model statistics"," R2","=",round(b,digit=2), "RMSE","=",round(a,digit=0))
+
+
+#plot the model predicted vs. measured 
+plot_DOC <- as.data.frame(DOC_predicted)
+plot_DOC$DOC_meas <- clean_doc_data$DOC
+
+p_model_DIC<-ggplot(plot_DOC,aes(x=DIC_predicted,y=DIC_meas))+
+  geom_point(size=3) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 1)+
+  labs(x = expression(paste("Measured DIC"," (",mu,"mol"," L"^-1,")")),
+       y = expression(paste("Predicted DIC"," (",mu,"mol"," L"^-1,")")),
+       color="",
+       tag = "")+
+  stat_smooth(method = "lm",se = FALSE)+
+  theme_bw()+
+  theme(aspect.ratio = 1,
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5), 
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title =  element_text(size = 12),
+        axis.title.x = element_text(size = 12),
+        axis.text.x = element_text(size = 12))
+p_model_DIC
+
 
 ```
 
 
-#predict vars over the whole sensor dataset 
+# predict vars over the whole sensor dataset 
 ```{r add concentration to sensor data, warning=FALSE}
 DIC_ts <- 10^predict(DIC_model, sensor_data, na.action = na.roughfix)
 DOC_ts <- 10^predict(DOC_model, sensor_data, na.action = na.roughfix) #with fDOM
