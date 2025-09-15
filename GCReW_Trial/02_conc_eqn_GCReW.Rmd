@@ -181,6 +181,8 @@ p_model_TA<-ggplot(plot_TA,aes(x=10^TA_model$fitted.values,y=TA_meas))+
         axis.text.x = element_text(size = 12))
 p_model_TA
 
+#could do separating by winter and summer and re aanlzyer 
+#also need to consider the prevailing wind and how this will impact fluxes 
 
 ```
 
