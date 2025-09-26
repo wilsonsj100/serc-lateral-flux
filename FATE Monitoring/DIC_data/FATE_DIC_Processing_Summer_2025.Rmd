@@ -1,6 +1,6 @@
 ---
 title: "FATE: Monitoring DIC"
-author: "2025 Spring Samples"
+author: "2025 Summer Samples"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -30,13 +30,13 @@ cat("Setup Information")
   
 ###### File Names - PLEASE CHANGE 
 #file path and name for raw summary data file 
-    raw_file_name = "Raw Data/FATE_DIC_202505.txt" 
+    raw_file_name = "Raw Data/FATE_DIC_202509.txt" 
     
 #file path and name for raw all peaks file 
-    raw_allpeaks_name = "Raw Data/FATE_DIC_202505_allpeaks.txt"
+    raw_allpeaks_name = "Raw Data/FATE_DIC_202509_allpeaks.txt"
 
 #file path and name of processed data file 
-    processed_file_name = "Processed Data/FATE_Processed_DIC_202505.csv"
+    processed_file_name = "Processed Data/FATE_Processed_DIC_202509.csv"
 
 
 ###### Log Files - PLEASE CHECK 
@@ -234,6 +234,7 @@ log <- bind_rows(log, new_rows)
 Slopes_chk <- ggplot(log, aes(run_date, slope, col=curve)) +
   geom_point(size=4) + 
   geom_line() + 
+  ylim(10,20) +
   theme_bw() + labs(title="Slope Drift Assessment", x="Run Date", y="Slope") +
   scale_color_manual(values=c("darkred"))
 Slopes_chk
@@ -307,6 +308,8 @@ ifelse(crm_Chk$pct_diff_Chk >= chk_flag,
 cat("Run mean =", crm_Chk$Mean_crm, "\n")
 cat("Expected  =", ic_crm, "\n\n")
 
+
+
 ```
  
 
@@ -323,11 +326,14 @@ chks_raw <- raw_file_name %>%
 
 #we don't always the same checks so we need to pull the concentration out of the name 
 chks_raw <- chks_raw %>%
+  filter(!sample_name == "Chk_Std_CRM-221") %>%
+  filter(!sample_name == "Chk_Std_CRM-215") %>%
   mutate(chk_std_conc = str_extract(sample_name, "\\d+")) %>%  # extract the number
   mutate(chk_std_conc = as.numeric(chk_std_conc))    # convert to numeric
 
 chks_raw <- chks_raw %>% 
-  mutate(rep = row_number())
+  mutate(rep = row_number()) %>%
+  filter(ic_raw > 1)
 
 #no rsv calculated for DIC because they are all different concentrations
 
@@ -376,7 +382,8 @@ blks_raw <- raw_file_name %>%
   bind_rows() 
 
 blks_raw <- blks_raw %>% 
-  mutate(rep = row_number())
+  mutate(rep = row_number()) %>%
+  filter(ic_raw > 0.5)
 
 #Check if the blanks are above the lower 25% quantile of your data 
 blk_flag_c <- quantile(dat_raw$ic_raw, prob=c(.25))   #this gives you the lower 25% quantile of the data 
@@ -552,7 +559,7 @@ head(final_data)
 
 ```
 
-## Assess Duplicates 
+## Assess Duplicates - none on this run
 ```{#r Check Duplicates, echo=FALSE}
 
 cat("Assess Duplicates")
