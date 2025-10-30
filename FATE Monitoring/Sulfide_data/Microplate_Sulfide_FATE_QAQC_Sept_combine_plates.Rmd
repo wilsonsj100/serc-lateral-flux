@@ -1,0 +1,305 @@
+---
+title: "FATE: Porewater Sulfide"
+author: "2025 All Plates"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: false
+    number_sections: false
+geometry: "left=2cm,right=2cm,top=1cm,bottom=2cm"
+output_dir: "To Be Reviewed/PDF"
+---
+
+##Add Required Packages
+```{r packages, include=FALSE}
+
+#Packages that are required 
+lapply(c(
+  "dplyr", "ggplot2", "ggpubr", "stringr",
+  "purrr", "tidyverse", "here", "broom", "tibble",
+  "googledrive", "googlesheets4", "data.table", 
+  "matrixStats", "gridExtra", "grid", "readxl"), 
+  library, character.only = TRUE)
+
+#Packages for loading metadata
+require(pacman)
+pacman::p_load(janitor, # useful for simplifying column names
+               googlesheets4, # read_sheet 
+               googledrive, # drive_ functions
+               plotrix,
+               here) 
+
+common_tz = "Etc/GMT+5"
+
+Sys.setenv(TZ = "America/New_York")
+
+```
+
+
+##Run Notes
+```{r}
+Sample_Year <- "2025"
+Run_notes = "Still need metadata"
+
+```
+
+
+##Read in raw data
+```{r Read in raw data, include = FALSE}
+
+#Read in list of processed data files
+files <- list.files(path = "Processed Data", pattern = "\\d\\.csv$", full.names = TRUE)
+
+#Read and combine all csvs
+all_data <- files %>%
+  lapply(read.csv, 
+        colClasses = c("IDs" = "character")) %>%    # or read.csv if you prefer base R
+  bind_rows()             # combine into one data frame
+
+all_data$X <- NULL
+
+colnames(all_data)
+
+##Remove Dups and Spikes
+Sample_data <- all_data %>% 
+  subset((!IDs %like% " Dup")) %>% 
+  subset((!IDs %like% " Spike"))
+
+```
+
+##Remove ADL/BDL samples that were later diluted differently
+```{r Remove ADL/BDL samples that were later diluted differently, include = FALSE}
+
+#filter the high CV data in to one table
+HighCV<-filter(Sample_data, H2S_cv_flag=="High CV")
+
+#filter out the samples that need to be run at a higher dilution
+ADL<-filter(Sample_data, H2S_Conc_flag=="adl")
+
+#remove the samples that have already been run at a higher dilution 
+ww_ADL<-subset(Sample_data, (IDs %in% ADL$IDs))
+ww_ADL<-filter(ww_ADL, H2S_Conc_flag=="Within_Range") 
+ADL_not_fixed<-ADL %>% 
+  subset((!IDs %in% ww_ADL$IDs)) %>% 
+  subset((!IDs %like% " Dup")) %>% 
+  subset((!IDs %like% " Spike"))
+
+#filter out the samples that need to be run at a lower dilution
+BDL<-filter(Sample_data, H2S_Conc_flag=="bdl"& Dilution!=1)
+
+#remove the samples that have already been run at a lower dilution 
+ww_BDL<-subset(Sample_data, (IDs %in% BDL$IDs))
+ww_BDL<-filter(ww_BDL,H2S_Conc_flag=="Within_Range") 
+BDL_not_fixed<-BDL %>% 
+  subset((!IDs %in% ww_BDL$IDs)) %>% 
+  subset((!IDs %like% " Dup")) %>% 
+  subset((!IDs %like% " Spike"))
+
+
+##Remove samples that were ADL/BDL and are now fixed
+ADL_fixed<-ADL %>% 
+  subset((IDs %in% ww_ADL$IDs)) %>% 
+  subset((!IDs %like% " Dup")) %>% 
+  subset((!IDs %like% " Spike"))
+ADL_fixed$ID_conc <- paste(ADL_fixed$IDs, ADL_fixed$H2S_Conc_flag, sep = "_")
+
+BDL_fixed<-BDL %>% 
+  subset((IDs %in% ww_BDL$IDs)) %>% 
+  subset((!IDs %like% " Dup")) %>% 
+  subset((!IDs %like% " Spike"))
+BDL_fixed$ID_conc <- paste(BDL_fixed$IDs, BDL_fixed$H2S_Conc_flag, sep = "_")
+
+
+Sample_data$ID_conc <- paste(Sample_data$IDs, Sample_data$H2S_Conc_flag, sep = "_")
+
+Sample_data_wr <- Sample_data %>% 
+  subset(!ID_conc %in% BDL_fixed$ID_conc) %>% 
+  subset(!ID_conc %in% ADL_fixed$ID_conc)
+
+##If there are duplicates, remove the one with the lowest CV
+Sample_data_nodups <- Sample_data_wr %>%
+  arrange(IDs, H2S_cv) %>% # Sort by ID ascending, Value ascending
+  distinct(IDs, .keep_all = TRUE) # Keep distinct IDs, retaining all other columns
+
+print(HighCV)
+print(ADL_not_fixed)
+print(BDL_not_fixed)
+
+```
+
+## Pull in active porewater tracking inventory sheet from Google Drive: 
+```{r rest of metadata, include=FALSE, eval = FALSE}
+
+#Run these to pull the TEMPEST porewater metadata into GitHub if not already there
+# inventory_directory <- "https://docs.google.com/spreadsheets/d/1sFWq-WKhemPzbOFInqhCu_Lx0lsO6a_Z/edit#gid=496164093"
+# 
+# drive_download(inventory_directory, overwrite = TRUE)
+
+sheet_names <- excel_sheets("TEMPEST_PorewaterInventory_May2022_Present.xlsx")
+sheet_names
+
+raw_metadata_lys <- read_excel("TEMPEST_PorewaterInventory_May2022_Present.xlsx", sheet = "Porewater - Individual", skip = 3)
+
+```
+
+
+##Create similar sample IDs to match with run samples 
+```{r pull in metadata for later, include=FALSE, eval = FALSE}
+
+#select SO4/Cl samples 
+raw_metadata_lys <- subset(raw_metadata_lys, Analyte == "SO4/Cl/H2S")
+
+#select samples from correct year
+raw_metadata_lys_year <- raw_metadata_lys %>%  
+  filter(str_detect(Sample_ID, Sample_Year))
+
+#separate samples into columns
+raw_metadata_lys_year <- raw_metadata_lys_year %>%
+  separate(
+    col = Sample_ID,
+    sep = "_",
+    into = c("Project", "Zone", "Source" ,"Grid", "Depth", "Analyte", "Collection_Date"),
+    remove = FALSE)
+
+raw_metadata_lys_combined <- raw_metadata_lys_year %>%
+  select("Sample_ID", "Project", "Zone", "Source" ,"Grid", "Depth", "Analyte", "Collection_Date", "Volume_mL", "Notes")
+
+
+#create IDs from what was collected for comparison later
+raw_metadata_lys_combined <- raw_metadata_lys_combined %>%
+  mutate(H2S_ID = paste(Project,
+                          Zone,
+                          Source, 
+                          Grid,
+                          Collection_Date, 
+                          Depth, 
+                          sep = "_"))
+
+raw_metadata_lys_combined$H2S_ID <- toupper(raw_metadata_lys_combined$H2S_ID)
+
+#remove old ID's
+raw_metadata_lys_combined$Sample_ID <- NULL
+
+sulfide_metadata = raw_metadata_lys_combined
+
+```
+
+
+##Check to see if samples run match metadata & merge info
+```{r Check to see if samples run match metadata & merge info, echo = FALSE, eval = FALSE}
+
+all_present <- all(Sample_data_nodups$Sample_ID %in% sulfide_metadata$H2S_ID)
+
+if (all_present) {
+  message("All sample IDs are present in metadata.")
+} else {
+  message("Some sample IDs are missing from metadata.")
+  
+  # Optional: Which ones are missing?
+  missing_ids <- setdiff(Sample_data_nodups$Sample_ID, sulfide_metadata$H2S_ID)
+  print(missing_ids)
+}
+
+# missing_ids <- data.frame(missing_ids)
+# 
+# ##Export missing IDs to csv
+# write.csv(missing_ids, "20250529_COMPASS_H2S_missing_IDs.csv")
+
+##Select only necessary columns
+all_data_selected <- Sample_data_nodups %>%
+  dplyr::select(-c("ID_conc"))
+all_data_selected$Date <- as.character(all_data_selected$Date)
+
+##Select only necessary columns
+sulfide_metadata_selected <- sulfide_metadata
+
+#merge metadata with sample run data 
+merged_data <- all_data_selected %>%
+  left_join(sulfide_metadata_selected, by = c("Sample_ID" = "H2S_ID", "Plot" = "Grid", "Date" = "Collection_Date","Project", "Zone", "Source", "Analyte", "Depth"))
+
+
+```
+
+## Visualize Data by Plot   
+```{r Visualize Data, echo=FALSE, warning=FALSE, eval = FALSE}
+
+#Plot samples to get a first look at concentrations (sanity check)
+data_plotting <- merged_data
+
+#Order by Zone from Upland to Surface Water
+data_plotting$Zone = factor(data_plotting$Zone, levels = c("C", "FW", "SW"))
+data_plotting <- data_plotting[order(data_plotting$Zone), ]
+
+#group the data for plotting
+data_plotting <- data_plotting %>%
+  mutate(row_num = factor(row_number())) %>%  # create row_num as factor per group
+  ungroup()
+
+#Plot data and change colors based on Zone:
+viz_H2S_plot <- ggplot(data_plotting, aes(x = row_num, y = H2S_mean, fill = Zone)) +
+  geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
+  facet_wrap(~ Zone, scales="free_x") +
+  scale_fill_manual(values = c(
+    "C" = "springgreen2",
+    "FW" = "cyan2",
+    "SW" = "violetred2", 
+    "ESTUARY" = "grey"
+  )) +
+  theme_classic() +
+  theme(axis.text.x = element_blank()) +
+  labs(x = " ", y = "Sulfide (uM)", title = "Samples: Sulfide") +
+  scale_x_discrete(drop = TRUE)+
+  geom_text(aes(label = ifelse(H2S_mean == 0, "0", "")), vjust = -0.5)+
+  theme(
+    panel.spacing = unit(.05, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.1))
+
+viz_H2S_plot
+
+```
+
+##Export Combined Data
+```{r Export Combined Data, include = FALSE}
+
+#Prepare data to be exported - if there is anything else to add 
+#Add any necessary identifiers to the samples  ### VERY IMPORTANT AND STANDARD FOR PROJECT ####
+  #example read in sample IDs list and merge 
+  #create required ID columns in R, etc. 
+
+colnames(merged_data)
+
+final_data <- merged_data %>%
+  rename(
+    Field_notes = Notes,
+    Depth_cm = Depth, 
+    Grid = Plot, 
+    Collection_Date = Date
+    # add more rename pairs as needed
+  ) %>%
+  select(
+    Project, Sample_ID, Zone, Grid, Depth_cm,
+         Source, Volume_mL, Collection_Date, 
+         H2S_mean, H2S_sd, H2S_cv, H2S_Conc_flag, H2S_cv_flag, H2S_QAQC_flag, Dilution, 
+         Analysis_rundate, Field_notes
+        # list columns in the order you want them
+  )
+
+head(final_data)
+
+#Write out final data frame 
+write.csv(Sample_data_nodups, "FATE_H2S_2025_AllPlates_Combined.csv", row.names = FALSE)
+
+#Write out samples that still have high CVs
+write.csv(HighCV, "FATE_H2S_2025_AllPlates_HighCVs.csv", row.names = FALSE)
+
+#Write out ADL samples
+write.csv(ADL_not_fixed, "FATE_H2S_2025_AllPlates_ADL.csv", row.names = FALSE)
+
+#Write out BDL samples
+write.csv(BDL_not_fixed, "FATE_H2S_2025_AllPlates_BDL.csv", row.names = FALSE)
+
+
+```
+
+
+##END
