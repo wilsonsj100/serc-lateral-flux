@@ -1,0 +1,340 @@
+---
+title: "05_flux_calcs"
+author: "Stephanie J. Wilson"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.duplicate.label = "allow")
+```
+
+```{r packages, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ModelMetrics)
+library(rmarkdown)
+library(pracma)
+library(patchwork)
+```
+
+```{r read data, include=FALSE}
+rm(list=ls())
+sensor_data <- read.csv("../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv")
+WBsy2 <- read.csv("../../Data/Original/SLP_USGS_WHOI/WBsy2.csv")
+if("X" %in% colnames(sensor_data))
+{sensor_data=select(sensor_data, -X)}
+source("flux_processing_functions.R")
+```
+
+
+## Marsh platform
+
+A = 4132 m$^2$
+
+```{r marsh}
+A <- 4132
+s2y <- 3600*24*365
+```
+
+## Instantaneous flux calculations
+
+unit: $\mu$mol L$^{-1}$ *  m$^3$ s$^{-1}$ / 1000 = mol s$^{-1}$
+
+```{r Instantaneous}
+sensor_data$DIC_flux <- sensor_data$DIC*sensor_data$flow_corr/1000
+sensor_data$TA_flux <- sensor_data$TA*sensor_data$flow_corr/1000
+sensor_data$DOC_flux <- sensor_data$DOC*sensor_data$flow_corr/1000
+```
+
+## Tidal flux calculations
+
+```{r Tidal calc}
+flow_H_HT <- sensor_data%>%
+  group_by(halftide_num)%>%
+  summarise(net_tidal_flow=sum(flow_corr*5*60, na.rm = TRUE),
+            year=round(mean(year, na.rm = TRUE)),
+            H=max(H, na.rm = TRUE))%>%
+  mutate(year=as.character(year))%>%
+  filter(abs(net_tidal_flow)>0)
+
+tidal_DIC_flux <- sensor_data%>%
+  group_by(tide_num)%>%
+  summarise(DIC_tidal_flux=sum(DIC_flux, na.rm = TRUE)*s2y/A,
+            net_tidal_flow=sum(flow_corr*5*60, na.rm = TRUE),
+            year=round(mean(year, na.rm = TRUE)),
+            H=max(H, na.rm = TRUE))%>%
+  mutate(year=as.character(year))%>%
+  filter(abs(DIC_tidal_flux)>0)
+
+tidal_TA_flux <- sensor_data%>%
+  group_by(tide_num)%>%
+  summarise(TA_tidal_flux=sum(TA_flux, na.rm = TRUE)*s2y/A,
+            net_tidal_flow=sum(flow_corr*5*60, na.rm = TRUE),
+            year=round(mean(year, na.rm = TRUE)),
+            H=max(H, na.rm = TRUE))%>%
+  mutate(year=as.character(year))%>%
+  filter(abs(TA_tidal_flux)>0)
+
+tidal_DOC_flux <- sensor_data%>%
+  group_by(tide_num)%>%
+  summarise(DOC_tidal_flux=sum(DOC_flux, na.rm = TRUE)*s2y/A,
+            net_tidal_flow=sum(flow_corr*5*60, na.rm = TRUE),
+            year=round(mean(year, na.rm = TRUE)),
+            H=max(H, na.rm = TRUE))%>%
+  mutate(year=as.character(year))%>%
+  filter(abs(DOC_tidal_flux)>0)
+
+p_tidal_DIC_flux<-ggplot(tidal_DIC_flux, 
+                         aes(x=net_tidal_flow,y=DIC_tidal_flux,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(x = expression(paste("Tidal water budgets"," (m"^3,")")),
+       y = expression(paste("Tidal DIC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_tidal_TA_flux<-ggplot(tidal_TA_flux, 
+                         aes(x=net_tidal_flow,y=TA_tidal_flux,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(x = expression(paste("Tidal water budgets"," (m"^3,")")),
+       y = expression(paste("Tidal TA fluxes"," (mol"," m"^-2," yr"^-1,")")))
+  
+p_tidal_DOC_flux<-ggplot(tidal_DOC_flux, 
+                         aes(x=net_tidal_flow,y=DOC_tidal_flux,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(x = expression(paste("Tidal water budgets"," (m"^3,")")),
+       y = expression(paste("Tidal DOC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_tidal_flux <- (p_tidal_DIC_flux + p_tidal_TA_flux + p_tidal_DOC_flux)+
+  plot_layout(guides = "collect")
+p_tidal_flux
+rm(p_tidal_DIC_flux, p_tidal_TA_flux, p_tidal_DOC_flux)
+
+p_halftidal_H_flow<-ggplot(flow_H_HT, 
+                      aes(x=net_tidal_flow,y=H,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(x = expression(paste("Half tidal water budgets"," (m"^3,")")),
+       y = expression(paste("Water level at high tide (m)")))
+p_halftidal_H_flow
+
+###
+p_H_DIC_flux<-ggplot(tidal_DIC_flux, aes(x=DIC_tidal_flux,y=H,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Tidal DIC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_H_TA_flux<-ggplot(tidal_TA_flux, aes(x=TA_tidal_flux,y=H,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Tidal TA fluxes"," (mol"," m"^-2," yr"^-1,")")))
+  
+p_H_DOC_flux<-ggplot(tidal_DOC_flux, aes(x=DOC_tidal_flux,y=H,color=year)) + 
+  geom_point() +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Tidal DOC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_H_flux <- (p_H_DIC_flux + p_H_TA_flux + p_H_DOC_flux)+
+  plot_layout(guides = "collect")
+p_H_flux
+rm(p_H_DIC_flux, p_H_TA_flux, p_H_DOC_flux)
+
+###instantaneous flux
+sensor_data$year<-as.character(sensor_data$year)
+p_inst_DIC_flux<-ggplot(sensor_data, aes(x=DIC_flux,y=H,color=year)) + 
+  geom_point(alpha = 0.5) +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Inst DIC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_inst_TA_flux<-ggplot(sensor_data, aes(x=TA_flux,y=H,color=year)) + 
+  geom_point(alpha = 0.5) +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Inst TA fluxes"," (mol"," m"^-2," yr"^-1,")")))
+  
+p_inst_DOC_flux<-ggplot(sensor_data, aes(x=DOC_flux,y=H,color=year)) + 
+  geom_point(alpha = 0.5) +
+  theme_light() +
+  labs(y = expression(paste("Water level at high tide (m)")),
+       x = expression(paste("Inst DOC fluxes"," (mol"," m"^-2," yr"^-1,")")))
+
+p_inst_flux <- (p_inst_DIC_flux + p_inst_TA_flux + p_inst_DOC_flux)+
+  plot_layout(guides = "collect")
+p_inst_flux
+rm(p_inst_DIC_flux, p_inst_TA_flux, p_inst_DOC_flux)
+```
+
+## Monthly flux calculations
+
+```{r Monthly calc, message=FALSE}
+# create 5% bins of instantaneous flow values 
+# flow distribution plots at 5% intervals
+bin_vals <- makeBinsPer(sensor_data$flow_corr,5)
+bins <- bin_vals$bins
+
+#available month-year, shortened for 'my'
+#Each month has the flow distribution interval (bin) for flow data to fill 
+my <- group_by_at(sensor_data,c("year","month"))%>%summarise()
+bins_tb <- my[rep(seq_len(nrow(my)), 20), ]%>%arrange_at(c("year","month"))
+bins_tb$flow_bin <- rep(bins[-1],nrow(my))
+
+# assign each instantaneous flow to corresponding bins
+sensor_data$flow_bin <- setBins(sensor_data$flow_corr,bins)
+
+# calculate summary stats for each flow bin
+# this step prepares for subsequent calculations
+# for example, for each bin, the quantity of available flow data and DOC data.
+sensor_data_bin_sum <- binSumFlowMo(sensor_data)
+
+# determine flow-weighted flux/conc averages by summing the 
+# flux*time columns for all bins
+#'_time' is similar to time-weighted average
+data_sum <- group_by_at(sensor_data_bin_sum,c('year','month'))%>%
+  summarize(N_flows = sum(N,na.rm=TRUE), 
+            N_DOC_flux = sum(N_DOC,na.rm=TRUE),
+            N_DIC_flux = sum(N_DIC,na.rm=TRUE),
+            N_TA_flux = sum(N_TA,na.rm=TRUE),
+            DOC_flux_avg = sum(DOC_flux_time,na.rm=TRUE)*s2y/A, #mol/m2/yr
+            DOC_flux_inst = sum(DOC_flux_time,na.rm=TRUE), #mol/s
+            DIC_flux_avg = sum(DIC_flux_time,na.rm=TRUE)*s2y/A,
+            DIC_flux_inst = sum(DIC_flux_time,na.rm=TRUE),
+            TA_flux_avg = sum(TA_flux_time,na.rm=TRUE)*s2y/A,
+            TA_flux_inst = sum(TA_flux_time,na.rm=TRUE),
+            DOC_avg = sum(DOC_time,na.rm=TRUE),
+            DIC_avg = sum(DIC_time,na.rm=TRUE),
+            TA_avg = sum(TA_time,na.rm=TRUE),
+            DOC_out = sum(DOC_in_out_time[which(round(flow_bin,8)<=0)],na.rm=TRUE),
+            DOC_in = sum(DOC_in_out_time[which(round(flow_bin,8)>0)],na.rm=TRUE),
+            DIC_out = sum(DIC_in_out_time[which(round(flow_bin,8)<=0)],na.rm=TRUE),
+            DIC_in = sum(DIC_in_out_time[which(round(flow_bin,8)>0)],na.rm=TRUE),
+            TA_out = sum(TA_in_out_time[which(round(flow_bin,8)<=0)],na.rm=TRUE),
+            TA_in = sum(TA_in_out_time[which(round(flow_bin,8)>0)],na.rm=TRUE),
+            DOC_diff = DOC_out-DOC_in,
+            DIC_diff = DIC_out-DIC_in,
+            TA_diff = TA_out-TA_in)
+
+# determine the total number of possible entries in each season/year
+N_all <- group_by_at(sensor_data,c("year","month"))%>%
+  summarize(N=n(), flow_net = mean(flow_corr,na.rm=TRUE)*s2y,
+            flow_abs = mean(abs(flow_corr),na.rm=TRUE)*s2y)
+
+# calculate the C flux data coverage for each season/year
+data_sum <- merge(data_sum,N_all,by=c("year","month"))%>%
+  mutate(DOC_cover = N_DOC_flux/N,
+         DIC_cover = N_DIC_flux/N,
+         TA_cover = N_TA_flux/N,
+         year = as.character(year))
+
+#further data cleaning, for example, data coverage < 20% needs to be removed
+#define export is positive; import is negative
+data_sum <- data_sum %>%
+  na.omit() %>%
+  mutate(DOC_flux_avg=-DOC_flux_avg, DIC_flux_avg=-DIC_flux_avg,
+         TA_flux_avg=-TA_flux_avg,
+         DOC_flux_inst=-DOC_flux_inst,DIC_flux_inst=-DIC_flux_inst,
+         TA_flux_inst=-TA_flux_inst)
+
+f <- which(data_sum$DOC_cover < 0.2 | data_sum$DOC_cover == 0)
+data_sum[f, c("DOC_flux_avg", "DOC_flux_inst", "DOC_avg", "DOC_out", "DOC_in", "DOC_diff")] <-NA
+f <- which(data_sum$DIC_cover < 0.2 | data_sum$DIC_cover == 0)
+data_sum[f, c("DIC_flux_avg", "DIC_flux_inst", "DIC_avg", "DIC_out", "DIC_in", "DIC_diff")] <-NA
+f <- which(data_sum$TA_cover < 0.2 | data_sum$TA_cover == 0)
+data_sum[f, c("TA_flux_avg", "TA_flux_inst", "TA_avg", "TA_out", "TA_in", "TA_diff")] <-NA
+```
+
+## Groundwater correction
+
+```{r groundwater flux correction}
+GW_TA<-summary(lm(formula=sensor_data$TA~sensor_data$S))$coefficients[1,1]
+GW_DIC<-summary(lm(formula=sensor_data$DIC~sensor_data$S))$coefficients[1,1]
+GW_DOC<-summary(lm(formula=sensor_data$DOC~sensor_data$S))$coefficients[1,1]
+
+#groundwater inputs. Salt balance. Only applies to ebb flows.
+WBsy2$GW_m3yr<- -WBsy2$precipm3yr-WBsy2$ETm3yr+WBsy2$salt_bal
+WBsy2$year<- as.character(WBsy2$year)
+
+#add groundwater flows
+data_sum$season<-month2season(data_sum$month)
+#WBsy2<-select(WBsy2,GW_m3yr,season,year)
+data_sum<-left_join(data_sum,WBsy2,by=c("season","year"))
+
+#final calculations
+data_sum$TA_flux_f <- data_sum$TA_flux_avg + data_sum$GW_m3yr*GW_TA/A/1000
+data_sum$DIC_flux_f <- data_sum$DIC_flux_avg + data_sum$GW_m3yr*GW_DIC/A/1000
+data_sum$DOC_flux_f <- data_sum$DOC_flux_avg + data_sum$GW_m3yr*GW_DOC/A/1000
+```
+
+## Flux visualization
+
+```{r Flux plots, warning=FALSE, message=FALSE}
+data_sum$month<-month.abb[data_sum$month]
+data_sum$month<-factor(data_sum$month, levels = month.abb)
+ch1<-expression(paste("DIC flux"," "," (","mol ","m"^-2," yr"^-1,")"))
+ch2<-expression(paste("TA flux"," "," (","mol ","m"^-2," yr"^-1,")"))
+ch3<-expression(paste("DOC flux"," "," (","mol ","m"^-2," yr"^-1,")"))
+p_month_DIC_flux <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=DIC_flux_f,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=DIC_flux_f,color=year),size=3,alpha=0.8)+
+  labs(y=ch1,x="",color="year")+
+  theme_light() 
+
+p_month_DIC_flux2 <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=DIC_flux_avg,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=DIC_flux_avg,color=year),size=3,alpha=0.8)+
+  labs(y=ch1,x="",color="year")+
+  theme_light() 
+
+p_month_DIC_flux3 <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=DIC_flux_f_N,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=DIC_flux_f_N,color=year),size=3,alpha=0.8)+
+  labs(y=ch1,x="",color="year")+
+  theme_light() 
+
+p_month_TA_flux <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=TA_flux_f,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=TA_flux_f,color=year),size=3,alpha=0.8)+
+  labs(y=ch2,x="",color="year")+
+  theme_light()
+
+p_month_TA_flux2 <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=TA_flux_avg,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=TA_flux_avg,color=year),size=3,alpha=0.8)+
+  labs(y=ch2,x="",color="year")+
+  theme_light()
+
+p_month_DOC_flux <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=DOC_flux_f,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=DOC_flux_f,color=year),size=3,alpha=0.8)+
+  labs(y=ch3,x="",color="year")+
+  theme_light() 
+
+p_month_DOC_flux2 <- ggplot(data_sum)+
+  geom_line(aes(x=month,y=DOC_flux_avg,color=year,group=year),size=1,linetype="solid")+
+  geom_point(aes(x=month,y=DOC_flux_avg,color=year),size=3,alpha=0.8)+
+  labs(y=ch3,x="",color="year")+
+  theme_light() 
+
+p_month_flux <- (p_month_DIC_flux/p_month_TA_flux/p_month_DOC_flux)+plot_layout(guides = "collect") +  plot_annotation(
+  title = 'with groundwater corection')
+p_month_flux
+
+p_month_flux2 <- (p_month_DIC_flux2/p_month_TA_flux2/p_month_DOC_flux2)+plot_layout(guides = "collect") +  plot_annotation(
+  title = 'without groundwater corection')
+p_month_flux2
+```
+
+
+```{r save data}
+write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv",
+          row.names = FALSE)
+write.csv(data_sum, "../../Data/Derivative/SLP_USGS_WHOI/flux_final.csv",
+          row.names = FALSE)
+write.csv(WBsy2, "../../Data/Derivative/SLP_USGS_WHOI/WBsy2.csv",
+          row.names = FALSE)
+```
