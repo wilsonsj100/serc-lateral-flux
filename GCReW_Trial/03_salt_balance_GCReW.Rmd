@@ -1,0 +1,316 @@
+---
+title: "GCReW_SaltBalance"
+author: "Stephanie J. Wilson"
+date: "2025-11-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.duplicate.label = "allow")
+```
+
+```{r packages, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ModelMetrics)
+library(rmarkdown)
+library(pracma)
+library(patchwork)
+library(zoo)
+```
+
+```{r read data, include=FALSE}
+rm(list=ls())
+sensor_data <- read.csv("derived-data/all_data.csv")
+if("X" %in% colnames(sensor_data))
+{sensor_data=select(sensor_data, -X)}
+source("flux_processing_functions.R")
+```
+
+## Pre-processing
+
+Grouping seasons and months
+
+```{r pre-processing}
+sensor_data$month <- month(sensor_data$datetime)
+sensor_data$year <- year(sensor_data$datetime)
+sensor_data$season <- month2season(sensor_data$month)
+```
+
+## Overland Flow Corrections
+
+# linear overland flood correction
+H>2
+
+```{r Overland flow}
+#sensor_data <- mutate(sensor_data, 
+ #                     flow_land = if_else(flow>0&H>0.25&H<=0.5, 
+ #                                         (-15.4*H^2+20.4*H-3.11)*flow,
+ #                              if_else(flow<0&H>0.26&H<=0.5, 
+ #                                     (12.2*H^2+0.275*H+0.097)*flow,
+  #                      if_else(H>0.5, (H*9.170833-1.320587)*flow, flow))))
+
+sensor_data <- sensor_data %>%
+  filter(!H>2)
+
+sensor_data$flow_land <- sensor_data$flow
+
+#write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv", row.names = FALSE)
+```
+
+## Monthly salt balance
+
+```{r Monthly salt balance, eval=FALSE}
+#no overland flow correction for this site
+Qall_all<-sensor_data$flow_land
+salall_all<-sensor_data$S
+hall_all<-sensor_data$H
+dn<-sensor_data$datetime
+#dndates<-tibble(year=year(dn), month=month(dn), day=day(dn),
+#                hour=hour(dn), minute=minute(dn), second=second(dn))
+
+#rename matrices
+Qall<-Qall_all
+salall<-salall_all
+
+#
+dates<-unique(sensor_data[c('month', 'year')])
+L<-nrow(dates)
+dnTEF<-rep(NA, L)
+Qr_wm1<-rep(NA, L)
+Qr_wm2<-rep(NA, L)
+#q_sbin_in<-rep(NA, L)
+#q_sbin_out<-rep(NA, L)
+q_net_in<-rep(NA, L)
+q_net_out<-rep(NA, L)
+s_net_in<-rep(NA, L)
+s_net_out<-rep(NA, L)
+Qr_TEF1<-rep(NA, L)
+
+#define function
+int16 <- function(x){
+  x=round(x, digits = 0)
+  x=ifelse(x>(2^15-1),2^15-1,x)
+  x<ifelse(x<(-2^15),(-2^15),x)
+  return(x) 
+}
+
+#start looping through data
+for (tindex in 1:L){
+
+dn_range=which(sensor_data$month==dates$month[tindex] & sensor_data$year==dates$year[tindex])
+#dnTEF[tindex]<-mean(dn[dn_range])
+#dnTEF<-as.POSIXct(dnTEF)
+
+#make q and s matrices from time window
+#qipei note: temp may mean temporary
+q_temp = Qall[dn_range]
+s_temp = salall[dn_range]
+
+#bin inflowing and outflowing salinity for Knudsen calculation
+zin=which(q_temp>0)
+zout=which(q_temp<0)
+q_temp_in=mean(q_temp[zin], na.rm = TRUE)
+q_temp_out=mean(q_temp[zout], na.rm = TRUE)
+s_temp_in=mean(s_temp[zin], na.rm = TRUE)
+s_temp_out=mean(s_temp[zout], na.rm = TRUE)
+
+Qr_wm1[tindex]=(s_temp_in-s_temp_out)*abs(q_temp_out)/s_temp_in
+Qr_wm2[tindex]=(s_temp_in-s_temp_out)*q_temp_in/s_temp_out
+
+# TEF Knudsen, code from Shih-NaN Chen (N. Taiwan U)
+tsize=length(dn_range)
+dsbin=0.1
+sbin=seq(0,60,0.1) #maximum salinity is 59.0573
+
+q_sbin_out_t=matrix(0, tsize,length(sbin))
+q_sbin_in_t=q_sbin_out_t * 0
+q_sbin_out_time=matrix(0, tsize,length(sbin))
+q_sbin_in_time=q_sbin_out_time * 0
+
+q_sbin_in=matrix(0, 1,length(sbin)) 
+q_sbin_out=q_sbin_in * 0
+
+
+#sort q's by salt range, fixed "floor"
+for (tt in 1:tsize){
+  
+for (bb in 1:length(sbin)){
+qq = q_temp[tt]  # (t,z,y)
+iok = round(s_temp[tt]/dsbin, digits=0) == int16(sbin[bb]/dsbin) & q_temp[tt] < 0
+q_sbin_out_t[tt,bb] = sum(qq[iok], na.rm=TRUE)
+
+iok = round(s_temp[tt]/dsbin, digits=0) == int16(sbin[bb]/dsbin) & q_temp[tt] > 0
+q_sbin_in_t[tt,bb] = sum(qq[iok], na.rm=TRUE)
+rm(qq)
+}
+}
+
+q_sbin_in[,]=colMeans(q_sbin_in_t, na.rm = TRUE) 
+q_sbin_out[,]= colMeans(q_sbin_out_t, na.rm = TRUE)
+
+qs_sbin_in_total = mean(q_sbin_in_t * rep(sbin, tsize), na.rm = TRUE)   # total salt flux in
+qs_sbin_out_total = mean(q_sbin_out_t * rep(sbin, tsize), na.rm = TRUE)
+
+q_temp2 = drop(q_sbin_in + q_sbin_out)
+q_net_in[tindex] = sum(q_temp2[which(q_temp2 > 0)], na.rm = TRUE)  # net exchange
+q_net_out[tindex] = sum(q_temp2[which(q_temp2 < 0)], na.rm = TRUE)
+
+q_sbin_in_time[,] = q_sbin_in_t
+q_sbin_out_time[,] = q_sbin_out_t
+
+q_temp3 = as.numeric(q_sbin_in + q_sbin_out)
+q_temp3[which(q_temp3<0)] = 0
+qs_net_in = sum(q_temp3 * sbin, na.rm = TRUE)  # salt flux by total exchange flow
+s_net_in[tindex] <- qs_net_in/q_net_in[tindex]
+
+q_temp3 <- q_sbin_in + q_sbin_out
+q_temp3[which(q_temp3>0)]<-0
+qs_net_out <- sum(q_temp3*sbin, na.rm = TRUE)
+s_net_out[tindex] <- qs_net_out/q_net_out[tindex]
+
+#net groundwater flow in m3/s
+Qr_TEF1[tindex]<-(s_net_in[tindex]-s_net_out[tindex])*abs(q_net_out[tindex])/s_net_in[tindex]
+#Qr_TEF2[tindex]<-(s_net_in[tindex]-s_net_out[tindex])*q_net_in[tindex]/s_net_out[tindex]
+print(Qr_TEF1[tindex])
+}
+
+save.image("derived-data/salt_balance_30d.RData")
+
+Qr_TEF1[Qr_TEF1 == "NaN"] <- NA
+salt_balance_GW <- tibble(year=dates$year, month=dates$month, GW_m3s = Qr_TEF1)
+write.csv(salt_balance_GW, "derived-data/monthly_salt_balance_GW.csv",
+          row.names = FALSE)
+```
+
+## ET and precip
+
+```{r water budgets}
+A <- 4134
+
+# read data and correct timezone
+MET <- read_csv("../../Data/Original/SLP_USGS_WHOI/WQBCHMET/WQBCHMET.csv")
+MET$DateTimeStamp <- mdy_hm(MET$DateTimeStamp)
+MET$DateTimeStamp <- force_tz(MET$DateTimeStamp,tz="EST")
+MET$DateTimeStamp <- with_tz(MET$DateTimeStamp,tz="UTC") 
+
+# filter flagged data
+MET <- mutate(MET, year = year(DateTimeStamp),
+              month = month(DateTimeStamp),
+              ATemp = ifelse(grepl("-3",F_ATemp),NA,ATemp))
+
+METseason <- group_by_at(MET,c("year","month"))%>%
+  summarize(tot_precip_m3 = sum(TotPrcp,na.rm=TRUE)/1000*A, # integrated total precip over marsh area
+            dur_min = length(which(!is.na(TotPrcp)))*15, # length of time with data
+            precipm3yr = tot_precip_m3/(dur_min/60/24/365)) # precip as an annual rate
+
+################################################################################
+
+SoRad13 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2013_21.csv")
+SoRad14 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2014_21.csv")
+SoRad15 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2015_21.csv")
+SoRad16 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2016_21.csv")
+
+SoRad <- rbind(SoRad13,SoRad14,SoRad15,SoRad16)%>% select(Datetime,SolRad)
+SoRad$Datetime <- mdy_hm(SoRad$Datetime)
+
+ET <- merge(MET,SoRad, by.x = "DateTimeStamp",by.y = "Datetime",
+            all = TRUE)%>% select(DateTimeStamp,ATemp,RH,BP,WSpd,SolRad) # merge data from each year
+
+ET$day <- date(ET$DateTimeStamp) # get date
+
+# correct wind speed for height and define constants
+Wcorrfact <- 4.87/log(67.8*10-5.42)
+
+# P <- 101.3
+# g <-  0.000665*P
+lat <- 41.5817
+AE <- (pi/180)*lat
+Gsc <- 0.082
+a <- 0.23
+kb <- 4.903*10^-9
+
+### tall reference crop
+# calculate ET for each day then summarize over each month
+
+ETday <- group_by(ET,day)%>%
+  summarize(Tmax = max(ATemp,na.rm=TRUE),Tmin = min(ATemp,na.rm=TRUE),
+            WSpdmean = mean(WSpd,na.rm=TRUE),RHmax = max(RH,na.rm=TRUE),
+            RHmin = min(RH,na.rm=TRUE),SolRadmean = mean(SolRad,na.rm=TRUE),
+            BPmean = mean(BP,na.rm=TRUE))%>%
+  mutate(Tmean = (Tmin+Tmax)/2, u2 = WSpdmean*Wcorrfact,
+         Rs = SolRadmean*0.0864,
+         i = 4098*(0.6108*exp((17.27*Tmean)/(Tmean+237.3))/(Tmean+237.3)^2),
+         g = 0.000665*BPmean/10,
+         DT = i/(i+g*(1+0.38*u2)), PT = g/(i+g*(1+0.38*u2)),
+         TT = (1600/(Tmean+273))*u2,
+         eTmax = 0.6108*exp((17.27*Tmax)/(Tmax+237.3)),
+         eTmin = 0.6108*exp((17.27*Tmin)/(Tmin+237.3)),
+         es = (eTmax+eTmin)/2, 
+         ea = (eTmin*(RHmax/100)+eTmax*(RHmin/100))/2,
+         J = yday(day), dr = 1 + 0.033*cos(2*pi/365*J),
+         d = 0.409*sin(2*pi/365*J-1.39),
+         ws = acos(-tan(AE)*tan(d)),
+         Ra = (24*60/pi)*Gsc*dr*((ws*sin(AE)*sin(d))+(cos(AE)*cos(d)*sin(ws))),
+         Rso = 0.75*Ra, Rns = (1-a)*Rs,
+         Rnl = kb*(((Tmax+273.16)^4+(Tmin+273.16)^4)/2)*(0.38-0.14*sqrt(ea))*
+           (1.35*(Rs/Rso)-0.35),
+         Rn = Rns-Rnl,Rng = 0.408*Rn,ETrad = DT*Rng,
+         ETwind = PT*TT*(es-ea),ETo = ETwind+ETrad,year = year(day))
+
+# overall average
+ETmean <- mean(ETday$ETo,na.rm=TRUE)
+ETmyr <- ETmean*365/1000
+ETm3yr <- ETmyr*A
+
+# monthly averages
+ETseason <- mutate(ETday, month = month(day))%>%
+  group_by_at(c("year","month"))%>% 
+  summarize(ETm3yr=mean(ETo,na.rm=TRUE)*365/1000*4132,
+            N = length(which(!is.na(ETo))),
+            wind = mean(WSpdmean,na.rm=TRUE),
+            temp = mean(Tmean, na.rm=TRUE),
+            rad = mean(SolRadmean, na.rm=TRUE))%>%
+  mutate(date=ymd(paste(year,month,1)))
+
+# spline interpolation for missing months 
+ETseason$ETm3yr <- na.spline(ETseason$ETm3yr) # fill missing months
+
+WBseason <- select(ETseason,year,month,ETm3yr)
+
+# Freshwater flux is positive for ET and negative for precip and groundwater discharge
+WBseason <- merge(WBseason,select(METseason,year, month, precipm3yr), 
+                  by = c("year","month"))%>%
+  mutate(precipm3yr = -1*precipm3yr)
+
+#write_csv(WBseason,"precip_ET_calc.csv")
+```
+
+## Combine with salt balance results
+
+```{r final}
+##read groundwater
+#load("../../Data/Derivative/SLP_USGS_WHOI/salt_balance_30d.Rdata")
+salt_balance_GW<-read.csv( "../../Data/Derivative/SLP_USGS_WHOI/monthly_salt_balance_GW.csv")
+#WBsy2
+a <- salt_balance_GW 
+a$salt_bal_m3s <- -a$GW_m3s
+
+#negative sign here
+#when the direct output is positive, it means groundwater gain;
+#the negative sign means export freshwater.
+
+a <- a%>%
+  mutate(salt_bal_m3s_raw=salt_bal_m3s)#%>%
+  #mutate(salt_bal_m3s=ifelse(abs(salt_bal_m3s)<0.02, salt_bal_m3s, NA))%>%
+
+WBsy2 <- WBseason %>%
+  left_join(a, by=c("year","month"))%>%
+  arrange(year, month)%>%
+  mutate(salt_bal_raw=salt_bal_m3s_raw*3600*24*365-precipm3yr-ETm3yr)%>%
+  mutate(salt_bal=ifelse(salt_bal_raw<0, salt_bal_raw, 0))%>%
+  mutate(salt_bal_m3s=salt_bal/(365*24*3600))
+
+write.csv(WBsy2, "../../Data/Derivative/SLP_USGS_WHOI/monthly_WBsy2.csv", row.names = FALSE)
+```

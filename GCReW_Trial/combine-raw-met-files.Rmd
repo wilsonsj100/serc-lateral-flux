@@ -1,0 +1,74 @@
+---
+title: "Untitled"
+author: "Stephanie J. Wilson"
+date: "2025-11-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(tidyr)
+```
+
+## 2022
+```{r}
+# read in 2022 data 
+path <- "raw-met-data/2022"
+
+# List all CSV files
+files <- list.files(path, pattern = "\\.csv$", full.names = TRUE)
+
+# Read and combine
+df_22 <- files %>%
+  lapply(read.csv) %>%
+  bind_rows()
+
+df_22 <- df_22 %>% 
+  filter(!F_OOB == "1") %>% 
+  filter(!F_OOS == "1")
+
+df_22 <- df_22 %>% 
+  pivot_wider(
+    names_from = research_name,
+    values_from = Value
+  )
+
+
+```
+
+## 2023
+```{r}
+# read in 2022 data 
+path <- "raw-met-data/2023"
+
+# List all CSV files
+files <- list.files(path, pattern = "\\.csv$", full.names = TRUE)
+
+# Read and combine
+df_23 <- files %>%
+  lapply(read.csv) %>%
+  bind_rows()
+
+df_23 <- df_23 %>% 
+  select(-c("Instrument_ID", "Sensor_ID", "Location", "Source_file", "Instrument")) %>%
+  filter(!F_OOB == "1") %>% 
+  filter(!F_OOS == "1")
+
+df_23 <- df_23 %>% 
+  select(-c("F_OOB", "F_OOS", "F_MAD")) 
+
+df_23 <- df_23 %>%
+  group_by(TIMESTAMP, research_name) %>%
+  filter(!is.na(Value)) %>%
+  slice(1) %>%                     # keep the first non-NA
+  ungroup()
+
+df_23 <- df_23 %>% 
+  pivot_wider(
+    names_from = research_name,
+    values_from = Value
+  )
+
+
+```
+

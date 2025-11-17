@@ -22,7 +22,7 @@ library(zoo)
 
 ```{r read data, include=FALSE}
 rm(list=ls())
-sensor_data <- read.csv("derived-data/sensor_data.csv")
+sensor_data <- read.csv("derived-data/all_data.csv")
   #GEPsy <- read.csv("../../Data/Original/SLP_USGS_WHOI/WBsy2.csv")
 if("X" %in% colnames(sensor_data))
 {sensor_data=select(sensor_data, -X)}
@@ -74,6 +74,7 @@ sensor_data<-sensor_data%>%
 
 h<-tibble(time=sensor_data$datetime, h=sensor_data$H)
 h<-na.omit(h)
+h <- h[order(h$time), ]
 datetime2<-h$time #used in Line 67
 h0<-mean(sensor_data$H, na.rm=TRUE)
 tidal_dat <- TidalCharacteristics(h=h, h0 = h0, 
@@ -98,30 +99,30 @@ Compared to previously used 1000, I relax the threshold.
 ```{r check water budgets, warning=FALSE, message=FALSE}
 water_check <- sensor_data%>%
   group_by(tide_num)%>%#300s=5min
-  summarise(flow_tide_sum=sum(flow_land)*300)%>%
+  summarise(flow_tide_sum=sum(flow)*300)%>%
   filter(abs(flow_tide_sum)>5000)
 rm_inst <- which(sensor_data$tide_num %in% water_check$tide_num)
-sensor_data$flow_land[rm_inst]<-NA
+sensor_data$flow[rm_inst]<-NA
 print("how many tides are removed?")
 nrow(water_check)
 rm(rm_inst)
 
 #TA check
 TA_check<-sensor_data%>%
-  select(tide_num,flow_land,TA)%>%
-  mutate(flux=TA*flow_land)%>%
+  select(tide_num,flow,TA)%>%
+  mutate(flux=TA*flow)%>%
   group_by(tide_num)%>%
   summarize(N=length(na.omit(flux)),
             N_t=length(na.omit(tide_num)))%>%
   mutate(A.pct=N/N_t*100)%>%
   filter(A.pct>80) #note here, the threshold is relaxed
 
-sensor_data$flow_land[which(!(sensor_data$tide_num %in% TA_check$tide_num))]<-NA
+sensor_data$flow[which(!(sensor_data$tide_num %in% TA_check$tide_num))]<-NA
 #sensor_data$TA[which(!(sensor_data$tide_num %in% TA_check$tide_num))]<-NA
 
 water_check2 <- sensor_data%>%
   group_by(tide_num)%>%#300s=5min
-  summarise(flow_tide_sum=sum(flow_land)*300)
+  summarise(flow_tide_sum=sum(flow)*300)
 
 p_water_check2<-ggplot(water_check2, aes(x=flow_tide_sum)) + 
   geom_histogram(color="black", fill="white") +
@@ -135,7 +136,7 @@ p_water_check2
 ```{r salt budgets, error=FALSE, message=FALSE}
 #To determine groundwater inputs based on salt balance. 
 #Adjustments only apply to ebb flows.
-sensor_data$flow_corr <- sensor_data$flow_land
+sensor_data$flow_corr <- sensor_data$flow
 sensor_data$month <- month(sensor_data$datetime)
 sensor_data$year <- year(sensor_data$datetime)
 sensor_data$season <- month2season(sensor_data$month)
@@ -144,6 +145,9 @@ sensor_data$season <- month2season(sensor_data$month)
 m_list <- group_by_at(sensor_data, c("year","month"))%>%summarize()
 m_list <- na.omit(m_list)
 shift_corr <- rep(NA,nrow(m_list))
+
+
+#here I need to know what GEPsy is and what it is useful for 
 
 #create a 'for' loop to process every season each year
 for(i in 1:length(shift_corr)){

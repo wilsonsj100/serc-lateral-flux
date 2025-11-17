@@ -40,10 +40,10 @@ if("DIC" %in% colnames(sensor_data))
 ```{r fit DIC model}
 
 clean_dic_data <- DIC_bottle_data %>% 
-  rename(temp = 'T') %>%
-  filter(!is.na(DIC) & !is.na(pH) & !is.na(temp) & !is.na(S) & !is.na(DO))
+  #rename(temp = 'T') %>%
+  filter(!is.na(DIC) & !is.na(pH) & !is.na(T) & !is.na(S) & !is.na(DO))
 
-DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(temp) + log10(S) + log10(DO) , 
+DIC_model <- lm(log10(DIC) ~ log10(pH) + log10(T) + log10(S) + log10(DO) , 
                 data = clean_dic_data)
 
 summary(DIC_model)
@@ -189,6 +189,7 @@ p_model_TA
 
 #predict vars over the whole sensor dataset 
 ```{r add concentration to sensor data, warning=FALSE}
+
 DIC_ts <- 10^predict(DIC_model, sensor_data, na.action = na.roughfix)
 DOC_ts <- 10^predict(DOC_model, sensor_data, na.action = na.roughfix) #with fDOM
 TA_ts  <- 10^predict(TA_model, sensor_data, na.action = na.roughfix)
