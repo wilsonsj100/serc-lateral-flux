@@ -14,18 +14,21 @@ library(tidyverse)
 #'
 #' @examples
 download_new_data <- function(gcrew_folder = here::here("Raw_data"),
-                              start_date = Sys.Date() - days(100)) {
+                              start_date = Sys.Date() - days(100),
+                              current_path = "GCREW_LOGGERNET_DATA/current_data",
+                              archive_path = "GCREW_LOGGERNET_DATA/archive_data",
+                              search_term = "MARSH_OUTLET") {
   # Identify all files
   # GENX flux vs GENX LGR in 2021
   message("Looking for new data files on dropbox")
-  relevant_files <- drop_dir(path = "GCREW_LOGGERNET_DATA/archive_data") %>%
-    filter(grepl("GCREW_MARSH_OUTLET", name), )
-  current <- drop_dir(path = "GCREW_LOGGERNET_DATA/current_data") %>%
+  relevant_files <- drop_dir(path = archive_path) %>%
+    filter(grepl(search_term, name))
+  current <- drop_dir(path = current_path) %>%
     filter(
-      grepl("GCREW_MARSH_OUTLET", name),
+      grepl(search_term, name),
       !grepl("backup", name)
     )
-
+  
   possible_file_names <- format(
     seq.Date(start_date, Sys.Date(), by = "1 day"),
     "%Y%m%d"
@@ -33,6 +36,7 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
   relevant_files <- relevant_files[
     grepl(paste0(possible_file_names, collapse = "|"), relevant_files$name),
   ]
+  relevant_files <- relevant_files[!grepl("NewConstTable", relevant_files$name),]
 
   # Remove files that are already loaded and haven't been modified
   already_loaded <- list.files(gcrew_folder)
@@ -48,13 +52,19 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
 
   # Load current data file
   new <- current$path_display %>%
-    map(load_file, output_dir = gcrew_folder)
+    map(load_file, 
+        output_dir = gcrew_folder,
+        current_path = current_path,
+        archive_path = archive_path)
 
   if (nrow(relevant_files) == 0) {
     message("No new files to download")
   } else {
     message("Downloading ", nrow(relevant_files), " files")
     all_data <- relevant_files$path_display %>%
-      map(load_file, output_dir = gcrew_folder)
+      map(load_file, 
+          output_dir = gcrew_folder, 
+          current_path = current_path,
+          archive_path = archive_path)
   }
 }

@@ -1,9 +1,12 @@
-load_file <- function(path_display, output_dir) {
+load_file <- function(path_display, 
+                      output_dir,
+                      current_path,
+                      archive_path) {
   url <- "https://content.dropboxapi.com/2/files/download"
   name <- sub(
-    "/GCREW_LOGGERNET_DATA/archive_data/", "",
+    current_path, "",
     sub(
-      "/GCREW_LOGGERNET_DATA/current_data/",
+      archive_path,
       "", path_display
     )
   )
