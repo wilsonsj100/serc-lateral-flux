@@ -219,7 +219,8 @@ div(
 #| panel: fill
 
 # Plot exo data (created in server chunk)
-plotlyOutput("plot_exo", height = "400px")
+plotlyOutput("plot_exo_dock", height = "350px")
+plotlyOutput("plot_exo_flume", height = "350px")
 ```
 
 ```{r}
@@ -239,7 +240,8 @@ checkboxGroupInput("exo_vars", h4("Variables to plot"),
 ```{r}
 #| panel: fill
 
-plotlyOutput("plot_hydrology", height = "360px")
+plotlyOutput("plot_hydrology_dock", height = "350px")
+plotlyOutput("plot_hydrology_flume", height = "350px")
 ```
 
 ```{r}
@@ -256,7 +258,8 @@ checkboxGroupInput("hydrology_vars", h4("Variables to plot"),
 ```{r}
 #| panel: fill
 
-plotlyOutput("plot_radon", height = "360px")
+plotlyOutput("plot_radon_dock", height = "350px")
+plotlyOutput("plot_radon_flume", height = "350px")
 ```
 
 ```{r}
@@ -340,9 +343,10 @@ updateDateInput(
 )
 
 # Code for plots
-output$plot_exo <- renderPlotly({
+output$plot_exo_dock <- renderPlotly({
   exo_recent <- exo %>%
     filter(
+      Site == "DOCK",
       as.Date(TIMESTAMP) >= input$start_date,
       as.Date(TIMESTAMP) <= input$end_date
     ) %>%
@@ -358,14 +362,41 @@ output$plot_exo <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )
+    )+
+    ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
-output$plot_hydrology <- renderPlotly({
+output$plot_exo_flume <- renderPlotly({
+  exo_recent <- exo %>%
+    filter(
+      Site == "FLUME",
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
+    select(TIMESTAMP, all_of(input$exo_vars)) %>%
+    pivot_longer(input$exo_vars)
+
+  p1 <- exo_recent %>%
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    facet_wrap(~name, scales = "free_y") +
+    scale_color_manual(values = exo_colors) +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )+
+    ggtitle("FLUME")
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
+})
+
+output$plot_hydrology_dock <- renderPlotly({
   hydrology_recent <- hydrology %>%
     filter(
+      Site == "DOCK",
       as.Date(TIMESTAMP) >= input$start_date,
       as.Date(TIMESTAMP) <= input$end_date
     ) %>%
@@ -381,7 +412,33 @@ output$plot_hydrology <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )
+    )+
+    ggtitle("DOCK")
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
+})
+
+output$plot_hydrology_flume <- renderPlotly({
+  hydrology_recent <- hydrology %>%
+    filter(
+      Site == "FLUME",
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
+    select(TIMESTAMP, all_of(input$hydrology_vars)) %>%
+    pivot_longer(input$hydrology_vars)
+
+  p1 <- hydrology_recent %>%
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    scale_color_manual(values = hydrology_colors) +
+    facet_wrap(~name, scales = "free_y") +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )+
+    ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
@@ -409,9 +466,10 @@ output$plot_hydrology <- renderPlotly({
 #  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 #})
 
-output$plot_radon <- renderPlotly({
+output$plot_radon_dock <- renderPlotly({
   rad_recent <- radon %>%
     filter(
+      Site == "DOCK",
       as.Date(TIMESTAMP) >= input$start_date,
       as.Date(TIMESTAMP) <= input$end_date
     ) %>%
@@ -427,7 +485,33 @@ output$plot_radon <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )
+    )+
+    ggtitle("DOCK")
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
+})
+
+output$plot_radon_flume <- renderPlotly({
+  rad_recent <- radon %>%
+    filter(
+      Site == "FLUME",
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
+    select(TIMESTAMP, all_of(input$rad_vars)) %>%
+    pivot_longer(input$rad_vars)
+
+  p1 <- rad_recent %>%
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    scale_color_manual(values = rad_colors) +
+    facet_wrap(~name, scales = "free_y") +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )+
+    ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
@@ -451,66 +535,62 @@ output$data_latest <- renderText({
   #}
   
   exo_times <- exo %>%
-    filter(!if_any(-TIMESTAMP, is.na)) %>%
-    pull(TIMESTAMP)
-  formatted_date_exo <- ifelse(length(exo_times) > 0,
-                               paste(
-                                 format(
-                                   max(exo_times, na.rm = T),
-                                   "%Y-%m-%d %H:%M:%S"
+    group_by(Site) %>%
+    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+              formatted = ifelse(is.finite(max),
+                                 paste(
+                                   format(max, "%Y-%m-%d %H:%M:%S"),
+                                   TIMEZONE
                                  ),
-                                 TIMEZONE
-                               ),
-                               "No data")
-  exo_color <- if (formatted_date_exo == "No data" ||
-                   now() - max(exo_times, na.rm = T) > hours(1)) {
-    ' style="color: #990000;"'
-  } else {
-    ""
-  }
+                                 "No data"),
+              color = ifelse(formatted == "No data" || 
+                               (now() - max) > hours(1),
+                             ' style="color: #990000;"',
+                             ""))
   
   radon_times <- radon %>%
-    filter(!if_any(-TIMESTAMP, is.na)) %>%
-    pull(TIMESTAMP)
-  formatted_date_rad <- ifelse(length(radon_times) > 0,
-                               paste(
-                                 format(
-                                   max(radon_times, na.rm = T),
-                                   "%Y-%m-%d %H:%M:%S"
+    group_by(Site) %>%
+    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+              formatted = ifelse(is.finite(max),
+                                 paste(
+                                   format(max, "%Y-%m-%d %H:%M:%S"),
+                                   TIMEZONE
                                  ),
-                                 TIMEZONE
-                               ),
-                               "No data")
-  radon_color <- if (formatted_date_rad == "No data" ||
-                     now() - max(radon_times, na.rm = T) > hours(1)) {
-    ' style="color: #990000;"'
-  } else {
-    ""
-  }
+                                 "No data"),
+              color = ifelse(formatted == "No data" || 
+                               (now() - max) > hours(1),
+                             ' style="color: #990000;"',
+                             ""))
   
   hydrology_times <- hydrology %>%
-    filter(!if_any(-TIMESTAMP, is.na)) %>%
-    pull(TIMESTAMP)
-  formatted_date_hydrology <- ifelse(length(hydrology_times) > 0,
-                                     paste(
-                                       format(
-                                         max(hydrology_times, na.rm = T),
-                                         "%Y-%m-%d %H:%M:%S"
-                                       ),
-                                       TIMEZONE
-                                     ),
-                                     "No data")
-  hydrology_color <- if (formatted_date_hydrology == "No data" ||
-                         now() - max(hydrology_times, na.rm = T) > hours(1)) {
-    ' style="color: #990000;"'
-  } else {
-    ""
-  }
+    group_by(Site) %>%
+    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+              formatted = ifelse(is.finite(max),
+                                 paste(
+                                   format(max, "%Y-%m-%d %H:%M:%S"),
+                                   TIMEZONE
+                                 ),
+                                 "No data"),
+              color = ifelse(formatted == "No data" || 
+                               (now() - max) > hours(1),
+                             ' style="color: #990000;"',
+                             ""))
   
   formatted_list <- paste(
-    "<ul><li", exo_color, "><b>EXO2 water quality sonde:</b> ", formatted_date_exo, "</li>
-    <li", hydrology_color, "><b>SontekIQ ADCP:</b> ", formatted_date_hydrology, "</li>
-    <li", radon_color, "><b>Radon detector:</b> ", formatted_date_rad, "</li></ul>"
+    "DOCK:</br>
+    <ul><li", exo_times$color[exo_times$Site == "DOCK"], 
+    "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "DOCK"], "</li>
+    <li", hydrology_times$color[hydrology_times$Site == "DOCK"], 
+    "><b>SontekIQ ADCP:</b> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "</li>
+    <li", radon_times$color[radon_times$Site == "DOCK"], 
+    "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "DOCK"], "</li></ul></br>
+    FLUME:</br>
+    <ul><li", exo_times$color[exo_times$Site == "FLUME"], 
+    "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "FLUME"], "</li>
+    <li", hydrology_times$color[hydrology_times$Site == "FLUME"], 
+    "><b>SontekIQ ADCP:</b> ", hydrology_times$formatted[hydrology_times$Site == "FLUME"], "</li>
+    <li", radon_times$color[radon_times$Site == "FLUME"], 
+    "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "FLUME"], "</li></ul>"
   ) #    <li", ghg_color, "><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
   
   return(formatted_list)
