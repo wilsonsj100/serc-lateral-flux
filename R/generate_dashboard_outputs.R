@@ -128,4 +128,4 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
 }
 
 
-# generate_dashboard_outputs()
+generate_dashboard_outputs()
