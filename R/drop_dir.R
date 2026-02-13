@@ -23,45 +23,41 @@
 #'
 #' @examples \dontrun{
 #'
-#'   # list files in root directory
-#'   drop_dir()
+#' # list files in root directory
+#' drop_dir()
 #'
-#'   # get a cursor from root directory,
-#'   # upload a new file,
-#'   # return only information about new file
-#'   cursor <- drop_dir(cursor = TRUE)
-#'   drop_upload("some_new_file")
-#'   drop_dir(cursor = cursor)
+#' # get a cursor from root directory,
+#' # upload a new file,
+#' # return only information about new file
+#' cursor <- drop_dir(cursor = TRUE)
+#' drop_upload("some_new_file")
+#' drop_dir(cursor = cursor)
 #' }
 #'
 #' @export
 drop_dir <- function(
-    path = "",
-    recursive = FALSE,
-    include_media_info = FALSE,
-    include_deleted = FALSE,
-    include_has_explicit_shared_members = FALSE,
-    include_mounted_folders = TRUE,
-    limit = NULL,
-    cursor = FALSE,
-    dtoken = get_dropbox_token()
+  path = "",
+  recursive = FALSE,
+  include_media_info = FALSE,
+  include_deleted = FALSE,
+  include_has_explicit_shared_members = FALSE,
+  include_mounted_folders = TRUE,
+  limit = NULL,
+  cursor = FALSE,
+  dtoken = get_dropbox_token()
 ) {
-  
   # this API doesn't accept "/", so don't add slashes to empty path, remove if given
   if (path != "") path <- add_slashes(path)
   if (path == "/") path <- ""
-  
+
   # force limit to integer
   if (!is.null(limit)) limit <- as.integer(limit)
-  
+
   # behavior depends on cursor
   if (is.character(cursor)) {
-    
     # list changes since cursor
     content <- drop_list_folder_continue(cursor, dtoken)
-    
   } else if (cursor) {
-    
     # get a cursor to track changes against
     content <- drop_list_folder_get_latest_cursor(
       path,
@@ -74,9 +70,7 @@ drop_dir <- function(
       dtoken
     )
     return(content$cursor)
-    
   } else {
-    
     # list files normally
     content <- drop_list_folder(
       path,
@@ -88,22 +82,20 @@ drop_dir <- function(
       limit,
       dtoken
     )
-    
   }
-  
+
   # extract list of content metadata
   results <- content$entries
-  
+
   # if no limit was given, make additional requests until all content retrieved
   if (is.null(limit)) {
     while (content$has_more) {
-      
       # update content, append results
       content <- drop_list_folder_continue(content$cursor)
-      results  <- append(results, content$entries)
+      results <- append(results, content$entries)
     }
   }
-  
+
   # coerce to tibble, one row per item found
   dplyr::bind_rows(purrr::map(results, LinearizeNestedList))
 }
@@ -121,18 +113,17 @@ drop_dir <- function(
 #'
 #' @keywords internal
 drop_list_folder <- function(
-    path,
-    recursive = FALSE,
-    include_media_info = FALSE,
-    include_deleted = FALSE,
-    include_has_explicit_shared_members = FALSE,
-    include_mounted_folders = TRUE,
-    limit = NULL,
-    dtoken = get_dropbox_token()
+  path,
+  recursive = FALSE,
+  include_media_info = FALSE,
+  include_deleted = FALSE,
+  include_has_explicit_shared_members = FALSE,
+  include_mounted_folders = TRUE,
+  limit = NULL,
+  dtoken = get_dropbox_token()
 ) {
-  
   url <- "https://api.dropboxapi.com/2/files/list_folder"
-  
+
   req <- httr::POST(
     url = url,
     httr::config(token = dtoken),
@@ -147,9 +138,9 @@ drop_list_folder <- function(
     )),
     encode = "json"
   )
-  
+
   httr::stop_for_status(req)
-  
+
   httr::content(req)
 }
 
@@ -164,18 +155,17 @@ drop_list_folder <- function(
 #'
 #' @keywords internal
 drop_list_folder_continue <- function(cursor, dtoken = get_dropbox_token()) {
-  
   url <- "https://api.dropboxapi.com/2/files/list_folder/continue"
-  
+
   req <- httr::POST(
     url = url,
     httr::config(token = dtoken),
     body = list(cursor = cursor),
     encode = "json"
   )
-  
+
   httr::stop_for_status(req)
-  
+
   httr::content(req)
 }
 
@@ -190,18 +180,17 @@ drop_list_folder_continue <- function(cursor, dtoken = get_dropbox_token()) {
 #'
 #' @keywords internal
 drop_list_folder_get_latest_cursor <- function(
-    path,
-    recursive = FALSE,
-    include_media_info = FALSE,
-    include_deleted = FALSE,
-    include_has_explicit_shared_members = FALSE,
-    include_mounted_folders = TRUE,
-    limit = NULL,
-    dtoken = get_dropbox_token()
+  path,
+  recursive = FALSE,
+  include_media_info = FALSE,
+  include_deleted = FALSE,
+  include_has_explicit_shared_members = FALSE,
+  include_mounted_folders = TRUE,
+  limit = NULL,
+  dtoken = get_dropbox_token()
 ) {
-  
   url <- "https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor"
-  
+
   req <- httr::POST(
     url = url,
     httr::config(token = dtoken),
@@ -216,9 +205,9 @@ drop_list_folder_get_latest_cursor <- function(
     )),
     encode = "json"
   )
-  
+
   httr::stop_for_status(req)
-  
+
   httr::content(req)
 }
 
@@ -238,8 +227,8 @@ drop_compact <- function(l) Filter(Negate(is.null), l)
 # Author page (currently unreachable):  https://sites.google.com/site/akhilsbehl/geekspace/articles/r/linearize_nested_lists_in
 # Original Author: Akhil S Bhel
 # Notes: Current author could not be reached and original site () appears defunct. Copyright remains with original author
-LinearizeNestedList <- function(NList, LinearizeDataFrames=FALSE,
-                                NameSep="/", ForceNames=FALSE) {
+LinearizeNestedList <- function(NList, LinearizeDataFrames = FALSE,
+                                NameSep = "/", ForceNames = FALSE) {
   # LinearizeNestedList:
   #
   # https://sites.google.com/site/akhilsbehl/geekspace/
@@ -289,20 +278,25 @@ LinearizeNestedList <- function(NList, LinearizeDataFrames=FALSE,
   stopifnot(is.character(NameSep), length(NameSep) == 1)
   stopifnot(is.logical(LinearizeDataFrames), length(LinearizeDataFrames) == 1)
   stopifnot(is.logical(ForceNames), length(ForceNames) == 1)
-  if (! is.list(NList)) return(NList)
+  if (!is.list(NList)) {
+    return(NList)
+  }
   #
   # If no names on the top-level list coerce names. Recursion shall handle
   # naming at all levels.
   #
-  if (is.null(names(NList)) | ForceNames == TRUE)
+  if (is.null(names(NList)) | ForceNames == TRUE) {
     names(NList) <- as.character(1:length(NList))
+  }
   #
   # If simply a dataframe deal promptly.
   #
-  if (is.data.frame(NList) & LinearizeDataFrames == FALSE)
+  if (is.data.frame(NList) & LinearizeDataFrames == FALSE) {
     return(NList)
-  if (is.data.frame(NList) & LinearizeDataFrames == TRUE)
+  }
+  if (is.data.frame(NList) & LinearizeDataFrames == TRUE) {
     return(as.list(NList))
+  }
   #
   # Book-keeping code to employ a while loop.
   #
@@ -343,8 +337,9 @@ LinearizeNestedList <- function(NList, LinearizeDataFrames=FALSE,
           #
           # Generate or coerce names as need be.
           #
-          if (is.null(names(Element)) | ForceNames == TRUE)
+          if (is.null(names(Element)) | ForceNames == TRUE) {
             names(Element) <- as.character(1:length(Element))
+          }
           #
           # Just throw back as list since dataframes have no nesting.
           #
@@ -352,7 +347,7 @@ LinearizeNestedList <- function(NList, LinearizeDataFrames=FALSE,
           #
           # Update names
           #
-          names(Element) <- paste(EName, names(Element), sep=NameSep)
+          names(Element) <- paste(EName, names(Element), sep = NameSep)
           #
           # Plug the branch back into the top-level trunk.
           #
@@ -364,11 +359,14 @@ LinearizeNestedList <- function(NList, LinearizeDataFrames=FALSE,
         #
         # Go recursive! :)
         #
-        if (is.null(names(Element)) | ForceNames == TRUE)
+        if (is.null(names(Element)) | ForceNames == TRUE) {
           names(Element) <- as.character(1:length(Element))
-        Element <- LinearizeNestedList(Element, LinearizeDataFrames,
-                                       NameSep, ForceNames)
-        names(Element) <- paste(EName, names(Element), sep=NameSep)
+        }
+        Element <- LinearizeNestedList(
+          Element, LinearizeDataFrames,
+          NameSep, ForceNames
+        )
+        names(Element) <- paste(EName, names(Element), sep = NameSep)
         Jump <- length(Element)
         NList <- c(Before, Element, After)
       }

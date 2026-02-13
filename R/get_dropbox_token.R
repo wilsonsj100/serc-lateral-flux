@@ -1,5 +1,5 @@
-#From https://rdrr.io/cran/rdrop2/src/R/drop_download.R
-#(no longer on CRAN)
+# From https://rdrr.io/cran/rdrop2/src/R/drop_download.R
+# (no longer on CRAN)
 
 # environment to store credentials
 .dstate <- new.env(parent = emptyenv())
@@ -38,70 +38,68 @@
 #' @examples
 #' \dontrun{
 #'
-#'   # To either read token from .httr-oauth in the working directory or open a
-#'   # web browser to authenticate (and cache a token)
-#'   drop_auth()
+#' # To either read token from .httr-oauth in the working directory or open a
+#' # web browser to authenticate (and cache a token)
+#' drop_auth()
 #'
-#'   # If you want to overwrite an existing local token and switch to a new
-#'   # user, set new_user to TRUE.
-#'   drop_auth(new_user = TRUE)
+#' # If you want to overwrite an existing local token and switch to a new
+#' # user, set new_user to TRUE.
+#' drop_auth(new_user = TRUE)
 #'
-#'   # To store a token for re-use (more flexible than .httr-oauth), save the
-#'   # output of drop_auth and save it to an RDS file
-#'   token <- drop_auth()
-#'   saveRDS(token, "/path/to/tokenfile.RDS")
+#' # To store a token for re-use (more flexible than .httr-oauth), save the
+#' # output of drop_auth and save it to an RDS file
+#' token <- drop_auth()
+#' saveRDS(token, "/path/to/tokenfile.RDS")
 #'
-#'   # To use a stored token provide token location
-#'   drop_auth(rdstoken = "/path/to/tokenfile.RDS")
+#' # To use a stored token provide token location
+#' drop_auth(rdstoken = "/path/to/tokenfile.RDS")
 #' }
 drop_auth <- function(new_user = F,
                       key = "mmhfsybffdom42w",
                       secret = "l8zeqqqgm1ne5z0",
                       cache = TRUE,
                       rdstoken = here::here("tokenfile.RDS")) {
-  
   # check if token file exists & use it
-  if (new_user == FALSE &  !is.na(rdstoken)) {
-    
+  if (new_user == FALSE & !is.na(rdstoken)) {
     # read token or error
     if (file.exists(rdstoken)) {
       .dstate$token <- readRDS(rdstoken)
     } else {
       stop("token file not found")
     }
-    
+
     # authenticate normally
   } else {
-    
     # remove any cached token if new user
     if (new_user && file.exists(".httr-oauth")) {
       message("Removing old credentials...")
       file.remove(".httr-oauth")
     }
-    
+
     # set dropbox oauth2 endpoints
     dropbox <- httr::oauth_endpoint(
       authorize = "https://www.dropbox.com/oauth2/authorize",
       access = "https://api.dropbox.com/oauth2/token"
     )
-    
+
     # registered dropbox app's key & secret
     dropbox_app <- httr::oauth_app("dropbox", key, secret)
-    
+
     # get the token
-    dropbox_token <- httr::oauth2.0_token(dropbox, dropbox_app, cache = cache,
-                                          query_authorize_extra = list(token_access_type= "offline"))
-    
+    dropbox_token <- httr::oauth2.0_token(dropbox, dropbox_app,
+      cache = cache,
+      query_authorize_extra = list(token_access_type = "offline")
+    )
+
     # make sure we got a token
     if (!inherits(dropbox_token, "Token2.0")) {
       stop("something went wrong, try again")
     }
-    
+
     # cache token in rdrop2 namespace
     .dstate$token <- dropbox_token
   }
 }
-
 
 
 #' Retrieve oauth2 token from rdrop2-namespaced environment
@@ -110,8 +108,7 @@ drop_auth <- function(new_user = F,
 #'
 #' @keywords internal
 get_dropbox_token <- function() {
-  
-  if (!exists('.dstate') || is.null(.dstate$token)) {
+  if (!exists(".dstate") || is.null(.dstate$token)) {
     drop_auth()
   } else {
     .dstate$token

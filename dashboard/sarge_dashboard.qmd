@@ -85,7 +85,7 @@ Shiny.addCustomMessageHandler("hideLoadingOverlay", function(message) {
 ```{r, message=FALSE, warning=FALSE}
 #| context: setup
 
-#Load packages
+# Load packages
 library(shiny)
 library(shinythemes)
 library(tidyverse)
@@ -97,53 +97,67 @@ library(cowplot)
 library(plotly)
 
 ## Load data ##
-#Note this code could be adapted for use with the RAD8 (Durridge) and LI7820 N2O Analyzer
+# Note this code could be adapted for use with the RAD8 (Durridge) and LI7820 N2O Analyzer
 
 ## Specifications ##
 
-TIMEZONE = "EST" #Used across all
+TIMEZONE <- "EST" # Used across all
 
-#Specify variable choices
+# Specify variable choices
 
-exo_choices <- c("DO_mgL", "FDOM_RFU", "Chlorophyll_ugL", "Conductivity", 
-         "DO_saturation", "Salinity_PPT", "TDS_mgL", "pH", "Temp_C",
-         "Depth_m")
+exo_choices <- c(
+  "DO_mgL", "FDOM_RFU", "Chlorophyll_ugL", "Conductivity",
+  "DO_saturation", "Salinity_PPT", "TDS_mgL", "pH", "Temp_C",
+  "Depth_m"
+)
 
-hydrology_choices <- c("Water_depth_m", "Flowrate_ms", "Index_velocity_ms", 
-                       "Mean_velocity_ms")
+hydrology_choices <- c(
+  "Water_depth_m", "Flowrate_ms", "Index_velocity_ms",
+  "Mean_velocity_ms"
+)
 
-ghg_choices <- c("H2O_ppm", "CO2d_ppm", "CH4d_ppb", "Cavity_pressure", 
-                  "Cavity_temperature")
+ghg_choices <- c(
+  "H2O_ppm", "CO2d_ppm", "CH4d_ppb", "Cavity_pressure",
+  "Cavity_temperature"
+)
 
 radon_choices <- c("Relative_humidity_pct", "Radon_Bqm3", "Radon_error_Bqm3")
 
 # Specify colors
 
-exo_colors <- c("Depth_m" = "darkblue",
-                "DO_mgL" = "lightblue",
-                "pH" = "pink",
-                "Salinity_PPT" = "grey50",
-                "Temp_C" = "red",
-                "FDOM_RFU" = "brown",
-                "Chlorophyll_ugL" = "darkgreen",
-                "Conductivity" = "grey20",
-                "DO_saturation" = "lightblue",
-                "TDS_mgL" = "orange")
+exo_colors <- c(
+  "Depth_m" = "darkblue",
+  "DO_mgL" = "lightblue",
+  "pH" = "pink",
+  "Salinity_PPT" = "grey50",
+  "Temp_C" = "red",
+  "FDOM_RFU" = "brown",
+  "Chlorophyll_ugL" = "darkgreen",
+  "Conductivity" = "grey20",
+  "DO_saturation" = "lightblue",
+  "TDS_mgL" = "orange"
+)
 
-hydrology_colors <- c("Water_depth_m" = "darkblue", 
-                   "Flowrate_ms" = "lightblue1", 
-                   "Index_velocity_ms" = "lightblue3", 
-                   "Mean_velocity_ms" = "lightblue4")
+hydrology_colors <- c(
+  "Water_depth_m" = "darkblue",
+  "Flowrate_ms" = "lightblue1",
+  "Index_velocity_ms" = "lightblue3",
+  "Mean_velocity_ms" = "lightblue4"
+)
 
-ghg_colors <- c("H2O_ppm" = "lightblue", 
-                 "CO2d_ppm" = "goldenrod", 
-                 "CH4d_ppb" = "red4", 
-                 "Cavity_pressure" = "purple4",
-                 "Cavity_temperature" = "red")
+ghg_colors <- c(
+  "H2O_ppm" = "lightblue",
+  "CO2d_ppm" = "goldenrod",
+  "CH4d_ppb" = "red4",
+  "Cavity_pressure" = "purple4",
+  "Cavity_temperature" = "red"
+)
 
-rad_colors <- c("Relative_humidity_pct" = "lightblue", 
-                "Radon_Bqm3" = "purple", 
-                "Radon_error_Bqm3" = "darkblue")
+rad_colors <- c(
+  "Relative_humidity_pct" = "lightblue",
+  "Radon_Bqm3" = "purple",
+  "Radon_error_Bqm3" = "darkblue"
+)
 ```
 
 ```{r}
@@ -151,14 +165,14 @@ rad_colors <- c("Relative_humidity_pct" = "lightblue",
 #| layout-ncol: 2
 
 dateInput(
-  'start_date',
-  'Start date for plots',
+  "start_date",
+  "Start date for plots",
   value = Sys.Date()
 )
 
 dateInput(
-  'end_date',
-  'End date for plots',
+  "end_date",
+  "End date for plots",
   value = Sys.Date()
 )
 ```
@@ -172,18 +186,18 @@ dateInput(
 ```{r}
 #| panel: fill
 
-#Using div to put the images on the right
+# Using div to put the images on the right
 div(
   style = "display:flex; align-items:flex-start; gap:15px;",
-  
+
   # Bullet point latest dates (created in server chunk)
   div(
     htmlOutput("today"),
     h3("Latest data"),
     htmlOutput("data_latest")
   ),
-  
-  #Images
+
+  # Images
   div(
     img(
       src = "www/images/SARGE_BKGD_SHINY.jpg",
@@ -204,27 +218,20 @@ div(
 ```{r}
 #| panel: fill
 
-#Plot exo data (created in server chunk)
-plotlyOutput('plot_exo', height = "400px")
+# Plot exo data (created in server chunk)
+plotlyOutput("plot_exo", height = "400px")
 ```
 
 ```{r}
 #| panel: sidebar
 
-#Sidebar for exo data
+# Sidebar for exo data
 
-#Create checkboxes
-checkboxGroupInput("exo_vars",h4("Variables to plot"),
-                   choices = exo_choices,
-                   selected = c("Depth_m", "Salinity_PPT"))
-
-```
-
-```{r}
-#| panel: fill
-
-h3("Table of all physiochemistry data")
-div(DT::dataTableOutput("table_exo"), style = "font-size:80%")
+# Create checkboxes
+checkboxGroupInput("exo_vars", h4("Variables to plot"),
+  choices = exo_choices,
+  selected = c("Depth_m", "Salinity_PPT")
+)
 ```
 
 ## Hydrology
@@ -232,46 +239,16 @@ div(DT::dataTableOutput("table_exo"), style = "font-size:80%")
 ```{r}
 #| panel: fill
 
-plotlyOutput('plot_hydrology', height = "360px")
+plotlyOutput("plot_hydrology", height = "360px")
 ```
 
 ```{r}
 #| panel: sidebar
 
 checkboxGroupInput("hydrology_vars", h4("Variables to plot"),
-                   choices = hydrology_choices,
-                   selected = c("Water_depth_m", "Index_velocity_ms"))
-
-```
-
-```{r}
-#| panel: fill
-
-h3("Table of all hydrology data")
-div(DT::dataTableOutput("table_hydrology"), style = "font-size:80%")
-```
-
-## GHG
-
-```{r}
-#| panel: fill
-
-plotlyOutput('plot_ghg', height = "360px")
-```
-
-```{r}
-#| panel: sidebar
-
-checkboxGroupInput("ghg_vars",h4("Variables to plot"),
-                   choices = ghg_choices,
-                   selected = c("CH4d_ppb", "CO2d_ppm"))
-```
-
-```{r}
-#| panel: fill
-
-h3("Table of all GHG data")
-div(DT::dataTableOutput("table_ghg"), style = "font-size:80%")
+  choices = hydrology_choices,
+  selected = c("Water_depth_m", "Index_velocity_ms")
+)
 ```
 
 ## Radon
@@ -279,23 +256,16 @@ div(DT::dataTableOutput("table_ghg"), style = "font-size:80%")
 ```{r}
 #| panel: fill
 
-plotlyOutput('plot_radon', height = "360px")
+plotlyOutput("plot_radon", height = "360px")
 ```
 
 ```{r}
 #| panel: sidebar
 
-checkboxGroupInput("rad_vars",h4("Variables to plot"),
-                   choices = radon_choices,
-                   selected = c("Radon_Bqm3", "Radon_error_Bqm3"))
-
-```
-
-```{r}
-#| panel: fill
-
-h3("Table of all radon data")
-div(DT::dataTableOutput("table_radon"), style = "font-size:80%")
+checkboxGroupInput("rad_vars", h4("Variables to plot"),
+  choices = radon_choices,
+  selected = c("Radon_Bqm3", "Radon_error_Bqm3")
+)
 ```
 
 :::
@@ -309,279 +279,239 @@ Sys.setenv(TZ = TIMEZONE)
 
 output$data_ready <- renderText({
   ready <- nrow(exo) > 0 &&
-           nrow(hydrology) > 0 &&
-           nrow(ghg) > 0 &&
-           nrow(radon) > 0
-  
+    nrow(hydrology) > 0 &&
+    #nrow(ghg) > 0 &&
+    nrow(radon) > 0
+
   if (ready) "true" else "false"
 })
 
 outputOptions(output, "data_ready", suspendWhenHidden = FALSE)
 
-## EXO DATA ##
+## LOAD DATA ##
 
-#Read in current water quality sonde (EXO2) data from SARGE
-#Set exo column names
-#exo_names <- colnames(read_delim("https://www.dropbox.com/scl/fi/0l884zjlaphi2nu9uupiw/WILSON_ExoTable.dat?rlkey=3ydvfbetag118ql5a03f3o9l8&st=80wnki57&dl=1", 
-#                        delim = ",", skip = 1, show_col_types = F, n_max = 1))
-#dput(exo_names)
-exo_names <- c("TIMESTAMP", "RECORD", "Date", "Time", "Chlorophyll_RFU", "Chlorophyll_ugL", 
-               "Conductivity", "FDOM_QSU", "FDOM_RFU", "NLF_conductivity", "ODO_sat", 
-               "ODO_local", "ODO_MgL", "Pressure_psia", "Salinity_PPT", "Specific_Conductivity_uScm", 
-               "BGA_PE_RFU", "BGA_PE_ugL", "TDS_mg_L", "Turbidity_FNU", "Wiper_Position_mv", 
-               "pH", "pH_mv", "Temp_C", "Depth_m", "Battery_v", "Cable_v", "Wiper_Current_ma", 
-               "sn", "snn")
-
-#Load data
-exo <- read_delim("https://www.dropbox.com/scl/fi/0l884zjlaphi2nu9uupiw/WILSON_ExoTable.dat?rlkey=3ydvfbetag118ql5a03f3o9l8&st=80wnki57&dl=1", 
-                        delim = ",", skip = 4, show_col_types = F,
-                  col_names = exo_names) %>%
+exo <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_EXO.csv")%>%
   mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)) %>%
-  select(-sn, -snn) %>%
-  rename(DO_mgL = ODO_MgL, 
-         DO_saturation = ODO_sat,
-         TDS_mgL = TDS_mg_L) %>%
-  select(all_of(c(exo_choices, "TIMESTAMP")))
+         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
 
-## HYDROLOGY DATA ##
-
-#read in hydrologic data from hydrology IQ (Xylem Analytics)
-#hydrology_names <- colnames(read_delim("https://www.dropbox.com/scl/fi/dqas4e92ngcsigqy7u107/WILSON_SontekTable.dat?rlkey=iw6azl1fqyyl521jpcgfjjcrk&st=d4xp83p3&dl=1", 
-#                        delim = ",", skip = 1, show_col_types = F, n_max = 1))
-#dput(hydrology_names)
-hydrology_names <- c('TIMESTAMP', 'RECORD', 'SONTEK_ID', 'Sample_number', 'yyyy', 
-                     'MM', 'dd', 'hh', 'Minute', 'ss', 'Flowrate', 'Stage', 
-                     'Mean_velocity', 'Total_volume', 'Water_depth', 
-                     'Index_velocity', 'Cross_area', 'Water_temperature', 
-                     'System_status', 'Velocity_XZxc', 'Velocity_XZzc', 
-                     'Velocity_XZxL', 'Velocity_XZxR', 'Batt_Vol_Sontek', 
-                     'Pitch_angle', 'Roll_angle', 'Perc_submergance', 'IceScore')
-
-#Load data
-hydrology <- read_delim("https://www.dropbox.com/scl/fi/dqas4e92ngcsigqy7u107/WILSON_SontekTable.dat?rlkey=iw6azl1fqyyl521jpcgfjjcrk&st=d4xp83p3&dl=1", 
-                        delim = ",", skip = 4, show_col_types = F,
-                  col_names = hydrology_names) %>%
+hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_HYDROLOGY.csv")%>%
   mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)) %>%
-  rename(Water_depth_m = Water_depth,
-         Index_velocity_ms = Index_velocity,
-         Mean_velocity_ms = Mean_velocity,
-         Flowrate_ms = Flowrate) %>%
-  select(all_of(c(hydrology_choices, "TIMESTAMP")))
+         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
 
-## GHG DATA ##
-
-#read in gas concentration data from the LI7810 (LI-COR)
-#ghg_names <- colnames(read_delim("https://www.dropbox.com/scl/fi/gtmjx6216pfqnmb5cd1yc/WILSON_FLUX_7810.dat?rlkey=zfeh41fxjeyd3jn9sqf76zfza&st=6ljj68yu&dl=1", 
-#                        delim = ",", skip = 1, show_col_types = F, n_max = 1))
-#dput(ghg_names)
-ghg_names <- c("TIMESTAMP", "RECORD", "TimeLong7810", "LI7810_time", "Seconds", 
-               "Nanoseconds", "NDX", "Diag", "H2O", "CO2", "CH4", "cavity_p", 
-               "cavity_t", "laser_phase_p", "laser_t", "residual", "ringdown", 
-               "thermal_enc_t", "phase_err", "laser_t_shift", "vin", "cavity_p_sp", 
-               "board_t", "case_t", "exfit_tau_rd1", "peak_ht_1", "exfit_tau_rd2", 
-               "peak_ht_2", "tec_sp", "phase_ctrl_out", "meas_phase", "laser_phase_sp", 
-               "num_peaks_win", "post_ringdwn_1_ign_len", "ringdwn_1_loc", "peak_x0", 
-               "xderiv_weight", "xderiv2_weight", "ch4_spec_weight", "co2_spec_weight", 
-               "h2o_spec_weight", "start_freq", "cavity_htr_w", "laser_ref_pwr", 
-               "offset_weight", "slope_weight", "evenodd_weight", "evenodd_lin_weight", 
-               "num_skipped_modes", "pump_sp", "pump_tach_ph")
-
-#Load data
-ghg <- read_delim("https://www.dropbox.com/scl/fi/gtmjx6216pfqnmb5cd1yc/WILSON_FLUX_7810.dat?rlkey=zfeh41fxjeyd3jn9sqf76zfza&st=6ljj68yu&dl=1", 
-                        delim = ",", skip = 4, show_col_types = F,
-                  col_names = ghg_names) %>%
+radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv")%>%
   mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)) %>%
-  rename(CH4d_ppb = CH4,
-         CO2d_ppm = CO2,
-         H2O_ppm = H2O,
-         Cavity_pressure = cavity_p,
-         Cavity_temperature = cavity_t) %>%
-  select(all_of(c(ghg_choices, "TIMESTAMP"))) %>%
-  mutate(TIMESTAMP = round_date(TIMESTAMP, "minute")) %>%
-  group_by(TIMESTAMP) %>%
-  summarize(across(everything(), ~mean(.x, na.rm = T)))
+         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
 
-## RADON DATA ##
+# TO DO: Still need GHG
 
-#read in radon concentration data from the RAD7 (Durridge)
-#radon_names <- colnames(read_delim("https://www.dropbox.com/scl/fi/ttjde8cpqf7xgn8dgcdv2/WILSON_Rad7Table.dat?rlkey=hcg2ycle3cmkerc6ic7pa13g1&st=vx91f41x&dl=1", 
-#                        delim = ",", skip = 1, show_col_types = F, n_max = 1))
-#dput(radon_names)
-radon_names <- c("TIMESTAMP", "RECORD", "Record_RAD7", "Year_RAD7", "Month_RAD7", 
-                 "Day_Rad7", "Hour_Rad7", "Minute_Rad7", "Total_Counts_Rad7", 
-                 "Live_Time_Rad7", "PER_TOT_A_Rad7", "PER_TOT_B_Rad7", "PER_TOT_C_Rad7", 
-                 "PER_TOT_D_Rad7", "High_Voltage_Level_Rad7", "High_Voltage_Duty_Rad7", 
-                 "Temp_sample_Rad7", "RH_sample_Rad7", "Leakage_Current_Rad7", 
-                 "Battery_Volt_Rad7", "Pump_current_Rad7", "Flags_Byte_Rad7", 
-                 "Radon_concentration_Rad7", "Radon_concentration_uncertainty_Rad7", 
-                 "Units_Byt_Rad7")
+# Set min and max for date input
+min_date <- min(
+  c(
+    exo$TIMESTAMP,
+    hydrology$TIMESTAMP,
+    #ghg$TIMESTAMP,
+    radon$TIMESTAMP
+  ),
+  na.rm = T
+)
 
-#Load data
-radon <- read_delim("https://www.dropbox.com/scl/fi/ttjde8cpqf7xgn8dgcdv2/WILSON_Rad7Table.dat?rlkey=hcg2ycle3cmkerc6ic7pa13g1&st=vx91f41x&dl=1", 
-                        delim = ",", skip = 4, show_col_types = F,
-                  col_names = radon_names) %>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)) %>%
-  rename(Relative_humidity_pct = RH_sample_Rad7,
-         Radon_Bqm3 = Radon_concentration_Rad7,
-         Radon_error_Bqm3 = Radon_concentration_uncertainty_Rad7) %>%
-  select(all_of(c(radon_choices, "TIMESTAMP")))
+max_date <- max(
+  c(
+    exo$TIMESTAMP,
+    hydrology$TIMESTAMP,
+    #ghg$TIMESTAMP,
+    radon$TIMESTAMP
+  ),
+  na.rm = T
+)
 
-#Set min and max for date input
-min_date <- min(c(exo$TIMESTAMP,
-                  hydrology$TIMESTAMP,
-                  ghg$TIMESTAMP,
-                  radon$TIMESTAMP), 
-                na.rm = T)
+updateDateInput(
+  inputId = "start_date",
+  min = min_date,
+  max = Sys.Date(),
+  value = max_date - days(7)
+)
 
-max_date <- max(c(exo$TIMESTAMP,
-                  hydrology$TIMESTAMP,
-                  ghg$TIMESTAMP,
-                  radon$TIMESTAMP), 
-                na.rm = T)
+updateDateInput(
+  inputId = "end_date",
+  min = min_date,
+  max = Sys.Date(),
+  value = max_date
+)
 
-updateDateInput(inputId = "start_date", 
-                min = min_date,
-                max = Sys.Date(),
-                value = max_date - days(7))
-
-updateDateInput(inputId = "end_date", 
-                min = min_date,
-                max = Sys.Date(),
-                value = max_date)
-
-#Code for plots
+# Code for plots
 output$plot_exo <- renderPlotly({
   exo_recent <- exo %>%
-    filter(as.Date(TIMESTAMP) >= input$start_date,
-           as.Date(TIMESTAMP) <= input$end_date) %>%
+    filter(
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
     select(TIMESTAMP, all_of(input$exo_vars)) %>%
-    pivot_longer(input$exo_vars) 
-  
+    pivot_longer(input$exo_vars)
+
   p1 <- exo_recent %>%
-    ggplot(aes(x=TIMESTAMP, y=value, color = name)) + 
-    geom_point(size = 0.3)+
-    theme_classic()+
-    facet_wrap(~name, scales = "free_y")+
-    scale_color_manual(values = exo_colors)+
-    theme(axis.title.x = element_blank(),
-          legend.position = "none")
-  
-  plotly::ggplotly(p1, tooltip=c("TIMESTAMP", "value"))
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    facet_wrap(~name, scales = "free_y") +
+    scale_color_manual(values = exo_colors) +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
 output$plot_hydrology <- renderPlotly({
   hydrology_recent <- hydrology %>%
-    filter(as.Date(TIMESTAMP) >= input$start_date,
-           as.Date(TIMESTAMP) <= input$end_date) %>%
+    filter(
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
     select(TIMESTAMP, all_of(input$hydrology_vars)) %>%
-    pivot_longer(input$hydrology_vars) 
-  
+    pivot_longer(input$hydrology_vars)
+
   p1 <- hydrology_recent %>%
-    ggplot(aes(x=TIMESTAMP, y=value, color = name)) + 
-    geom_point(size = 0.3)+
-    theme_classic()+
-    scale_color_manual(values = hydrology_colors)+
-    facet_wrap(~name, scales = "free_y")+
-    theme(axis.title.x = element_blank(),
-          legend.position = "none")
-  
-  plotly::ggplotly(p1, tooltip=c("TIMESTAMP", "value"))
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    scale_color_manual(values = hydrology_colors) +
+    facet_wrap(~name, scales = "free_y") +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
-output$plot_ghg <- renderPlotly({
-  ghg_recent <- ghg %>%
-    filter(as.Date(TIMESTAMP) >= input$start_date,
-           as.Date(TIMESTAMP) <= input$end_date) %>%
-    select(TIMESTAMP, all_of(input$ghg_vars)) %>%
-    pivot_longer(input$ghg_vars) 
-  
-  p1 <- ghg_recent %>%
-    ggplot(aes(x=TIMESTAMP, y=value, color = name)) + 
-    geom_point(size = 0.3)+
-    theme_classic()+
-    scale_color_manual(values = ghg_colors)+
-    facet_wrap(~name, scales = "free_y")+
-    theme(axis.title.x = element_blank(),
-          legend.position = "none")
-  
-  plotly::ggplotly(p1, tooltip=c("TIMESTAMP", "value"))
-})
+#output$plot_ghg <- renderPlotly({
+#  ghg_recent <- ghg %>%
+#    filter(
+#      as.Date(TIMESTAMP) >= input$start_date,
+#      as.Date(TIMESTAMP) <= input$end_date
+#    ) %>%
+#    select(TIMESTAMP, all_of(input$ghg_vars)) %>%
+#    pivot_longer(input$ghg_vars)
+#
+#  p1 <- ghg_recent %>%
+#    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+#    geom_point(size = 0.3) +
+#    theme_classic() +
+#    scale_color_manual(values = ghg_colors) +
+#    facet_wrap(~name, scales = "free_y") +
+#    theme(
+#      axis.title.x = element_blank(),
+#      legend.position = "none"
+#    )
+#
+#  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
+#})
 
 output$plot_radon <- renderPlotly({
   rad_recent <- radon %>%
-    filter(as.Date(TIMESTAMP) >= input$start_date,
-           as.Date(TIMESTAMP) <= input$end_date) %>%
+    filter(
+      as.Date(TIMESTAMP) >= input$start_date,
+      as.Date(TIMESTAMP) <= input$end_date
+    ) %>%
     select(TIMESTAMP, all_of(input$rad_vars)) %>%
-    pivot_longer(input$rad_vars) 
-  
+    pivot_longer(input$rad_vars)
+
   p1 <- rad_recent %>%
-    ggplot(aes(x=TIMESTAMP, y=value, color = name)) + 
-    geom_point(size = 0.3)+
-    theme_classic()+
-    scale_color_manual(values = rad_colors)+
-    facet_wrap(~name, scales = "free_y")+
-    theme(axis.title.x = element_blank(),
-          legend.position = "none")
-  
-  plotly::ggplotly(p1, tooltip=c("TIMESTAMP", "value"))
+    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
+    geom_point(size = 0.3) +
+    theme_classic() +
+    scale_color_manual(values = rad_colors) +
+    facet_wrap(~name, scales = "free_y") +
+    theme(
+      axis.title.x = element_blank(),
+      legend.position = "none"
+    )
+
+  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
-#Code for data tables
-output$table_exo <- DT::renderDataTable({exo %>%
-    arrange(rev(TIMESTAMP)) %>%
-    mutate(TIMESTAMP = format(TIMESTAMP, "%Y-%m-%d %H:%M"))}, 
-    rownames = F,
-    class = "display nowrap")
-output$table_hydrology <- DT::renderDataTable({hydrology %>%
-    arrange(rev(TIMESTAMP)) %>%
-    mutate(TIMESTAMP = format(TIMESTAMP, "%Y-%m-%d %H:%M"))},
-    rownames = F,
-    class = "display nowrap")
-output$table_radon <- DT::renderDataTable({radon %>%
-    arrange(rev(TIMESTAMP)) %>%
-    mutate(TIMESTAMP = format(TIMESTAMP, "%Y-%m-%d %H:%M"))},
-    rownames = F,
-    class = "display nowrap")
-output$table_ghg <- DT::renderDataTable({ghg %>%
-    arrange(rev(TIMESTAMP)) %>%
-    mutate(TIMESTAMP = format(TIMESTAMP, "%Y-%m-%d %H:%M"))},
-    rownames = F,
-    class = "display nowrap")
+# todays date for overview page
+now_txt <- reactiveTimer(1000) # Gets the current time every second
 
-#todays date for overview page
-now_txt <- reactiveTimer(1000) #Gets the current time every second
-
-#Max timesteps for overview page
+# Max timesteps for overview page
 output$data_latest <- renderText({
-  formatted_date_ghg <- paste(format(max(ghg$TIMESTAMP, na.rm = T), 
-                                     "%Y-%m-%d %H:%M:%S"), 
-                              TIMEZONE)
-  ghg_color <- if(now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)){
-    ' style="color: #990000;"'} else {""}
-  formatted_date_exo <- paste(format(max(exo$TIMESTAMP, na.rm = T), 
-                                     "%Y-%m-%d %H:%M:%S"), 
-                              TIMEZONE)
-  exo_color <- if(now() - max(exo$TIMESTAMP, na.rm = T) > hours(1)){
-    ' style="color: #990000;"'} else {""}
-  formatted_date_rad <- paste(format(max(radon$TIMESTAMP, na.rm = T), 
-                                     "%Y-%m-%d %H:%M:%S"), 
-                              TIMEZONE)
-  radon_color <- if(now() - max(radon$TIMESTAMP, na.rm = T) > hours(1)){
-    ' style="color: #990000;"'} else {""}
-  formatted_date_hydrology <- paste(format(max(hydrology$TIMESTAMP, na.rm = T), 
-                                           "%Y-%m-%d %H:%M:%S"), 
-                                    TIMEZONE)
-  hydro_color <- if(now() - max(hydrology$TIMESTAMP, na.rm = T) > hours(1)){
-    ' style="color: #990000;"'} else {""}
+  #formatted_date_ghg <- paste(
+  #  format(
+  #    max(ghg$TIMESTAMP, na.rm = T),
+  #    "%Y-%m-%d %H:%M:%S"
+  #  ),
+  #  TIMEZONE
+  #)
+  #ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
+  #  ' style="color: #990000;"'
+  #} else {
+  #  ""
+  #}
+  
+  exo_times <- exo %>%
+    filter(!if_any(-TIMESTAMP, is.na)) %>%
+    pull(TIMESTAMP)
+  formatted_date_exo <- ifelse(length(exo_times) > 0,
+                               paste(
+                                 format(
+                                   max(exo_times, na.rm = T),
+                                   "%Y-%m-%d %H:%M:%S"
+                                 ),
+                                 TIMEZONE
+                               ),
+                               "No data")
+  exo_color <- if (formatted_date_exo == "No data" ||
+                   now() - max(exo_times, na.rm = T) > hours(1)) {
+    ' style="color: #990000;"'
+  } else {
+    ""
+  }
+  
+  radon_times <- radon %>%
+    filter(!if_any(-TIMESTAMP, is.na)) %>%
+    pull(TIMESTAMP)
+  formatted_date_rad <- ifelse(length(radon_times) > 0,
+                               paste(
+                                 format(
+                                   max(radon_times, na.rm = T),
+                                   "%Y-%m-%d %H:%M:%S"
+                                 ),
+                                 TIMEZONE
+                               ),
+                               "No data")
+  radon_color <- if (formatted_date_rad == "No data" ||
+                     now() - max(radon_times, na.rm = T) > hours(1)) {
+    ' style="color: #990000;"'
+  } else {
+    ""
+  }
+  
+  hydrology_times <- hydrology %>%
+    filter(!if_any(-TIMESTAMP, is.na)) %>%
+    pull(TIMESTAMP)
+  formatted_date_hydrology <- ifelse(length(hydrology_times) > 0,
+                                     paste(
+                                       format(
+                                         max(hydrology_times, na.rm = T),
+                                         "%Y-%m-%d %H:%M:%S"
+                                       ),
+                                       TIMEZONE
+                                     ),
+                                     "No data")
+  hydrology_color <- if (formatted_date_hydrology == "No data" ||
+                         now() - max(hydrology_times, na.rm = T) > hours(1)) {
+    ' style="color: #990000;"'
+  } else {
+    ""
+  }
+  
   formatted_list <- paste(
-    "<ul><li",exo_color,"><b>EXO2 water quality sonde:</b> ", formatted_date_exo, "</li>
-    <li",hydro_color,"><b>SontekIQ ADCP:</b> ", formatted_date_hydrology, "</li>
-    <li",ghg_color,"><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
-    <li",radon_color,"><b>Radon detector:</b> ", formatted_date_rad, "</li></ul>")
+    "<ul><li", exo_color, "><b>EXO2 water quality sonde:</b> ", formatted_date_exo, "</li>
+    <li", hydrology_color, "><b>SontekIQ ADCP:</b> ", formatted_date_hydrology, "</li>
+    <li", radon_color, "><b>Radon detector:</b> ", formatted_date_rad, "</li></ul>"
+  ) #    <li", ghg_color, "><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
   
   return(formatted_list)
 })
@@ -594,8 +524,8 @@ output$today <- renderText({
 # Add an observer at the end of your server setup
 observe({
   # Wait until all data is loaded
-  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(ghg) > 0, nrow(radon) > 0)
-  
+  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(radon) > 0) #nrow(ghg) > 0, 
+
   # Hide the overlay using JavaScript
   session$sendCustomMessage("hideLoadingOverlay", TRUE)
 })
