@@ -1,0 +1,39 @@
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "00 12 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:4.2
+    permissions:
+      contents: write
+    
+    steps:
+      - run: git config --system --add safe.directory '*'
+      
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: load dropbox token
+        uses: mobiledevops/secret-to-file-action@v1
+        with:
+          base64-encoded-secret: ${{ secrets.DROPBOX }}
+          filename: "tokenfile.RDS"
+      
+      - name: Process latest data
+        run: |
+          Rscript packages.R
+          Rscript ./R/generate_dashboard_outputs.R
+        
+      - name: Commit and push
+        run: |
+          git config --global user.name 'abbylewis'
+          git config --global user.email 'abigail.sl.lewis@gmail.com'
+          git add .
+          git commit -m "Automated update" || echo "No changes to commit"
+          git push

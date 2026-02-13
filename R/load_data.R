@@ -1,20 +1,4 @@
 
-
-radon_names <- c(
-  "TIMESTAMP", "RECORD", "Record_RAD7", "Year_RAD7", "Month_RAD7",
-  "Day_Rad7", "Hour_Rad7", "Minute_Rad7", "Total_Counts_Rad7",
-  "Live_Time_Rad7", "PER_TOT_A_Rad7", "PER_TOT_B_Rad7", "PER_TOT_C_Rad7",
-  "PER_TOT_D_Rad7", "High_Voltage_Level_Rad7", "High_Voltage_Duty_Rad7",
-  "Temp_sample_Rad7", "RH_sample_Rad7", "Leakage_Current_Rad7",
-  "Battery_Volt_Rad7", "Pump_current_Rad7", "Flags_Byte_Rad7",
-  "Radon_concentration_Rad7", "Radon_concentration_uncertainty_Rad7",
-  "Units_Byt_Rad7"
-)
-
-
-
-
-
 load_data <- function(file) {
   site <- ifelse(grepl("MGEO", file),
                  "DOCK",
