@@ -322,6 +322,9 @@ p3<- ggplot(data=all_data)+
 
 p.ts <- (p1/p2/p3) + plot_layout(guides = "collect")
 p.ts
+p1
+p2
+p3
 
 #check on the datetime and see what is going on with the horizontal line here 
 ```       
