@@ -1,4 +1,4 @@
-load_file <- function(path_display, 
+load_file <- function(path_display,
                       output_dir,
                       current_path,
                       archive_path) {

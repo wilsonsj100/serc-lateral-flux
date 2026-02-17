@@ -147,13 +147,13 @@ Shiny.addCustomMessageHandler("hideLoadingOverlay", function(message) {
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="start_date" class="shiny-date-input form-group shiny-input-container">
 <label class="control-label" id="start_date-label" for="start_date">Start date for plots</label>
-<input type="text" class="form-control" aria-labelledby="start_date-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-initial-date="2026-02-13" data-date-autoclose="true" data-date-dates-disabled="null" data-date-days-of-week-disabled="null">
+<input type="text" class="form-control" aria-labelledby="start_date-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-initial-date="2026-02-16" data-date-autoclose="true" data-date-dates-disabled="null" data-date-days-of-week-disabled="null">
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="end_date" class="shiny-date-input form-group shiny-input-container">
 <label class="control-label" id="end_date-label" for="end_date">End date for plots</label>
-<input type="text" class="form-control" aria-labelledby="end_date-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-initial-date="2026-02-13" data-date-autoclose="true" data-date-dates-disabled="null" data-date-days-of-week-disabled="null">
+<input type="text" class="form-control" aria-labelledby="end_date-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-initial-date="2026-02-16" data-date-autoclose="true" data-date-dates-disabled="null" data-date-days-of-week-disabled="null">
 </div>
 </div>
 </div>
@@ -373,13 +373,8 @@ Shiny.addCustomMessageHandler("hideLoadingOverlay", function(message) {
 <script type="application/shiny-prerendered" data-context="server-start">
 # Load packages
 library(shiny)
-library(shinythemes)
 library(tidyverse)
 library(lubridate)
-library(data.table)
-library(DT)
-library(ggpubr)
-library(cowplot)
 library(plotly)
 
 ## Load data ##
@@ -449,30 +444,25 @@ rad_colors <- c(
 <script type="application/shiny-prerendered" data-context="server">
 Sys.setenv(TZ = TIMEZONE)
 
-output$data_ready <- renderText({
-  ready <- nrow(exo) > 0 &&
-    nrow(hydrology) > 0 &&
-    #nrow(ghg) > 0 &&
-    nrow(radon) > 0
-
-  if (ready) "true" else "false"
-})
-
-outputOptions(output, "data_ready", suspendWhenHidden = FALSE)
-
 ## LOAD DATA ##
 
-exo <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_EXO.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+exo <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_EXO.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
-hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_HYDROLOGY.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_HYDROLOGY.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
-radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
 # TO DO: Still need GHG
 
@@ -481,21 +471,23 @@ min_date <- min(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    #ghg$TIMESTAMP,
+    # ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
-)
+) %>%
+  as_date()
 
 max_date <- max(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    #ghg$TIMESTAMP,
+    # ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
-)
+) %>%
+  as_date()
 
 updateDateInput(
   inputId = "start_date",
@@ -531,7 +523,7 @@ output$plot_exo_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -556,7 +548,7 @@ output$plot_exo_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -581,7 +573,7 @@ output$plot_hydrology_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -606,13 +598,13 @@ output$plot_hydrology_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
-#output$plot_ghg <- renderPlotly({
+# output$plot_ghg <- renderPlotly({
 #  ghg_recent <- ghg %>%
 #    filter(
 #      as.Date(TIMESTAMP) >= input$start_date,
@@ -633,7 +625,7 @@ output$plot_hydrology_flume <- renderPlotly({
 #    )
 #
 #  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-#})
+# })
 
 output$plot_radon_dock <- renderPlotly({
   rad_recent <- radon %>%
@@ -654,7 +646,7 @@ output$plot_radon_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -679,7 +671,7 @@ output$plot_radon_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -690,78 +682,90 @@ now_txt <- reactiveTimer(1000) # Gets the current time every second
 
 # Max timesteps for overview page
 output$data_latest <- renderText({
-  #formatted_date_ghg <- paste(
+  # formatted_date_ghg <- paste(
   #  format(
   #    max(ghg$TIMESTAMP, na.rm = T),
   #    "%Y-%m-%d %H:%M:%S"
   #  ),
   #  TIMEZONE
-  #)
-  #ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
+  # )
+  # ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
   #  ' style="color: #990000;"'
-  #} else {
+  # } else {
   #  ""
-  #}
-  
+  # }
+
   exo_times <- exo %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   radon_times <- radon %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   hydrology_times <- hydrology %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   formatted_list <- paste(
     "DOCK:<\u002fbr>
-    <ul><li", exo_times$color[exo_times$Site == "DOCK"], 
+    <ul><li", exo_times$color[exo_times$Site == "DOCK"],
     "><b>EXO2 water quality sonde:<\u002fb> ", exo_times$formatted[exo_times$Site == "DOCK"], "<\u002fli>
-    <li", hydrology_times$color[hydrology_times$Site == "DOCK"], 
-    "><b>SontekIQ ADCP:<\u002fb> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "<\u002fli>
-    <li", radon_times$color[radon_times$Site == "DOCK"], 
+    <li", hydrology_times$color[hydrology_times$Site == "DOCK"],
+    "><b>Compact Bubbler Sensor:<\u002fb> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "<\u002fli>
+    <li", radon_times$color[radon_times$Site == "DOCK"],
     "><b>Radon detector:<\u002fb> ", radon_times$formatted[radon_times$Site == "DOCK"], "<\u002fli><\u002ful><\u002fbr>
     FLUME:<\u002fbr>
-    <ul><li", exo_times$color[exo_times$Site == "FLUME"], 
+    <ul><li", exo_times$color[exo_times$Site == "FLUME"],
     "><b>EXO2 water quality sonde:<\u002fb> ", exo_times$formatted[exo_times$Site == "FLUME"], "<\u002fli>
-    <li", hydrology_times$color[hydrology_times$Site == "FLUME"], 
+    <li", hydrology_times$color[hydrology_times$Site == "FLUME"],
     "><b>SontekIQ ADCP:<\u002fb> ", hydrology_times$formatted[hydrology_times$Site == "FLUME"], "<\u002fli>
-    <li", radon_times$color[radon_times$Site == "FLUME"], 
+    <li", radon_times$color[radon_times$Site == "FLUME"],
     "><b>Radon detector:<\u002fb> ", radon_times$formatted[radon_times$Site == "FLUME"], "<\u002fli><\u002ful>"
   ) #    <li", ghg_color, "><b>GHG analyzer:<\u002fb> ", formatted_date_ghg, "<\u002fli>
-  
+
   return(formatted_list)
 })
 
@@ -773,7 +777,7 @@ output$today <- renderText({
 # Add an observer at the end of your server setup
 observe({
   # Wait until all data is loaded
-  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(radon) > 0) #nrow(ghg) > 0, 
+  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(radon) > 0) # nrow(ghg) > 0,
 
   # Hide the overlay using JavaScript
   session$sendCustomMessage("hideLoadingOverlay", TRUE)
@@ -827,7 +831,7 @@ ojs_define <- function(..., .session = shiny::getDefaultReactiveDomain()) {
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81]}},"value":[{"type":"character","attributes":{},"value":["abind","backports","base","broom","bslib","cachem","car","carData","cli","compiler","cowplot","data.table","datasets","digest","dplyr","DT","evaluate","farver","fastmap","forcats","Formula","generics","ggplot2","ggpubr","ggsignif","glue","graphics","grDevices","grid","gtable","hms","htmltools","htmlwidgets","httpuv","httr","jquerylib","jsonlite","knitr","later","lazyeval","lifecycle","lubridate","magrittr","memoise","methods","mime","pillar","pkgconfig","plotly","promises","purrr","R6","RColorBrewer","Rcpp","readr","rlang","rmarkdown","rstatix","rstudioapi","S7","sass","scales","shiny","shinythemes","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","timechange","tools","tzdb","utils","vctrs","viridisLite","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["1.4-8","1.5.0","4.4.1","1.0.7","0.9.0","1.1.0","3.1-3","3.0-5","3.6.5","4.4.1","1.1.3","1.18.2.1","4.4.1","0.6.37","1.1.4","0.33","1.0.3","2.1.2","1.2.0","1.0.0","1.2-5","0.1.4","4.0.0","0.6.0","0.6.4","1.8.0","4.4.1","4.4.1","4.4.1","0.3.6","1.1.3","0.5.8.1","1.6.4","1.6.15","1.4.7","0.1.4","2.0.0","1.50","1.4.1","0.2.2","1.0.4","1.9.4","2.0.3","2.0.1","4.4.1","0.13","1.10.2","2.0.3","4.11.0","1.3.2","1.0.4","2.6.1","1.1-3","1.0.14","2.1.5","1.1.6","2.29","0.7.2","0.17.1","0.2.0","0.4.10","1.4.0","1.10.0","1.2.0","4.4.1","1.8.7","1.5.1","3.2.1","1.3.1","1.2.1","2.0.0","0.3.0","4.4.1","0.5.0","4.4.1","0.6.5","0.4.2","3.0.2","0.52","1.8-4","2.3.10"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69]}},"value":[{"type":"character","attributes":{},"value":["base","bslib","cachem","cli","compiler","data.table","datasets","digest","dplyr","evaluate","farver","fastmap","forcats","generics","ggplot2","glue","graphics","grDevices","grid","gtable","hms","htmltools","htmlwidgets","httpuv","httr","jquerylib","jsonlite","knitr","later","lazyeval","lifecycle","lubridate","magrittr","memoise","methods","mime","pillar","pkgconfig","plotly","promises","purrr","R6","RColorBrewer","Rcpp","readr","rlang","rmarkdown","rstudioapi","S7","sass","scales","shiny","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","timechange","tools","tzdb","utils","vctrs","viridisLite","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["4.4.1","0.9.0","1.1.0","3.6.5","4.4.1","1.18.2.1","4.4.1","0.6.37","1.2.0","1.0.3","2.1.2","1.2.0","1.0.0","0.1.4","4.0.0","1.8.0","4.4.1","4.4.1","4.4.1","0.3.6","1.1.3","0.5.8.1","1.6.4","1.6.15","1.4.7","0.1.4","2.0.0","1.50","1.4.1","0.2.2","1.0.5","1.9.4","2.0.4","2.0.1","4.4.1","0.13","1.11.1","2.0.3","4.11.0","1.3.2","1.0.4","2.6.1","1.1-3","1.0.14","2.1.5","1.1.7","2.29","0.17.1","0.2.0","0.4.10","1.4.0","1.10.0","4.4.1","1.8.7","1.5.1","3.3.1","1.3.1","1.2.1","2.0.0","0.3.0","4.4.1","0.5.0","4.4.1","0.7.1","0.4.2","3.0.2","0.52","1.8-4","2.3.10"]}]}]}
 </script>
 <!--/html_preserve-->
 

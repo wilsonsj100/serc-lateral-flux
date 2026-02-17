@@ -28,7 +28,7 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
       grepl(search_term, name),
       !grepl("backup", name)
     )
-  
+
   possible_file_names <- format(
     seq.Date(start_date, Sys.Date(), by = "1 day"),
     "%Y%m%d"
@@ -36,7 +36,7 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
   relevant_files <- relevant_files[
     grepl(paste0(possible_file_names, collapse = "|"), relevant_files$name),
   ]
-  relevant_files <- relevant_files[!grepl("NewConstTable", relevant_files$name),]
+  relevant_files <- relevant_files[!grepl("NewConstTable", relevant_files$name), ]
 
   # Remove files that are already loaded and haven't been modified
   already_loaded <- list.files(gcrew_folder)
@@ -52,19 +52,21 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
 
   # Load current data file
   new <- current$path_display %>%
-    map(load_file, 
-        output_dir = gcrew_folder,
-        current_path = current_path,
-        archive_path = archive_path)
+    map(load_file,
+      output_dir = gcrew_folder,
+      current_path = current_path,
+      archive_path = archive_path
+    )
 
   if (nrow(relevant_files) == 0) {
     message("No new files to download")
   } else {
     message("Downloading ", nrow(relevant_files), " files")
     all_data <- relevant_files$path_display %>%
-      map(load_file, 
-          output_dir = gcrew_folder, 
-          current_path = current_path,
-          archive_path = archive_path)
+      map(load_file,
+        output_dir = gcrew_folder,
+        current_path = current_path,
+        archive_path = archive_path
+      )
   }
 }

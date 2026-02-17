@@ -87,13 +87,8 @@ Shiny.addCustomMessageHandler("hideLoadingOverlay", function(message) {
 
 # Load packages
 library(shiny)
-library(shinythemes)
 library(tidyverse)
 library(lubridate)
-library(data.table)
-library(DT)
-library(ggpubr)
-library(cowplot)
 library(plotly)
 
 ## Load data ##
@@ -280,30 +275,25 @@ checkboxGroupInput("rad_vars", h4("Variables to plot"),
 
 Sys.setenv(TZ = TIMEZONE)
 
-output$data_ready <- renderText({
-  ready <- nrow(exo) > 0 &&
-    nrow(hydrology) > 0 &&
-    #nrow(ghg) > 0 &&
-    nrow(radon) > 0
-
-  if (ready) "true" else "false"
-})
-
-outputOptions(output, "data_ready", suspendWhenHidden = FALSE)
-
 ## LOAD DATA ##
 
-exo <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_EXO.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+exo <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_EXO.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
-hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_HYDROLOGY.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_HYDROLOGY.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
-radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv")%>%
-  mutate(TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
-         TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE))
+radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
 
 # TO DO: Still need GHG
 
@@ -312,21 +302,23 @@ min_date <- min(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    #ghg$TIMESTAMP,
+    # ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
-)
+) %>%
+  as_date()
 
 max_date <- max(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    #ghg$TIMESTAMP,
+    # ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
-)
+) %>%
+  as_date()
 
 updateDateInput(
   inputId = "start_date",
@@ -362,7 +354,7 @@ output$plot_exo_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -387,7 +379,7 @@ output$plot_exo_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -412,7 +404,7 @@ output$plot_hydrology_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -437,13 +429,13 @@ output$plot_hydrology_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
 })
 
-#output$plot_ghg <- renderPlotly({
+# output$plot_ghg <- renderPlotly({
 #  ghg_recent <- ghg %>%
 #    filter(
 #      as.Date(TIMESTAMP) >= input$start_date,
@@ -464,7 +456,7 @@ output$plot_hydrology_flume <- renderPlotly({
 #    )
 #
 #  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-#})
+# })
 
 output$plot_radon_dock <- renderPlotly({
   rad_recent <- radon %>%
@@ -485,7 +477,7 @@ output$plot_radon_dock <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("DOCK")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -510,7 +502,7 @@ output$plot_radon_flume <- renderPlotly({
     theme(
       axis.title.x = element_blank(),
       legend.position = "none"
-    )+
+    ) +
     ggtitle("FLUME")
 
   plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
@@ -521,78 +513,90 @@ now_txt <- reactiveTimer(1000) # Gets the current time every second
 
 # Max timesteps for overview page
 output$data_latest <- renderText({
-  #formatted_date_ghg <- paste(
+  # formatted_date_ghg <- paste(
   #  format(
   #    max(ghg$TIMESTAMP, na.rm = T),
   #    "%Y-%m-%d %H:%M:%S"
   #  ),
   #  TIMEZONE
-  #)
-  #ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
+  # )
+  # ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
   #  ' style="color: #990000;"'
-  #} else {
+  # } else {
   #  ""
-  #}
-  
+  # }
+
   exo_times <- exo %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   radon_times <- radon %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   hydrology_times <- hydrology %>%
     group_by(Site) %>%
-    summarize(max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-              formatted = ifelse(is.finite(max),
-                                 paste(
-                                   format(max, "%Y-%m-%d %H:%M:%S"),
-                                   TIMEZONE
-                                 ),
-                                 "No data"),
-              color = ifelse(formatted == "No data" || 
-                               (now() - max) > hours(1),
-                             ' style="color: #990000;"',
-                             ""))
-  
+    summarize(
+      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
+      formatted = ifelse(is.finite(max),
+        paste(
+          format(max, "%Y-%m-%d %H:%M:%S"),
+          TIMEZONE
+        ),
+        "No data"
+      ),
+      color = ifelse(formatted == "No data" ||
+        (now() - max) > hours(1),
+      ' style="color: #990000;"',
+      ""
+      )
+    )
+
   formatted_list <- paste(
     "DOCK:</br>
-    <ul><li", exo_times$color[exo_times$Site == "DOCK"], 
+    <ul><li", exo_times$color[exo_times$Site == "DOCK"],
     "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "DOCK"], "</li>
-    <li", hydrology_times$color[hydrology_times$Site == "DOCK"], 
-    "><b>SontekIQ ADCP:</b> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "</li>
-    <li", radon_times$color[radon_times$Site == "DOCK"], 
+    <li", hydrology_times$color[hydrology_times$Site == "DOCK"],
+    "><b>Compact Bubbler Sensor:</b> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "</li>
+    <li", radon_times$color[radon_times$Site == "DOCK"],
     "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "DOCK"], "</li></ul></br>
     FLUME:</br>
-    <ul><li", exo_times$color[exo_times$Site == "FLUME"], 
+    <ul><li", exo_times$color[exo_times$Site == "FLUME"],
     "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "FLUME"], "</li>
-    <li", hydrology_times$color[hydrology_times$Site == "FLUME"], 
+    <li", hydrology_times$color[hydrology_times$Site == "FLUME"],
     "><b>SontekIQ ADCP:</b> ", hydrology_times$formatted[hydrology_times$Site == "FLUME"], "</li>
-    <li", radon_times$color[radon_times$Site == "FLUME"], 
+    <li", radon_times$color[radon_times$Site == "FLUME"],
     "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "FLUME"], "</li></ul>"
   ) #    <li", ghg_color, "><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
-  
+
   return(formatted_list)
 })
 
@@ -604,7 +608,7 @@ output$today <- renderText({
 # Add an observer at the end of your server setup
 observe({
   # Wait until all data is loaded
-  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(radon) > 0) #nrow(ghg) > 0, 
+  req(nrow(exo) > 0, nrow(hydrology) > 0, nrow(radon) > 0) # nrow(ghg) > 0,
 
   # Hide the overlay using JavaScript
   session$sendCustomMessage("hideLoadingOverlay", TRUE)

@@ -12,27 +12,30 @@ source(here::here("R", "load_data.R"))
 #' @return list with three compiled files
 
 generate_dashboard_outputs <- function(days_to_include = 100) {
-  
   ### First, get local copies of all files ###
-  download_new_data(gcrew_folder = here::here("Raw_data"),
-                    start_date = Sys.Date() - days(100),
-                    current_path = "GCREW_LOGGERNET_DATA/current_data",
-                    archive_path = "GCREW_LOGGERNET_DATA/archive_data",
-                    search_term = "MARSH_OUTLET")
-  
-  download_new_data(gcrew_folder = here::here("Raw_data"),
-                    start_date = Sys.Date() - days(100),
-                    current_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_current_data",
-                    archive_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_archive_data",
-                    search_term = "MGEO_SERC_Rad7|MGEO_SERC_Exo|MGEO_SERC_Level")
-  
+  download_new_data(
+    gcrew_folder = here::here("Raw_data"),
+    start_date = Sys.Date() - days(100),
+    current_path = "GCREW_LOGGERNET_DATA/current_data",
+    archive_path = "GCREW_LOGGERNET_DATA/archive_data",
+    search_term = "MARSH_OUTLET"
+  )
+
+  download_new_data(
+    gcrew_folder = here::here("Raw_data"),
+    start_date = Sys.Date() - days(100),
+    current_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_current_data",
+    archive_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_archive_data",
+    search_term = "MGEO_SERC_Rad7|MGEO_SERC_Exo|MGEO_SERC_Level"
+  )
+
   ### Load files ###
   files <- list.files(here::here("Raw_data"), full.names = T)
 
-  #Are there any files we have loaded that we want to manually exclude?
+  # Are there any files we have loaded that we want to manually exclude?
   exclude <- c("FILL_IN_FILES_TO_EXCLUDE_HERE.csv")
   files <- files[!grepl(paste0(exclude, collapse = "|"), files)]
-  
+
   message(paste0("Generating outputs for ", length(files), " files"))
 
   files_exo <- files[grepl("Exo", files)]
