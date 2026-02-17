@@ -23,9 +23,6 @@ server: shiny
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8); /* make text readable */
 }
 
-</style>
-
-<style>
 #loading-overlay {
   position: fixed;
   top: 0;
@@ -90,6 +87,7 @@ library(shiny)
 library(tidyverse)
 library(lubridate)
 library(plotly)
+source("dashboard_functions.R")
 
 ## Load data ##
 # Note this code could be adapted for use with the RAD8 (Durridge) and LI7820 N2O Analyzer
@@ -335,250 +333,43 @@ updateDateInput(
 )
 
 # Code for plots
-output$plot_exo_dock <- renderPlotly({
-  exo_recent <- exo %>%
-    filter(
-      Site == "DOCK",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$exo_vars)) %>%
-    pivot_longer(input$exo_vars)
+output$plot_exo_dock  <- renderPlotly(
+  make_plot(exo, "DOCK", input$exo_vars, input$start_date, input$end_date, 
+            exo_colors)
+  )
 
-  p1 <- exo_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    facet_wrap(~name, scales = "free_y") +
-    scale_color_manual(values = exo_colors) +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("DOCK")
+output$plot_exo_flume <- renderPlotly(
+  make_plot(exo, "FLUME", input$exo_vars, input$start_date, input$end_date, 
+            exo_colors)
+  )
 
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
+output$plot_hydrology_dock <- renderPlotly(
+  make_plot(hydrology, "DOCK", input$hydrology_vars, input$start_date, 
+            input$end_date, hydrology_colors)
+  )
 
-output$plot_exo_flume <- renderPlotly({
-  exo_recent <- exo %>%
-    filter(
-      Site == "FLUME",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$exo_vars)) %>%
-    pivot_longer(input$exo_vars)
+output$plot_hydrology_flume <- renderPlotly(
+  make_plot(hydrology, "FLUME", input$hydrology_vars, input$start_date, 
+            input$end_date, hydrology_colors)
+  )
 
-  p1 <- exo_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    facet_wrap(~name, scales = "free_y") +
-    scale_color_manual(values = exo_colors) +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("FLUME")
+output$plot_radon_dock <- renderPlotly(
+  make_plot(radon, "DOCK", input$rad_vars, input$start_date, input$end_date,
+            rad_colors)
+  )
 
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
-
-output$plot_hydrology_dock <- renderPlotly({
-  hydrology_recent <- hydrology %>%
-    filter(
-      Site == "DOCK",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$hydrology_vars)) %>%
-    pivot_longer(input$hydrology_vars)
-
-  p1 <- hydrology_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    scale_color_manual(values = hydrology_colors) +
-    facet_wrap(~name, scales = "free_y") +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("DOCK")
-
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
-
-output$plot_hydrology_flume <- renderPlotly({
-  hydrology_recent <- hydrology %>%
-    filter(
-      Site == "FLUME",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$hydrology_vars)) %>%
-    pivot_longer(input$hydrology_vars)
-
-  p1 <- hydrology_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    scale_color_manual(values = hydrology_colors) +
-    facet_wrap(~name, scales = "free_y") +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("FLUME")
-
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
-
-# output$plot_ghg <- renderPlotly({
-#  ghg_recent <- ghg %>%
-#    filter(
-#      as.Date(TIMESTAMP) >= input$start_date,
-#      as.Date(TIMESTAMP) <= input$end_date
-#    ) %>%
-#    select(TIMESTAMP, all_of(input$ghg_vars)) %>%
-#    pivot_longer(input$ghg_vars)
-#
-#  p1 <- ghg_recent %>%
-#    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-#    geom_point(size = 0.3) +
-#    theme_classic() +
-#    scale_color_manual(values = ghg_colors) +
-#    facet_wrap(~name, scales = "free_y") +
-#    theme(
-#      axis.title.x = element_blank(),
-#      legend.position = "none"
-#    )
-#
-#  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-# })
-
-output$plot_radon_dock <- renderPlotly({
-  rad_recent <- radon %>%
-    filter(
-      Site == "DOCK",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$rad_vars)) %>%
-    pivot_longer(input$rad_vars)
-
-  p1 <- rad_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    scale_color_manual(values = rad_colors) +
-    facet_wrap(~name, scales = "free_y") +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("DOCK")
-
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
-
-output$plot_radon_flume <- renderPlotly({
-  rad_recent <- radon %>%
-    filter(
-      Site == "FLUME",
-      as.Date(TIMESTAMP) >= input$start_date,
-      as.Date(TIMESTAMP) <= input$end_date
-    ) %>%
-    select(TIMESTAMP, all_of(input$rad_vars)) %>%
-    pivot_longer(input$rad_vars)
-
-  p1 <- rad_recent %>%
-    ggplot(aes(x = TIMESTAMP, y = value, color = name)) +
-    geom_point(size = 0.3) +
-    theme_classic() +
-    scale_color_manual(values = rad_colors) +
-    facet_wrap(~name, scales = "free_y") +
-    theme(
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    ) +
-    ggtitle("FLUME")
-
-  plotly::ggplotly(p1, tooltip = c("TIMESTAMP", "value"))
-})
-
-# todays date for overview page
-now_txt <- reactiveTimer(1000) # Gets the current time every second
+output$plot_radon_flume <- renderPlotly(
+  make_plot(radon, "FLUME", input$rad_vars, input$start_date, input$end_date,
+            rad_colors))
 
 # Max timesteps for overview page
 output$data_latest <- renderText({
-  # formatted_date_ghg <- paste(
-  #  format(
-  #    max(ghg$TIMESTAMP, na.rm = T),
-  #    "%Y-%m-%d %H:%M:%S"
-  #  ),
-  #  TIMEZONE
-  # )
-  # ghg_color <- if (now() - max(ghg$TIMESTAMP, na.rm = T) > hours(1)) {
-  #  ' style="color: #990000;"'
-  # } else {
-  #  ""
-  # }
+  
+  exo_times <- latest_times(exo)
 
-  exo_times <- exo %>%
-    group_by(Site) %>%
-    summarize(
-      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-      formatted = ifelse(is.finite(max),
-        paste(
-          format(max, "%Y-%m-%d %H:%M:%S"),
-          TIMEZONE
-        ),
-        "No data"
-      ),
-      color = ifelse(formatted == "No data" ||
-        (now() - max) > hours(1),
-      ' style="color: #990000;"',
-      ""
-      )
-    )
+  radon_times <- latest_times(radon)
 
-  radon_times <- radon %>%
-    group_by(Site) %>%
-    summarize(
-      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-      formatted = ifelse(is.finite(max),
-        paste(
-          format(max, "%Y-%m-%d %H:%M:%S"),
-          TIMEZONE
-        ),
-        "No data"
-      ),
-      color = ifelse(formatted == "No data" ||
-        (now() - max) > hours(1),
-      ' style="color: #990000;"',
-      ""
-      )
-    )
-
-  hydrology_times <- hydrology %>%
-    group_by(Site) %>%
-    summarize(
-      max = max(TIMESTAMP[!if_any(-TIMESTAMP, is.na)], na.rm = T),
-      formatted = ifelse(is.finite(max),
-        paste(
-          format(max, "%Y-%m-%d %H:%M:%S"),
-          TIMEZONE
-        ),
-        "No data"
-      ),
-      color = ifelse(formatted == "No data" ||
-        (now() - max) > hours(1),
-      ' style="color: #990000;"',
-      ""
-      )
-    )
+  hydrology_times <- latest_times(hydrology)
 
   formatted_list <- paste(
     "DOCK:</br>
@@ -598,11 +389,6 @@ output$data_latest <- renderText({
   ) #    <li", ghg_color, "><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
 
   return(formatted_list)
-})
-
-# Render the current time as a text output
-output$today <- renderText({
-  paste("Current time: ", format(now_txt(), "%Y-%m-%d %H:%M:%S"), TIMEZONE)
 })
 
 # Add an observer at the end of your server setup
