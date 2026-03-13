@@ -26,7 +26,7 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
     start_date = Sys.Date() - days(100),
     current_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_current_data",
     archive_path = "MarineGEO Water Monitoring SERC/SERC_DOCK_Rawdata_Loggernet/SERC_DOCK_archive_data",
-    search_term = "MGEO_SERC_Rad7|MGEO_SERC_Exo|MGEO_SERC_Level"
+    search_term = "MGEO_SERC_Rad7|MGEO_SERC_Exo|MGEO_SERC_Level|MGEO_SERC_FLUX"
   )
 
   ### Load files ###
@@ -41,6 +41,7 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
   files_exo <- files[grepl("Exo", files)]
   files_rad7 <- files[grepl("Rad7", files)]
   files_sontek <- files[grepl("Sontek|Level", files)]
+  files_flux <- files[grepl("FLUX", files)]
 
   TIMEZONE <- "EST" # Used across all
 
@@ -110,6 +111,21 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
     ) %>%
     select(all_of(c("Site", "TIMESTAMP", radon_choices))) %>%
     filter(as.Date(TIMESTAMP) > Sys.Date() - days(days_to_include))
+  
+  data_flux <- files_flux %>%
+    map(load_data) %>%
+    bind_rows() %>%
+    mutate(
+      TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+      TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+    ) %>%
+    rename(H2O_ppm = H2O,
+    CO2d_ppm = CO2,
+    CH4d_ppb = CH4,
+    Cavity_pressure = cavity_p,
+    Cavity_temperature = cavity_t) %>%
+    select(all_of(c("Site", "TIMESTAMP", ghg_choices))) %>%
+    filter(as.Date(TIMESTAMP) > Sys.Date() - days(days_to_include))
 
   # Output
   write.csv(data_exo,
@@ -126,8 +142,13 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
     here::here("Processed_data", "GCREW_MARSH_OUTLET_HYDROLOGY.csv"),
     row.names = FALSE
   )
+  
+  write.csv(data_flux,
+            here::here("Processed_data", "GCREW_MARSH_OUTLET_GHG.csv"),
+            row.names = FALSE
+  )
 
-  return(list(data_exo, data_radon, data_hydrology))
+  return(list(data_exo, data_radon, data_hydrology, data_flux))
 }
 
 

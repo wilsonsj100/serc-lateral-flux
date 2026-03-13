@@ -193,12 +193,12 @@ div(
   # Images
   div(
     img(
-      src = "www/images/SARGE_BKGD_SHINY.jpg",
+      src = "www/images/SERC-Docks4_CreditSamBenson_web.jpg",
       style = "width:300px; padding-bottom:10px; ",
       alt = "SARGE in the field"
     ),
     img(
-      src = "www/images/GCW_HighTide.png",
+      src = "www/images/flume.png",
       style = "width:300px;",
       alt = "marsh at high tide"
     )

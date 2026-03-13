@@ -19,7 +19,6 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
                               archive_path = "GCREW_LOGGERNET_DATA/archive_data",
                               search_term = "MARSH_OUTLET") {
   # Identify all files
-  # GENX flux vs GENX LGR in 2021
   message("Looking for new data files on dropbox")
   relevant_files <- drop_dir(path = archive_path) %>%
     filter(grepl(search_term, name))
