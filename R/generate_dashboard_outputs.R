@@ -5,11 +5,11 @@ source(here::here("R", "load_data.R"))
 #' calculate_flux
 #'
 #' @description
-#' This function calculates the raw CH4 fluxes for all files in the dropbox_downloads folder
+#' This function loads data from dropbox and compiles four summarized outputs with recent, formatted data
 #'
 #' @param days_to_include how many days of historical data to include in output
 #'
-#' @return list with three compiled files
+#' @return list with four compiled files
 
 generate_dashboard_outputs <- function(days_to_include = 100) {
   ### First, get local copies of all files ###
