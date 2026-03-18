@@ -1,12 +1,12 @@
 ---
-title: "SARGE Real-Time Data Dashboard"
+title: "SERC Lateral Transport"
 title-block-banner: true
 server: shiny
 ---
 
 <style>
 .quarto-title-banner {
-  background-image: url("www/images/DJI_0014.jpeg");
+  background-image: url("www/images/GCReW_Drone.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -246,6 +246,24 @@ checkboxGroupInput("hydrology_vars", h4("Variables to plot"),
 )
 ```
 
+## GHG
+
+```{r}
+#| panel: fill
+
+plotlyOutput("plot_ghg_dock", height = "350px")
+plotlyOutput("plot_ghg_flume", height = "350px")
+```
+
+```{r}
+#| panel: sidebar
+
+checkboxGroupInput("ghg_vars", h4("Variables to plot"),
+  choices = ghg_choices,
+  selected = c("CH4d_ppb", "CO2d_ppm")
+)
+```
+
 ## Radon
 
 ```{r}
@@ -287,6 +305,12 @@ hydrology <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-latera
     TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
   )
 
+ghg <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_GHG.csv") %>%
+  mutate(
+    TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
+    TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
+  )
+
 radon <- read_csv("https://raw.githubusercontent.com/wilsonsj100/serc-lateral-flux/refs/heads/dashboard/Processed_data/GCREW_MARSH_OUTLET_RADON.csv") %>%
   mutate(
     TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
@@ -300,7 +324,7 @@ min_date <- min(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    # ghg$TIMESTAMP,
+    ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
@@ -311,7 +335,7 @@ max_date <- max(
   c(
     exo$TIMESTAMP,
     hydrology$TIMESTAMP,
-    # ghg$TIMESTAMP,
+    ghg$TIMESTAMP,
     radon$TIMESTAMP
   ),
   na.rm = T
@@ -353,6 +377,16 @@ output$plot_hydrology_flume <- renderPlotly(
             input$end_date, hydrology_colors)
   )
 
+output$plot_ghg_dock <- renderPlotly(
+  make_plot(ghg, "DOCK", input$ghg_vars, input$start_date, 
+            input$end_date, ghg_colors)
+  )
+
+output$plot_ghg_flume <- renderPlotly(
+  make_plot(ghg, "FLUME", input$ghg_vars, input$start_date, 
+            input$end_date, ghg_colors)
+  )
+
 output$plot_radon_dock <- renderPlotly(
   make_plot(radon, "DOCK", input$rad_vars, input$start_date, input$end_date,
             rad_colors)
@@ -370,6 +404,8 @@ output$data_latest <- renderText({
   radon_times <- latest_times(radon)
 
   hydrology_times <- latest_times(hydrology)
+  
+  ghg_times <- latest_times(ghg)
 
   formatted_list <- paste(
     "DOCK:</br>
@@ -377,6 +413,8 @@ output$data_latest <- renderText({
     "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "DOCK"], "</li>
     <li", hydrology_times$color[hydrology_times$Site == "DOCK"],
     "><b>Compact Bubbler Sensor:</b> ", hydrology_times$formatted[hydrology_times$Site == "DOCK"], "</li>
+    <li", ghg_times$color[ghg_times$Site == "DOCK"],
+    "><b>GHG analyzer:</b> ", ghg_times$formatted[ghg_times$Site == "DOCK"], "</li>
     <li", radon_times$color[radon_times$Site == "DOCK"],
     "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "DOCK"], "</li></ul></br>
     FLUME:</br>
@@ -384,9 +422,11 @@ output$data_latest <- renderText({
     "><b>EXO2 water quality sonde:</b> ", exo_times$formatted[exo_times$Site == "FLUME"], "</li>
     <li", hydrology_times$color[hydrology_times$Site == "FLUME"],
     "><b>SontekIQ ADCP:</b> ", hydrology_times$formatted[hydrology_times$Site == "FLUME"], "</li>
+    <li", ghg_times$color[ghg_times$Site == "FLUME"],
+    "><b>GHG analyzer:</b> ", ghg_times$formatted[ghg_times$Site == "FLUME"], "</li>
     <li", radon_times$color[radon_times$Site == "FLUME"],
     "><b>Radon detector:</b> ", radon_times$formatted[radon_times$Site == "FLUME"], "</li></ul>"
-  ) #    <li", ghg_color, "><b>GHG analyzer:</b> ", formatted_date_ghg, "</li>
+  ) #    
 
   return(formatted_list)
 })

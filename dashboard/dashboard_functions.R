@@ -20,8 +20,19 @@ make_plot <- function(data, site, vars, start, end, colors) {
 }
 
 latest_times <- function(df) {
-  df %>%
+  filt <- df %>%
     group_by(Site) %>%
+    filter(if_any(-TIMESTAMP, ~!is.na(.))) 
+  
+  if(!"FLUME" %in% filt$Site){
+    filt <- bind_rows(filt, data.frame(Site = "FLUME"))
+  }
+  
+  if(!"DOCK" %in% filt$Site){
+    filt <- bind_rows(filt, data.frame(Site = "DOCK"))
+  }
+  
+  out <- filt %>%
     summarize(
       max = max(TIMESTAMP, na.rm = TRUE),
       formatted = ifelse(
@@ -35,4 +46,6 @@ latest_times <- function(df) {
         ""
       )
     )
+  
+  return(out)
 }
