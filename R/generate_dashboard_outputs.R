@@ -119,11 +119,6 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
       TIMESTAMP = paste(format(TIMESTAMP, "%Y-%m-%d %H:%M:%S")),
       TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
     ) %>%
-    rename(H2O_ppm = H2O,
-    CO2d_ppm = CO2,
-    CH4d_ppb = CH4,
-    Cavity_pressure = cavity_p,
-    Cavity_temperature = cavity_t) %>%
     select(all_of(c("Site", "TIMESTAMP", ghg_choices))) %>%
     filter(as.Date(TIMESTAMP) > Sys.Date() - days(days_to_include))
 

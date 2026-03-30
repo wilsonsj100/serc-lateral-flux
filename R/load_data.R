@@ -23,6 +23,25 @@ load_data <- function(file) {
     data <- data %>%
       rename(Water_depth = Level_m_CBS)
   }
+  
+  if ("CH4d_ppm_LGR1" %in% names) {
+    data <- data %>%
+      mutate(CH4d_ppb = CH4d_ppm_LGR1 * 1000) %>%
+      rename(CO2d_ppm = CO2d_ppm_LGR1,
+             H2O_ppm = H2O_ppm_LGR1,
+             Cavity_pressure = GasP_torr_LGR1,
+             Cavity_temperature = GasT_C_LGR1
+             )
+  }
+  
+  if("CH4" %in% names) {
+    data <- data %>%
+      rename(H2O_ppm = H2O,
+             CO2d_ppm = CO2,
+             CH4d_ppb = CH4,
+             Cavity_pressure = cavity_p,
+             Cavity_temperature = cavity_t)
+  }
 
   return(data)
 }
