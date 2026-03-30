@@ -120,7 +120,8 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
       TIMESTAMP = ymd_hms(TIMESTAMP, tz = TIMEZONE)
     ) %>%
     select(all_of(c("Site", "TIMESTAMP", ghg_choices))) %>%
-    filter(as.Date(TIMESTAMP) > Sys.Date() - days(days_to_include))
+    filter(as.Date(TIMESTAMP) > Sys.Date() - days(days_to_include),
+           second(TIMESTAMP) == 0)
 
   # Output
   write.csv(data_exo,
