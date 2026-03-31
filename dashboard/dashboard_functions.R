@@ -6,14 +6,21 @@ make_plot <- function(data, site, vars, start, end, colors) {
       as.Date(TIMESTAMP) <= end
     ) %>%
     select(all_of(c("TIMESTAMP", vars))) %>%
-    pivot_longer(vars)
+    pivot_longer(vars) 
   
   p <- ggplot(recent, aes(TIMESTAMP, value, color = name)) +
     geom_point(size = 0.3) +
     theme_classic() +
     facet_wrap(~name, scales = "free_y") +
     scale_color_manual(values = colors) +
-    theme(axis.title.x = element_blank(), legend.position = "none") +
+    coord_cartesian(
+      xlim = c(
+        lubridate::ymd(start, tz = "EST"),
+        lubridate::ymd(end + 1, tz = "EST")
+      )
+    ) +
+    theme(axis.title.x = element_blank(), legend.position = "none",
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
     ggtitle(site)
   
   plotly::ggplotly(p, tooltip = c("TIMESTAMP", "value"))
