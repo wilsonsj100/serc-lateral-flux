@@ -33,7 +33,7 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
   files <- list.files(here::here("Raw_data"), full.names = T)
 
   # Are there any files we have loaded that we want to manually exclude?
-  exclude <- c("FILL_IN_FILES_TO_EXCLUDE_HERE.csv")
+  exclude <- c("/Users/abigaillewis/Desktop/SERC/serc-lateral-flux/Raw_data/MGEO_SERC_FLUX_7810_15.dat")
   files <- files[!grepl(paste0(exclude, collapse = "|"), files)]
 
   message(paste0("Generating outputs for ", length(files), " files"))
