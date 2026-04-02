@@ -110,7 +110,7 @@ hydrology_choices <- c(
 )
 
 ghg_choices <- c(
-  "H2O_ppm", "CO2d_ppm", "CH4d_ppb", "Cavity_pressure",
+  "H2O_ppm", "CO2d_ppm", "CH4d_ppm", "Cavity_pressure",
   "Cavity_temperature"
 )
 
@@ -141,7 +141,7 @@ hydrology_colors <- c(
 ghg_colors <- c(
   "H2O_ppm" = "lightblue",
   "CO2d_ppm" = "goldenrod",
-  "CH4d_ppb" = "red4",
+  "CH4d_ppm" = "red4",
   "Cavity_pressure" = "purple4",
   "Cavity_temperature" = "red"
 )
@@ -260,7 +260,7 @@ plotlyOutput("plot_ghg_flume", height = "300px")
 
 checkboxGroupInput("ghg_vars", h4("Variables to plot"),
   choices = ghg_choices,
-  selected = c("CH4d_ppb", "CO2d_ppm")
+  selected = c("CH4d_ppm", "CO2d_ppm")
 )
 ```
 

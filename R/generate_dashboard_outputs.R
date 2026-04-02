@@ -58,7 +58,7 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
   )
 
   ghg_choices <- c(
-    "H2O_ppm", "CO2d_ppm", "CH4d_ppb", "Cavity_pressure",
+    "H2O_ppm", "CO2d_ppm", "CH4d_ppm", "Cavity_pressure",
     "Cavity_temperature"
   )
 
