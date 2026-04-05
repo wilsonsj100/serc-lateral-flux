@@ -58,8 +58,8 @@ generate_dashboard_outputs <- function(days_to_include = 100) {
   )
 
   ghg_choices <- c(
-    "H2O_ppm", "CO2d_ppm", "CH4d_ppm", "Cavity_pressure",
-    "Cavity_temperature"
+    "H2O_ppm", "CO2d_ppm", "CH4d_ppm", "Cavity_pressure_kPa",
+    "Cavity_temperature_C"
   )
 
   radon_choices <- c("Relative_humidity_pct", "Radon_Bqm3", "Radon_error_Bqm3")

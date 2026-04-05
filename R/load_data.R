@@ -26,11 +26,11 @@ load_data <- function(file) {
   
   if ("CH4d_ppm_LGR1" %in% names) {
     data <- data %>%
+      mutate(Cavity_pressure_kPa = GasP_torr_LGR1 / 7.500616827) %>%
       rename(CO2d_ppm = CO2d_ppm_LGR1,
              CH4d_ppm = CH4d_ppm_LGR1,
              H2O_ppm = H2O_ppm_LGR1,
-             Cavity_pressure = GasP_torr_LGR1,
-             Cavity_temperature = GasT_C_LGR1
+             Cavity_temperature_C = GasT_C_LGR1
              )
   }
   
@@ -39,8 +39,8 @@ load_data <- function(file) {
       mutate(CH4d_ppm = CH4 / 1000) %>%
       rename(H2O_ppm = H2O,
              CO2d_ppm = CO2,
-             Cavity_pressure = cavity_p,
-             Cavity_temperature = cavity_t)
+             Cavity_pressure_kPa = cavity_p,
+             Cavity_temperature_C = cavity_t)
   }
 
   return(data)

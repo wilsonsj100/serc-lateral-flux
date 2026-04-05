@@ -44,7 +44,7 @@ latest_times <- function(df) {
       max = max(TIMESTAMP, na.rm = TRUE),
       formatted = ifelse(
         is.finite(max),
-        format(max, "%Y-%m-%d"),
+        paste0(format(max, "%Y-%m-%d %H:%M"), " EST"),
         "No data in past 100 days"
       ),
       color = ifelse(
