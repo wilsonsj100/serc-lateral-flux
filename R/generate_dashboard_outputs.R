@@ -2,7 +2,7 @@ source(here::here("R", "download_new_data.R"))
 source(here::here("R", "load_data.R"))
 # requires zoo, tidyverse
 
-#' calculate_flux
+#' generate dashboard outputs
 #'
 #' @description
 #' This function loads data from dropbox and compiles four summarized outputs with recent, formatted data

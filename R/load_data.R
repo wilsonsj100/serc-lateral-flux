@@ -31,7 +31,8 @@ load_data <- function(file) {
              CH4d_ppm = CH4d_ppm_LGR1,
              H2O_ppm = H2O_ppm_LGR1,
              Cavity_temperature_C = GasT_C_LGR1
-             )
+             ) %>%
+      select(-LGR_Time)
   }
   
   if("CH4" %in% names) {
