@@ -1,0 +1,99 @@
+[Header]	
+System	Smithsonian TCTN	
+S/W Version	1.00	
+User	sjw	
+Date/Time	8/19/2023 8:41:22 AM	
+
+[System]	
+Instrument Options	TOC/ASI/IC Unit/TN/	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Result(TOC)	Result(TC)	Result(IC)	Result(POC)	Result(NPOC)	Result(TN)	Unit	Vial	Date / Time	
+Unknown	IC	DI	Untitled			1.079				mg/L	0	8/18/2023 1:37:46 PM	
+Unknown	IC	DI	Untitled			1.080				mg/L	0	8/18/2023 1:48:49 PM	
+Unknown	IC	DI	Untitled			1.067				mg/L	0	8/18/2023 1:57:43 PM	
+Unknown	IC	Chk_Std_40mgL_IC	Untitled			37.96				mg/L	1	8/18/2023 2:11:19 PM	
+Unknown	IC	DI	Untitled			1.077				mg/L	0	8/18/2023 2:22:24 PM	
+Unknown	IC	DI	Untitled			1.068				mg/L	0	8/18/2023 2:31:16 PM	
+Standard	IC	CalCurve_IC	Untitled			200.0				mg/L	2, 3, 4, 5, 6, 7, 8, 9	8/18/2023 4:25:13 PM	
+Unknown	IC	DI	Untitled			1.135				mg/L	0	8/18/2023 4:37:41 PM	
+Unknown	IC	DI	Untitled			1.110				mg/L	0	8/18/2023 4:50:56 PM	
+Unknown	IC	DIC_CRM_209-0374	Untitled			22.92				mg/L	10	8/18/2023 5:04:25 PM	
+Unknown	IC	DI	Untitled			1.125				mg/L	0	8/18/2023 5:15:30 PM	
+Unknown	IC	Flume_20230815_GW-1	Untitled			93.88				mg/L	11	8/18/2023 5:35:34 PM	
+Unknown	IC	Flume_20230815_GW-2	Untitled			71.06				mg/L	12	8/18/2023 5:55:35 PM	
+Unknown	IC	Flume_20230815_GW-3	Untitled			30.17				mg/L	13	8/18/2023 6:09:56 PM	
+Unknown	IC	Flume_20230815_GW-4	Untitled			66.76				mg/L	14	8/18/2023 6:30:15 PM	
+Unknown	IC	Flume_20230815_GW-5	Untitled			61.92				mg/L	15	8/18/2023 6:45:09 PM	
+Unknown	IC	Flume_20230815_GW-6	Untitled			61.06				mg/L	16	8/18/2023 6:59:55 PM	
+Unknown	IC	DI	Untitled			1.164				mg/L	0	8/18/2023 7:14:11 PM	
+Unknown	IC	DIC_CRM_209=0374	Untitled			23.24				mg/L	17	8/18/2023 7:27:35 PM	
+Unknown	IC	DI_Bubbled	Untitled			1.035				mg/L	18	8/18/2023 7:38:28 PM	
+Unknown	IC	Flume_20230816_SW-0530	Untitled			18.09				mg/L	19	8/18/2023 7:51:29 PM	
+Unknown	IC	Flume_20230816_SW-0630	Untitled			18.46				mg/L	20	8/18/2023 8:04:41 PM	
+Unknown	IC	Flume_20230816_SW-0730	Untitled			20.41				mg/L	21	8/18/2023 8:18:04 PM	
+Unknown	IC	Flume_20230816_SW-0730_dup	Untitled			20.07				mg/L	22	8/18/2023 8:31:30 PM	
+Unknown	IC	Flume_20230816_SW-0830	Untitled			21.96				mg/L	23	8/18/2023 8:45:00 PM	
+Unknown	IC	Flume_20230816_SW-0930	Untitled			24.27				mg/L	24	8/18/2023 8:58:34 PM	
+Unknown	IC	Flume_20230816_SW-1030	Untitled			27.51				mg/L	25	8/18/2023 9:12:10 PM	
+Unknown	IC	Flume_20230816_SW-1030_dup	Untitled			27.96				mg/L	26	8/18/2023 9:25:41 PM	
+Unknown	IC	Flume_20230816_SW-1130	Untitled			30.44				mg/L	27	8/18/2023 9:39:24 PM	
+Unknown	IC	DI	Untitled			1.146				mg/L	0	8/18/2023 9:52:41 PM	
+Unknown	IC	Flume_20230816_SW-1230	Untitled			31.12				mg/L	28	8/18/2023 10:06:17 PM	
+Unknown	IC	Flume_20230816_SW-1330	Untitled			31.94				mg/L	29	8/18/2023 10:19:56 PM	
+Unknown	IC	Flume_20230816_SW-1430	Untitled			27.24				mg/L	30	8/18/2023 10:33:34 PM	
+Unknown	IC	Flume_20230816_SW-1430_dup	Untitled			26.82				mg/L	31	8/18/2023 10:47:00 PM	
+Unknown	IC	Flume_20230816_SW-1530	Untitled			26.71				mg/L	32	8/18/2023 11:00:35 PM	
+Unknown	IC	Flume_20230816_SW-1630	Untitled			25.83				mg/L	33	8/18/2023 11:14:07 PM	
+Unknown	IC	Flume_20230816_SW-1630_dup	Untitled			25.74				mg/L	34	8/18/2023 11:27:37 PM	
+Unknown	IC	Flume_20230816_SW-1730	Untitled			23.70				mg/L	35	8/18/2023 11:40:35 PM	
+Unknown	IC	Flume_20230816_SW-1730_dup	Untitled			23.88				mg/L	36	8/18/2023 11:54:07 PM	
+Unknown	IC	Flume_20230816_GW-T1-NW5	Untitled			27.92				mg/L	37	8/19/2023 12:07:42 AM	
+Unknown	IC	Flume_20230816_GW-T2-NW1	Untitled			17.43				mg/L	38	8/19/2023 12:20:04 AM	
+Unknown	IC	DI	Untitled			1.192				mg/L	0	8/19/2023 12:33:20 AM	
+Unknown	IC	Chk_Std_40mgL_IC	Untitled			38.58				mg/L	39	8/19/2023 12:47:38 AM	
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	GCW_202308_TR_LysB_10cm	Untitled			0.000				mg/L	40		
+Unknown	IC	GCW_202308_WC_LysA_10cm	Untitled			0.000				mg/L	41		
+Unknown	IC	GCW_202308_WC_LysA_20cm	Untitled			0.000				mg/L	42		
+Unknown	IC	GCW_202308_WC_LysA_45cm	Untitled			0.000				mg/L	43		
+Unknown	IC	GCW_202308_WC_LysB_10cm	Untitled			0.000				mg/L	44		
+Unknown	IC	GCW_202308_WC_LysB_20cm	Untitled			0.000				mg/L	45		
+Unknown	IC	GCW_202308_WC_LysB_45cm	Untitled			0.000				mg/L	46		
+Unknown	IC	GCW_202308_WC_LysC_10cm	Untitled			0.000				mg/L	47		
+Unknown	IC	GCW_202308_WC_LysC_20cm	Untitled			0.000				mg/L	48		
+Unknown	IC	GCW_202308_WC_LysC_45cm	Untitled			0.000				mg/L	49		
+Unknown	IC	GCW_202308_SW_A	Untitled			0.000				mg/L	50		
+Unknown	IC	GCW_202308_SW_B	Untitled			0.000				mg/L	51		
+Unknown	IC	GCW_202308_SW_C	Untitled			0.000				mg/L	52		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DIC_CRM_201-0374	Untitled			0.000				mg/L	53		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MSM_202308_UP_LysB_10cm	Untitled			0.000				mg/L	54		
+Unknown	IC	MSM_202308_UP_LysC_10cm	Untitled			0.000				mg/L	55		
+Unknown	IC	MSM_202308_UP_LysC_20cm	Untitled			0.000				mg/L	56		
+Unknown	IC	MSM_202308_TR_LysA_10cm	Untitled			0.000				mg/L	57		
+Unknown	IC	MSM_202308_TR_LysA_20cm	Untitled			0.000				mg/L	58		
+Unknown	IC	MSM_202308_TR_LysB_20cm	Untitled			0.000				mg/L	59		
+Unknown	IC	MSM_202308_TR_LysC_10cm	Untitled			0.000				mg/L	60		
+Unknown	IC	MSM_202308_TR_LysC_20cm	Untitled			0.000				mg/L	61		
+Unknown	IC	MSM_202308_TR_LysC_45cm	Untitled			0.000				mg/L	62		
+Unknown	IC	MSM_202308_WC_LysA_10cm	Untitled			0.000				mg/L	63		
+Unknown	IC	MSM_202308_WC_LysA_20cm	Untitled			0.000				mg/L	64		
+Unknown	IC	MSM_202308_WC_LysB_10cm	Untitled			0.000				mg/L	65		
+Unknown	IC	MSM_202308_WC_LysB_20cm	Untitled			0.000				mg/L	66		
+Unknown	IC	MSM_202308_WC_LysC_10cm	Untitled			0.000				mg/L	67		
+Unknown	IC	MSM_202308_SW_A	Untitled			0.000				mg/L	68		
+Unknown	IC	MSM_202308_SW_B	Untitled			0.000				mg/L	69		
+Unknown	IC	MSM_202308_SW_C	Untitled			0.000				mg/L	70		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DIC_CRM_201-0374	Untitled			0.000				mg/L	71		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI_Bubbled	Untitled			0.000				mg/L	72		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		

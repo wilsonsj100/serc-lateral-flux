@@ -1,0 +1,57 @@
+[Header]	
+System	Smithsonian TCTN	
+S/W Version	1.00	
+User	sjw	
+Date/Time	8/10/2023 10:29:05 PM	
+
+[System]	
+Instrument Options	TOC/ASI/IC Unit/TN/	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Result(TOC)	Result(TC)	Result(IC)	Result(POC)	Result(NPOC)	Result(TN)	Unit	Vial	Date / Time	
+Unknown	IC	DI	Untitled			1.555				mg/L	0	8/10/2023 9:27:02 AM	
+Unknown	IC	DI	Untitled			1.561				mg/L	0	8/10/2023 9:35:57 AM	
+Unknown	IC	DI	Untitled			1.558				mg/L	0	8/10/2023 9:44:52 AM	
+Unknown	IC	DI_Bubbled	Untitled			1.448				mg/L	1	8/10/2023 9:55:40 AM	
+Standard	IC	CalCurve_IC	Untitled			200.0				mg/L	2, 3, 4, 5, 6, 7, 8, 9	8/10/2023 11:51:33 AM	
+Unknown	IC	DI	Untitled			1.127				mg/L	0	8/10/2023 12:06:15 PM	
+Unknown	IC	DI	Untitled			1.112				mg/L	0	8/10/2023 12:15:11 PM	
+Unknown	IC	DIC_CRM	Untitled			23.14				mg/L	10	8/10/2023 12:28:47 PM	
+Unknown	IC	DI	Untitled			1.117				mg/L	0	8/10/2023 12:39:53 PM	
+Unknown	IC	Chk_Std_40mgL	Untitled			39.09				mg/L	11	8/10/2023 12:53:33 PM	
+Unknown	IC	DI	Untitled			1.092				mg/L	0	8/10/2023 1:06:51 PM	
+Unknown	IC	Flume_GW-6	Untitled			25.54				mg/L	12	8/10/2023 1:20:22 PM	
+Unknown	IC	Flume_GW-5	Untitled			30.03				mg/L	13	8/10/2023 1:33:55 PM	
+Unknown	IC	Flume_GW-4	Untitled			62.51				mg/L	14	8/10/2023 1:48:33 PM	
+Unknown	IC	Flume_GW-3	Untitled			25.95				mg/L	15	8/10/2023 2:02:20 PM	
+Unknown	IC	Flume_GW-2	Untitled			48.10				mg/L	16	8/10/2023 2:16:16 PM	
+Unknown	IC	Flume_GW-1	Untitled			71.98				mg/L	17	8/10/2023 2:32:03 PM	
+Unknown	IC	DI	Untitled			1.140				mg/L	0	8/10/2023 2:45:26 PM	
+Unknown	IC	DI_Bubbled	Untitled			1.166				mg/L	18	8/10/2023 3:00:44 PM	
+Unknown	IC	Flume_SW-0530	Untitled			18.03				mg/L	19	8/10/2023 3:14:03 PM	
+Unknown	IC	Flume_SW-0630	Untitled			18.30				mg/L	20	8/10/2023 3:26:58 PM	
+Unknown	IC	Flume_SW-0730	Untitled			13.14				mg/L	21	8/10/2023 3:38:55 PM	
+Unknown	IC	Flume_SW-0830	Untitled			13.33				mg/L	22	8/10/2023 3:51:04 PM	
+Unknown	IC	Flume_SW-0930	Untitled			17.65				mg/L	23	8/10/2023 4:03:52 PM	
+Unknown	IC	Flume_SW-1030	Untitled			19.14				mg/L	24	8/10/2023 4:16:50 PM	
+Unknown	IC	Flume_SW-1130	Untitled			17.83				mg/L	25	8/10/2023 4:29:48 PM	
+Unknown	IC	Flume_SW-1230	Untitled			22.43				mg/L	26	8/10/2023 4:43:15 PM	
+Unknown	IC	Flume_SW-1330	Untitled			24.18				mg/L	27	8/10/2023 4:56:45 PM	
+Unknown	IC	Flume_SW-1430	Untitled			26.03				mg/L	28	8/10/2023 5:09:40 PM	
+Unknown	IC	Flume_SW-1530	Untitled			26.77				mg/L	29	8/10/2023 5:23:10 PM	
+Unknown	IC	Flume_SW-1630	Untitled			27.02				mg/L	30	8/10/2023 5:36:47 PM	
+Unknown	IC	Flume_SW-1730	Untitled			26.62				mg/L	31	8/10/2023 5:49:48 PM	
+Unknown	IC	DI	Untitled			1.122				mg/L	0	8/10/2023 6:03:10 PM	
+Unknown	IC	Chk_Std_40mgL	Untitled			39.40				mg/L	32	8/10/2023 6:16:58 PM	
+Unknown	IC	DI	Untitled			1.125				mg/L	0	8/10/2023 6:28:04 PM	
+Unknown	IC	OALab_Dock_1644	Untitled			16.78				mg/L	33	8/10/2023 6:41:00 PM	
+Unknown	IC	OALab_Dock_1644	Untitled			16.83				mg/L	34	8/10/2023 6:53:52 PM	
+Unknown	IC	OALab_Dock_1030	Untitled			17.43				mg/L	35	8/10/2023 7:06:44 PM	
+Unknown	IC	OALab_Dock_1030	Untitled			17.51				mg/L	36	8/10/2023 7:19:33 PM	
+Unknown	IC	DI	Untitled			1.109				mg/L	0	8/10/2023 7:30:39 PM	
+Unknown	IC	DI_Bubbled	Untitled			1.002				mg/L	37	8/10/2023 7:41:33 PM	
+Unknown	IC	DIC_CRM	Untitled			23.17				mg/L	38	8/10/2023 7:55:00 PM	
+Unknown	IC	DI	Untitled			1.101				mg/L	0	8/10/2023 8:08:16 PM	
+Unknown	IC	DI	Untitled			1.109				mg/L	0	8/10/2023 8:17:10 PM	
+Unknown	IC	DI	Untitled			1.108				mg/L	0	8/10/2023 8:26:04 PM	
+Unknown	IC	DI	Untitled			1.104				mg/L	0	8/10/2023 8:34:58 PM	

@@ -1,0 +1,37 @@
+[Header]	
+System	Smithsonian TCTN	
+S/W Version	1.00	
+User		
+Date/Time	2/25/2024 8:50:48 PM	
+
+[System]	
+Instrument Options	TOC/ASI/IC Unit/TN/	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Result(TOC)	Result(TC)	Result(IC)	Result(POC)	Result(NPOC)	Result(TN)	Unit	Vial	Date / Time	
+Unknown	NPOC/TN	DI	Untitled					0.1490	0.08378	mg/L	0	2/25/2024 12:05:42 PM	
+Unknown	NPOC/TN	Std Chk	Untitled					28.22	2.750	mg/L	76	2/25/2024 12:24:33 PM	
+Unknown	NPOC/TN	DI	Untitled					0.3512	0.06937	mg/L	0	2/25/2024 12:49:19 PM	
+Unknown	NPOC/TN	50	Untitled					3.966	0.7234	mg/L	77	2/25/2024 1:19:21 PM	
+Unknown	NPOC/TN	50 dup	Untitled					3.933	0.8149	mg/L	78	2/25/2024 1:44:44 PM	
+Unknown	NPOC/TN	VCN	Untitled					52.14	2.207	mg/L	79	2/25/2024 2:04:53 PM	
+Unknown	NPOC/TN	51	Untitled					3.877	0.8576	mg/L	80	2/25/2024 2:30:16 PM	
+Unknown	NPOC/TN	52	Untitled					3.297	0.9914	mg/L	81	2/25/2024 2:59:39 PM	
+Unknown	NPOC/TN	53	Untitled					3.105	0.9366	mg/L	82	2/25/2024 3:28:27 PM	
+Unknown	NPOC/TN	54	Untitled					5.850	3.688	mg/L	83	2/25/2024 3:49:59 PM	
+Unknown	NPOC/TN	55	Untitled					7.849	2.644	mg/L	84	2/25/2024 4:20:32 PM	
+Unknown	NPOC/TN	56	Untitled					4.075	1.123	mg/L	85	2/25/2024 4:48:52 PM	
+Unknown	NPOC/TN	57	Untitled					3.985	0.7072	mg/L	86	2/25/2024 5:19:27 PM	
+Unknown	NPOC/TN	58	Untitled					0.9676	0.3240	mg/L	87	2/25/2024 5:48:19 PM	
+Unknown	NPOC/TN	59	Untitled					1.239	0.4104	mg/L	88	2/25/2024 6:19:06 PM	
+Unknown	NPOC/TN	60	Untitled					4.020	1.009	mg/L	89	2/25/2024 6:48:29 PM	
+Unknown	NPOC/TN	60 dup	Untitled					3.951	1.011	mg/L	90	2/25/2024 7:18:26 PM	
+Unknown	NPOC/TN	VCN	Untitled					52.46	2.160	mg/L	91	2/25/2024 7:49:04 PM	
+Unknown	NPOC/TN	DI	Untitled					0.2273	0.09636	mg/L	0	2/25/2024 8:11:54 PM	
+Unknown	NPOC/TN	Std Chk	Untitled					29.41	2.502	mg/L	92	2/25/2024 8:42:18 PM	
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		
+Unknown	NPOC/TN	DI	Untitled					0.000	0.000	mg/L	0		

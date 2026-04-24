@@ -1,0 +1,472 @@
+---
+title: "Dionex_COMPASS_TEMPEST"
+author: "Stephanie J. Wilson"
+date: '2023-06-09'
+output: html_document
+---
+## Daily Set up 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## Load data.table package
+library(data.table)
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(matrixStats)
+library(gridExtra)
+library(ggpubr)
+library(grid)
+library(stringr)
+```
+
+
+### Read in and Format the raw data - change wd & file names (Make sure files are UTF-8 encoded)
+```{r}
+setwd("S:/Biogeochemistry/People/Wilson (Steph)/Data/RAD7/July 2023 Tidal Survey/Survey Data/Dionex Files")
+
+# SULFATE DATA: 
+
+## Read in raw data file from Dionex - copied and saved as a txt
+Sdat <- read.table("Flume_Tidal_Survey_202402_SO4.txt",sep='\t' , header=T, skip=3)
+head(Sdat)
+
+## Only keep the columns that we need 
+Sdat <- Sdat[ ,c(2,5,7)] # dont need this here 
+head(Sdat)
+
+## Name the columns correctly 
+colnames(Sdat) <- c( "Sample_ID", "SO4_ppm", "SO4_Area")
+Sdat$Sample_ID <- as.factor(Sdat$Sample_ID)
+Sdat$SO4_ppm <- as.numeric(Sdat$SO4_ppm)
+Sdat$SO4_Area <- as.numeric(Sdat$SO4_Area)
+Sdat <- as.data.frame(Sdat)
+head(Sdat)
+
+#Chloride data 
+## Read in raw data file from Dionex - copied and saved as a txt
+Cldat <- read.table("Flume_Tidal_Survey_202402_Cl.txt",sep='\t' , header=T, skip=3)
+head(Cldat)
+
+## Only keep the columns that we need 
+Cldat <- Cldat[ ,c(2,5,7)]
+head(Cldat)
+
+## Name the columns correctly 
+colnames(Cldat) <- c( "Sample_ID", "Cl_ppm", "Cl_Area")
+Cldat$Sample_ID <- as.factor(Cldat$Sample_ID)
+Cldat$Cl_ppm <- as.numeric(Cldat$Cl_ppm)
+Cldat$Cl_Area <- as.numeric(Cldat$Cl_Area)
+Cldat <- as.data.frame(Cldat)
+head(Cldat) 
+
+
+## Bring the data back together: 
+all_dat <- merge(Sdat, Cldat, by="Sample_ID")
+head(all_dat)
+
+## Remove empty lines 
+all_dat <- all_dat[!(is.na(all_dat$Sample_ID) | all_dat$Sample_ID==""), ]
+head(all_dat)
+
+all_dat <- droplevels(all_dat[!all_dat$Sample_ID == 'Lab Blank',])
+head(all_dat)
+
+all_dat[is.na(all_dat)] <- 0
+
+```
+
+
+## Pull out standards  - could do some checks here if we want
+```{r}
+stds <- all_dat[grepl("Standard", all_dat$Sample_ID),]
+head(stds)
+
+stds_chk_S <- stds %>%
+	group_by(Sample_ID) %>%
+	summarise(mean = mean(SO4_ppm), sd = sd(SO4_ppm))
+stds_chk_S$cv <- (stds_chk_S$sd/stds_chk_S$mean)*100
+stds_chk_S$flag <-  ifelse(stds_chk_S$cv <2, 'YES', 'NO, rerun')
+head(stds_chk_S)
+
+stds_chk_Cl <- stds %>%
+	group_by(Sample_ID) %>%
+	summarise(mean = mean(Cl_ppm), sd = sd(Cl_ppm))
+stds_chk_Cl$cv <- (stds_chk_Cl$sd/stds_chk_Cl$mean)*100
+stds_chk_Cl$flag <-  ifelse(stds_chk_Cl$cv <2, 'YES', 'NO, rerun')
+head(stds_chk_Cl)
+
+lmS <- lm(stds$SO4_Area ~ stds$SO4_ppm)
+SO4_sum <- summary(lmS)
+SO4_Slope <- SO4_sum$coefficients[2, 1] 
+SO4_Int <- SO4_sum$coefficients[1, 1] 
+
+
+lmCl <- lm(stds$Cl_Area ~ stds$Cl_ppm)
+Cl_sum <- summary(lmCl)
+Cl_Slope <- Cl_sum$coefficients[2, 1] 
+Cl_Int <- Cl_sum$coefficients[1, 1] 
+
+```
+
+
+## Calculate mmol/L concentrations
+```{r}
+#remove standards from sample dataframe
+sampledat <- all_dat[!grepl("Standard", all_dat$Sample_ID),]
+head(sampledat)
+
+# Constants needed for calculations: 
+clmw <- 35.45     #molecular weight of Chloride: 35.45 
+smw <- 32.06      #molecular weight of sulfur: 32.06
+
+
+# Convert ppm to mmol/L
+sampledat$SO4_mM <- (sampledat$SO4_ppm / smw)
+sampledat$Cl_mM <- (sampledat$Cl_ppm / clmw)
+
+
+# Calculate Salinity 
+# calculated using the Knudsen equation 
+# Salinity = 0.03 + 1.8050 * Chlorinity
+# Ref: A Practical Handbook of Seawater Analysis by Strickland & Parsons (P. 11)
+# =((1.807*Cl_ppm)+0.026)/1000
+sampledat$salinity <- ((1.8070 * sampledat$Cl_ppm) + 0.026) / 1000
+
+
+head(sampledat)
+```
+
+
+## Pull out dups and check with percent difference 
+```{r}
+#Show me the data that we have from the calculations 
+head(sampledat)
+
+#pull out any rows that have "dup" in the SampleID column
+dups <- sampledat %>%  
+  filter(str_detect(Sample_ID, "_dup"))      #have to change this to match data
+head(dups)
+
+#remove these from sample dataframe in a new dataframe
+sampledat2 <- sampledat %>%  
+  filter(!str_detect(Sample_ID, "_dup")) %>%  
+  filter(!str_detect(Sample_ID, "_spk")) 
+head(sampledat2)
+
+#remove the dup from these IDs so we will have duplicate sample names
+dups$Sample_ID<-gsub("_dup","",as.character(dups$Sample_ID))
+dups <- dups[ ,-c(2:5)]
+colnames(dups) <- c('Sample_ID', 'SO4_mM_dup', "Cl_mM_dup", "salinity_dup")
+head(dups)
+
+#put it back together with the old data set and look for duplicates 
+QAdups <- merge(sampledat2, dups)
+head(QAdups)
+
+QAdups$SO4_dups_chk <- ((abs(QAdups$SO4_mM-QAdups$SO4_mM_dup))/((QAdups$SO4_mM+QAdups$SO4_mM_dup)/2))*100
+QAdups$SO4_dups_flag <-  ifelse(QAdups$SO4_dups_chk <10, 'YES', 'NO, rerun')
+
+QAdups$Cl_dups_chk <- ((abs(QAdups$Cl_mM-QAdups$Cl_mM_dup))/((QAdups$Cl_mM+QAdups$Cl_mM_dup)/2))*100
+QAdups$Cl_dups_flag <-  ifelse(QAdups$Cl_dups_chk <10, 'YES', 'NO, rerun')
+
+head(QAdups)
+
+#plot dups output as a bar graph to easily check - want any over 10% to be red need to work on this 
+Sdupsbar <- ggplot(data = QAdups, aes(x = Sample_ID, y = SO4_dups_chk, fill=SO4_dups_chk)) +
+       geom_bar(stat = 'identity') + 
+        scale_fill_gradient2(low='darkgreen', mid='darkgreen', high='darkgrey', space='Lab') + 
+        theme_classic() + labs(x= "Sample ID", y="Difference Between SO4 Duplicates (%)") + 
+        theme(legend.position="none") +  geom_hline(yintercept=10, linetype="dashed", 
+                color = "black", size=1)
+
+
+Cldupsbar <- ggplot(data = QAdups, aes(x = Sample_ID, y = Cl_dups_chk, fill=Cl_dups_chk)) +
+       geom_bar(stat = 'identity') + 
+        scale_fill_gradient2(low='darkgreen', mid='darkgreen', high='darkgrey', space='Lab') + 
+        theme_classic() + labs(x= "Sample ID", y="Difference Between Cl Duplicates (%)") + 
+        theme(legend.position="none") +  geom_hline(yintercept=10, linetype="dashed", 
+                color = "black", size=1)
+
+ggarrange(Sdupsbar, Cldupsbar,ncol=2, nrow=1)
+
+#check for percent of no, reruns to see if it  would warrant reruns 
+Perc_dups <- QAdups %>% 
+  group_by(SO4_dups_flag) %>%
+  summarise(S_no_rows = length(SO4_dups_flag)) 
+Perc_dups1 <- QAdups %>% 
+  group_by(Cl_dups_flag) %>%
+  summarise(Cl_no_rows = length(Cl_dups_flag))
+colnames(Perc_dups) <- c("Flag", "S_no_rows")
+colnames(Perc_dups1) <- c("Flag", "Cl_no_rows")
+Perc_dups2 <- cbind(Perc_dups, Perc_dups1)
+
+Perc_dups2$Total <- length(QAdups$SO4_dups_flag)
+Perc_dups2$S_Percent <- (Perc_dups2$S_no_rows / Perc_dups2$Total)*100
+Perc_dups2$Cl_Percent <- (Perc_dups2$Cl_no_rows / Perc_dups2$Total)*100
+head(Perc_dups2)
+
+
+```
+
+
+## Pull out dups and check with cv  
+```{r}
+#the cv 
+# calculate the sd bewteen the two duplicates then divide by the mean and multiply by 100 
+
+df2 <- as.data.frame(QAdups$SO4_mM)
+df2$dups <- QAdups$SO4_mM_dup
+
+df2$sds <- apply(df2,1,sd)
+
+QAdups$SO4_dups_cv <- (df2$sds)/((QAdups$SO4_mM+QAdups$SO4_mM_dup)/2) * 100
+QAdups$SO4_dups_cv_flag <-  ifelse(QAdups$SO4_dups_cv <11, 'YES', 'NO, rerun')
+
+head(QAdups)
+
+#plot dups output as a bar graph to easily check - want any over 10% to be red need to work on this 
+Sdupsbar <- ggplot(data = QAdups, aes(x = Sample_ID, y = SO4_dups_cv, fill=SO4_dups_chk)) +
+       geom_bar(stat = 'identity') + 
+        scale_fill_gradient2(low='darkgreen', mid='darkgreen', high='darkgrey', space='Lab') + 
+        theme_classic() + labs(x= "Sample ID", y="CV Between SO4 Duplicates (%)") + 
+        theme(legend.position="none") +  geom_hline(yintercept=10, linetype="dashed", 
+                color = "black", size=1)
+
+
+Cldupsbar <- ggplot(data = QAdups, aes(x = Sample_ID, y = Cl_dups_chk, fill=Cl_dups_chk)) +
+       geom_bar(stat = 'identity') + 
+        scale_fill_gradient2(low='darkgreen', mid='darkgreen', high='darkgrey', space='Lab') + 
+        theme_classic() + labs(x= "Sample ID", y="CV Between Cl Duplicates (%)") + 
+        theme(legend.position="none") +  geom_hline(yintercept=10, linetype="dashed", 
+                color = "black", size=1)
+
+ggarrange(Sdupsbar, Cldupsbar,ncol=2, nrow=1)
+
+#check for percent of no, reruns to see if it  would warrant reruns 
+Perc_dups <- QAdups %>% 
+  group_by(SO4_dups_flag) %>%
+  summarise(S_no_rows = length(SO4_dups_flag)) 
+Perc_dups1 <- QAdups %>% 
+  group_by(Cl_dups_flag) %>%
+  summarise(Cl_no_rows = length(Cl_dups_flag))
+colnames(Perc_dups) <- c("Flag", "S_no_rows")
+colnames(Perc_dups1) <- c("Flag", "Cl_no_rows")
+Perc_dups2 <- cbind(Perc_dups, Perc_dups1)
+
+Perc_dups2$Total <- length(QAdups$SO4_dups_flag)
+Perc_dups2$S_Percent <- (Perc_dups2$S_no_rows / Perc_dups2$Total)*100
+Perc_dups2$Cl_Percent <- (Perc_dups2$Cl_no_rows / Perc_dups2$Total)*100
+head(Perc_dups2)
+
+
+```
+
+
+## Pull out spikes and check with dionex output conc. 
+```{r}
+#Show me the data that we have from the calculations 
+head(sampledat)
+
+#pull out any rows that have "spk" in the SampleID column
+spks <- sampledat %>%  
+  filter(str_detect(Sample_ID, "spk"))      #have to change this to match data
+head(spks)
+
+#remove the dup from these IDs so we will have duplicate sample names
+spks$Sample_ID<-gsub("_spk","",as.character(spks$Sample_ID))
+spks <- spks[ ,-c(2,3,4 ,5, 7,8)]
+colnames(spks) <- c('Sample_ID', 'SO4_mM_spk')
+head(spks)
+
+#put it back together with the old data set and look for duplicates 
+QAspks <- merge(sampledat, spks)
+head(QAspks)
+
+#now we need to calculate the spike concentration and calculate the spike recovery
+spkconc <- (250/smw)    # in mM
+spkvol <- 10             # in uL
+spkvol <- spkvol/1000000 
+#spike for these samples was 10uL of the 250mM standard
+QAspks$SO4_spk_Conc <- (spkconc)*spkvol         # mmoles of SO4 
+head(QAspks)
+
+#need to determine dilution factors and initial amount of sample added
+#if your samples are all the same dilution just use the first line 
+#for Steph / COMPASS this depends on the site so... 
+QAspks$Dilution <- 1
+QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "FTS_"), 100, QAspks$Dilution)
+QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "Aquifer"), 50, QAspks$Dilution)
+
+
+
+#Set Sample volumes in uL 
+QAspks$SampleVol <- 1
+QAspks$SampleVol <-  ifelse(str_detect(QAspks$Sample_ID, "FTS_"), 1475, QAspks$SampleVol)
+QAspks$SampleVol <-  ifelse(str_detect(QAspks$Sample_ID, "Aquifer"), 1501, QAspks$SampleVol)
+
+
+#change sample volume to L 
+QAspks$SampleVol <- QAspks$SampleVol/1000000
+head(QAspks)
+
+#gives us the total SO4 in the sample in mmoles
+QAspks$SO4_Total_unspkd <- (QAspks$SO4_mM/QAspks$Dilution)*(QAspks$SampleVol) 
+
+##total SO4 in spiked sample in mmoles
+QAspks$SO4_Total_spkd <- (QAspks$SO4_mM_spk/QAspks$Dilution)*(QAspks$SampleVol+spkvol) 
+
+QAspks$SO4_expctd_spkd <-  (QAspks$SO4_Total_unspkd + QAspks$SO4_spk_Conc)
+QAspks$spk_recovery <-    (QAspks$SO4_Total_spkd/QAspks$SO4_expctd_spkd)*100
+QAspks$SO4_spks_flag <-  ifelse(QAspks$spk_recovery <=120 & QAspks$spk_recovery >=80 , 'YES', 'NO, rerun')  #fix 
+
+head(QAspks)
+
+#plot spk recoveries output as a bar graph to easily check - want any over 10% to be red need to work on this 
+spksbar <- ggplot(data = QAspks, aes(x = Sample_ID, y = spk_recovery)) +
+        geom_bar(stat = 'identity') + 
+        scale_fill_manual(values=c("lightblue4")) + 
+        theme_classic() + labs(x= "Sample ID", y="Spike Recovery (%)") + 
+        theme(legend.position="none") +  
+        geom_hline(yintercept=80, linetype="dashed", color = "black", size=1) + 
+        geom_hline(yintercept=120, linetype="dashed", color = "black", size=1)
+
+spksbar
+
+
+
+#check for percent of no, reruns to see if it  would warrant reruns 
+Perc_spks <- QAspks %>% 
+  group_by(SO4_spks_flag) %>%
+  summarise(no_rows = length(SO4_spks_flag)) 
+Perc_spks$Total <- length(QAspks$SO4_spks_flag)
+Perc_spks$Percent <- (Perc_spks$no_rows / Perc_spks$Total)*100
+head(Perc_spks)
+
+```
+
+## Pull out spikes and check with area calc
+```{r}
+#Show me the data that we have from the calculations 
+head(sampledat)
+
+#now use area of all samples and calculate undilution corrected concentrations in ug/mL
+sampledat$SO4_ugmL <- ((sampledat$SO4_Area)-SO4_Int)/SO4_Slope
+sampledat$Cl_ugmL <- (sampledat$Cl_Area-Cl_Int)/Cl_Slope
+head(sampledat)
+
+#pull out any rows that have "spk" in the SampleID column
+spks <- sampledat %>%  
+  filter(str_detect(Sample_ID, "spk"))      #have to change this to match data
+head(spks)
+
+## Only keep the columns that we need 
+spks <- spks[ ,c(1,9,10)] # dont need this here 
+head(spks)
+
+#remove the spk from these IDs so we will have duplicate sample names
+spks$Sample_ID<-gsub("_spk","",as.character(spks$Sample_ID))
+spks <- spks[ ,c(1,2)]
+colnames(spks) <- c('Sample_ID', 'SO4_ugmL_spk')
+head(spks)
+
+#put it back together with the old data set and look for duplicates 
+QAspks <- merge(sampledat, spks)
+head(QAspks)
+
+#now we need to calculate the spike concentration and calculate the spike recovery
+spkconc <- (250)    # in ug
+spkvol <- 10             # in uL
+spkvol <- spkvol/1000 
+#spike for these samples was 10uL of the 250mM standard
+QAspks$SO4_spk_Conc <- (spkconc)*spkvol         # mmoles of SO4 
+head(QAspks)
+
+#need to determine dilution factors and initial amount of sample added
+#if your samples are all the same dilution just use the first line 
+#for Steph / COMPASS this depends on the site so... 
+#QAspks$Dilution <- 1
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "MSM_UP"), 50, QAspks$Dilution)
+#$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "MSM_TR"), 50, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "MSM_WC"), 100, QAspks$Dilution)
+#$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GCrew_UP"), 50, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GCrew_TR"), 50, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GCrew_WC"), 100, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GWI_UP"), 100, QAspks$Dilution)
+#$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GWI_TR"), 100, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "GWI_WC"), 200, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "SWH_UP"), 100, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "SWH_TR"), 100, QAspks$Dilution)
+#QAspks$Dilution <-  ifelse(str_detect(QAspks$Sample_ID, "SWH_WC"), 100, QAspks$Dilution)
+
+#Set Sample volumes in uL 
+QAspks$SampleVol <- 1
+QAspks$SampleVol <-  ifelse(str_detect(QAspks$Sample_ID, "FTS_"), 1475, QAspks$SampleVol)
+QAspks$SampleVol <-  ifelse(str_detect(QAspks$Sample_ID, "Aquifer"), 1501, QAspks$SampleVol)
+
+
+#change sample volume to L 
+QAspks$SampleVol <- QAspks$SampleVol/1000
+head(QAspks)
+
+#gives us the total SO4 in the sample in mmoles
+QAspks$SO4_Total_unspkd <- QAspks$SO4_ugmL*QAspks$SampleVol
+
+##total SO4 in spiked sample in mmoles
+QAspks$SO4_Total_spkd <- (QAspks$SO4_ugmL_spk)*(QAspks$SampleVol+spkvol) 
+
+QAspks$SO4_expctd_spkd <-  (QAspks$SO4_Total_unspkd + QAspks$SO4_spk_Conc)
+QAspks$spk_recovery <-    (QAspks$SO4_Total_spkd/QAspks$SO4_expctd_spkd)*100
+QAspks$SO4_spks_flag <-  ifelse(QAspks$spk_recovery <=120 & QAspks$spk_recovery >=80 , 'YES', 'NO, rerun')  #fix 
+
+head(QAspks)
+
+#plot spk recoveries output as a bar graph to easily check - want any over 10% to be red need to work on this 
+spksbar <- ggplot(data = QAspks, aes(x = Sample_ID, y = spk_recovery)) +
+        geom_bar(stat = 'identity') + 
+        scale_fill_manual(values=c("lightblue4")) + 
+        theme_classic() + labs(x= "Sample ID", y="Spike Recovery (%)") + 
+        theme(legend.position="none") +  
+        geom_hline(yintercept=80, linetype="dashed", color = "black", size=1) + 
+        geom_hline(yintercept=120, linetype="dashed", color = "black", size=1)
+
+spksbar
+
+
+
+#check for percent of no, reruns to see if it  would warrant reruns 
+Perc_spks <- QAspks %>% 
+  group_by(SO4_spks_flag) %>%
+  summarise(no_rows = length(SO4_spks_flag)) 
+Perc_spks$Total <- length(QAspks$SO4_spks_flag)
+Perc_spks$Percent <- (Perc_spks$no_rows / Perc_spks$Total)*100
+head(Perc_spks)
+
+```
+
+
+## Make final dataframe with IDs  
+```{r}
+#for steph <- pull out identifiers of the sample names 
+#pull the sample ID and separate it by the underscores 
+IDs <- data.frame(do.call('rbind', strsplit(as.character(sampledat2$Sample_ID),'_',fixed=TRUE)))
+colnames(IDs) <- c("Sample Number" , "Project","Time-Well", "Date", "ID", "ID1")
+head(IDs)
+
+#rejoin them to the dataframe
+alldat <- cbind(IDs, sampledat2)
+head(alldat)
+
+```
+
+## Make final dataframe with IDs  
+```{r}
+setwd("S:/Biogeochemistry/People/Wilson (Steph)/Data/RAD7/July 2023 Tidal Survey/Survey Data/Dionex Files")       #Change wd 
+
+write.csv(alldat, file="GCReW_FlumeTidalSurvey_202402_SO4_Cl_PrelimData.csv")           #Change file name
+
+
+```
+
+
+## END

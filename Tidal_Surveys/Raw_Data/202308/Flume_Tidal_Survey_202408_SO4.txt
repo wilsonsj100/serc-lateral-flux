@@ -1,0 +1,81 @@
+Inj.	Injection Name	Type 	Ret.Time	Amount	Rel.Area 	Area	Height
+No.	Selected Peak:		min	µg/mL	%	µS*min	µS
+			CD	CD	CD	CD	CD
+			IC-SO4	IC-SO4	IC-SO4	IC-SO4	IC-SO4
+1	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+2	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+3	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+4	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+5	Standard 1	Calibration Standard	6.833 	0.4308 	6.17 	0.6563 	3.29 
+6	Standard 2	Calibration Standard	6.857 	0.9545 	6.61 	1.4542 	7.04 
+7	Standard 3	Calibration Standard	6.947 	1.9865 	6.86 	3.0266 	14.25 
+8	Standard 4	Calibration Standard	6.860 	10.0561 	7.01 	15.3214 	66.66 
+9	Standard 5	Calibration Standard	6.797 	19.9773 	7.01 	30.4373 	121.96 
+10	Lab Blank	Unknown	6.907 	0.0079 	8.11 	0.0120 	0.04 
+11	Lab Blank	Unknown	6.903 	0.0300 	33.47 	0.0457 	0.04 
+12	1_FTS_GW6_0815_20230807	Unknown	6.887 	882.3016 	8.59 	13.4427 	59.05 
+13	2_FTS_GW5_0850_20230807	Unknown	6.840 	875.5142 	8.43 	13.3393 	58.87 
+14	3_FTS_GW4_0920_20230807	Unknown	6.910 	668.4489 	7.19 	10.1844 	45.64 
+15	4_FTS_GW3_0945_20230807	Unknown	6.873 	871.4001 	8.60 	13.2766 	58.35 
+16	5_FTS_GW2_1030_20230807	Unknown	6.920 	590.1277 	7.85 	8.9911 	40.43 
+17	6_FTS_GW1_1110_20230807	Unknown	6.890 	536.1661 	6.19 	8.1690 	37.17 
+18	7_FTS_0530_20230808	Unknown	6.913 	530.1684 	8.12 	8.0776 	36.57 
+19	8_FTS_0630_20230808	Unknown	6.940 	541.5009 	8.16 	8.2503 	37.23 
+20	9_FTS_0730_20230808	Unknown	6.893 	426.2495 	8.06 	6.4943 	29.72 
+21	10_FTS_0830_20230808	Unknown	6.937 	449.6613 	8.22 	6.8510 	31.06 
+22	10_FTS_0830_20230808_dup	Unknown	6.933 	449.2080 	8.19 	6.8441 	31.07 
+23	11_FTS_0930_20230808	Unknown	6.937 	513.2474 	8.09 	7.8198 	35.27 
+24	11_FTS_0930_20230808_spk	Spiked	6.883 	682.8660 	10.64 	10.4041 	46.48 
+25	Standard 1	Check Standard	6.907 	0.4926 	6.77 	0.7505 	3.56 
+26	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+27	12_FTS_1030_20230808	Unknown	6.910 	524.8887 	8.09 	7.9972 	36.11 
+28	13_FTS_1130_20230808	Unknown	6.867 	515.9921 	7.99 	7.8616 	35.79 
+29	14_FTS_1230_20230808	Unknown	6.867 	567.1044 	7.99 	8.6404 	39.17 
+30	15_FTS_1330_20230808	Unknown	6.893 	607.8384 	8.03 	9.2610 	41.66 
+31	16_FTS_1430_20230808	Unknown	6.847 	576.1199 	7.89 	8.7777 	39.81 
+32	17_FTS_1530_20230808	Unknown	6.910 	597.0337 	7.78 	9.0964 	40.88 
+33	18_FTS_1630_20230808	Unknown	6.913 	594.3565 	7.76 	9.0556 	40.57 
+34	19_FTS_1730_20230808	Unknown	6.907 	573.4178 	7.77 	8.7366 	39.32 
+35	20_FTS_GW6_0944_20230815	Unknown	6.903 	675.9667 	7.28 	10.2990 	45.85 
+36	20_FTS_GW6_0944_20230815_dup	Unknown	6.920 	654.3084 	7.28 	9.9690 	44.50 
+37	21_FTS_GW5_1011_20230815	Unknown	6.923 	655.5244 	6.66 	9.9875 	44.53 
+38	21_FTS_GW5_1011_20230815_spk	Spiked	6.880 	826.7208 	8.33 	12.5959 	55.31 
+39	Standard 2	Check Standard	6.927 	1.0163 	6.88 	1.5485 	7.27 
+40	Lab Blank	Unknown	6.983 	0.0195 	24.95 	0.0297 	0.02 
+41	22_FTS_GW4_1030_20230815	Unknown	6.913 	643.9683 	6.93 	9.8115 	43.86 
+42	23_FTS_GW3_1050_20230815	Unknown	6.933 	800.6671 	8.39 	12.1989 	53.47 
+43	24_FTS_GW2_1110_20230815	Unknown	6.943 	659.0550 	7.02 	10.0413 	44.71 
+44	25_FTS_GW1_1130_20230815	Unknown	6.967 	387.0148 	4.99 	5.8965 	26.93 
+45	26_FTS_0530_20230816	Unknown	6.953 	702.3610 	8.55 	10.7011 	47.31 
+46	27_FTS_0630_20230816	Unknown	6.917 	709.9571 	8.53 	10.8169 	47.91 
+47	28_FTS_0730_20230816	Unknown	6.957 	677.7060 	8.37 	10.3255 	45.72 
+48	29_FTS_0830_20230816	Unknown	6.927 	589.5001 	8.17 	8.9816 	40.23 
+49	30_FTS_0930_20230816	Unknown	6.930 	566.7522 	8.03 	8.6350 	38.75 
+50	30_FTS_0930_20230816_dup	Unknown	6.927 	558.6565 	8.01 	8.5117 	38.18 
+51	31_FTS_1030_20230816	Unknown	6.963 	556.9005 	7.84 	8.4849 	38.01 
+52	31_FTS_1030_20230816_spk	Spiked	6.923 	730.7779 	10.07 	11.1341 	49.04 
+53	Standard 3	Check Standard	7.003 	2.0493 	6.94 	3.1223 	14.45 
+54	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+55	32_FTS_GWT1_TEMPEST_S_C_EAST_NW5_1100_20230816	Unknown	7.017 	28.2999 	4.12 	0.8624 	3.73 
+56	33_FTS_1130_20230816	Unknown	6.977 	568.4766 	7.70 	8.6613 	38.57 
+57	34_FTS_GWT2_TEMPEST_NW1_1200_20230816	Unknown	6.973 	34.4891 	5.80 	1.0509 	3.57 
+58	35_FTS_1230_20230816	Unknown	6.967 	560.9022 	7.63 	8.5459 	38.22 
+59	36_FTS_1330_20230816	Unknown	6.957 	558.4768 	7.63 	8.5089 	38.05 
+60	37_FTS_1430_20230816	Unknown	6.950 	580.2738 	7.85 	8.8410 	39.49 
+61	38_FTS_1530_20230816	Unknown	6.950 	597.0617 	7.84 	9.0968 	40.61 
+62	39_FTS_1630_20230816	Unknown	6.903 	577.3266 	7.89 	8.7961 	39.47 
+63	39_FTS_1630_20230816_dup	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+64	40_FTS_1730_20230816	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+65	40_FTS_1730_20230816_spk	Spiked	n.a.	n.a.	n.a.	n.a.	n.a.
+66	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+67	Standard 1	Check Standard	n.a.	n.a.	n.a.	n.a.	n.a.
+68	Standard 2	Check Standard	n.a.	n.a.	n.a.	n.a.	n.a.
+69	Standard 3	Check Standard	n.a.	n.a.	n.a.	n.a.	n.a.
+70	Standard 4	Check Standard	n.a.	n.a.	n.a.	n.a.	n.a.
+71	Standard 5	Check Standard	n.a.	n.a.	n.a.	n.a.	n.a.
+72	Lab Blank	Unknown	n.a.	n.a.	n.a.	n.a.	n.a.
+Maximum			7.017 	882.3016 	33.47 	30.4373 	121.96 
+Average			6.917 	473.4246 	8.42 	8.2273 	36.51 
+Minimum			6.797 	0.0079 	4.12 	0.0120 	0.02 
+Standard Deviation			0.042 	277.2245 	4.24 	4.8451 	20.34 
+Relative Standard Deviation			0.61%	58.56%	50.41%	58.89%	55.71%
