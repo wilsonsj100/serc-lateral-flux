@@ -1,0 +1,211 @@
+[Header]	
+System	TOCL TNML ASIL 24ML	
+S/W Version	1.00	
+User	sjw	
+Date/Time	2/3/2026 5:04:40 PM	
+
+[System]	
+Instrument Options	TOC/ASI/IC Unit/TN/	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Result(TOC)	Result(TC)	Result(IC)	Result(POC)	Result(NPOC)	Result(TN)	Unit	Vial	Date / Time	
+Unknown	IC	Chk_Std_crm221	Untitled			32.84				mg/L	1	2/2/2026 2:30:09 PM	
+Unknown	IC	DI	Untitled			15.84				mg/L	0	2/2/2026 2:50:30 PM	
+Standard	IC	CalCurve_IC	Untitled			200.0				mg/L	2, 3, 4, 5, 6, 7, 8, 9	2/2/2026 4:47:31 PM	
+Unknown	IC	DI	Untitled			2.050				mg/L	0	2/2/2026 4:59:17 PM	
+Unknown	IC	Chk_Std_10mgL	Untitled			10.75				mg/L	10	2/2/2026 5:14:47 PM	
+Unknown	IC	Chk_Std_crm221-0866	Untitled			24.23				mg/L	11	2/2/2026 5:26:03 PM	
+Unknown	IC	DI	Untitled			2.033				mg/L	0	2/2/2026 5:34:57 PM	
+Unknown	IC	FATE_Flume_20251204_A	Untitled			20.77				mg/L	12	2/2/2026 5:46:47 PM	
+Unknown	IC	FATE_Flume_20251204_B	Untitled			22.39				mg/L	13	2/2/2026 5:57:56 PM	
+Unknown	IC	FATE_Dock_20251204_A	Untitled			19.50				mg/L	14	2/2/2026 6:08:57 PM	
+Unknown	IC	FATE_Dock_20251204_B	Untitled			19.40				mg/L	15	2/2/2026 6:20:15 PM	
+Unknown	IC	DI	Untitled			2.013				mg/L	0	2/2/2026 6:29:09 PM	
+Unknown	IC	KW_1_A	Untitled			30.05				mg/L	16	2/2/2026 6:40:33 PM	
+Unknown	IC	KW_1_B	Untitled			29.91				mg/L	17	2/2/2026 6:51:53 PM	
+Unknown	IC	KW_2_A	Untitled			30.11				mg/L	18	2/2/2026 7:03:15 PM	
+Unknown	IC	KW_2_B	Untitled			30.64				mg/L	19	2/2/2026 7:14:40 PM	
+Unknown	IC	KW_3_A	Untitled			30.27				mg/L	20	2/2/2026 7:25:54 PM	
+Unknown	IC	KW_3_B	Untitled			30.29				mg/L	21	2/2/2026 7:37:26 PM	
+Unknown	IC	KW_4_A	Untitled			30.76				mg/L	22	2/2/2026 7:51:32 PM	
+Unknown	IC	KW_4_B	Untitled			30.96				mg/L	23	2/2/2026 8:03:16 PM	
+Unknown	IC	KW_5_A	Untitled			30.38				mg/L	24	2/2/2026 8:17:37 PM	
+Unknown	IC	KW_5_B	Untitled			30.35				mg/L	25	2/2/2026 8:29:21 PM	
+Unknown	IC	KW_6_A	Untitled			30.49				mg/L	26	2/2/2026 8:40:41 PM	
+Unknown	IC	KW_6_B	Untitled			30.27				mg/L	27	2/2/2026 8:52:04 PM	
+Unknown	IC	DI	Untitled			2.040				mg/L	0	2/2/2026 9:00:58 PM	
+Unknown	IC	Chk_Std_10mgL	Untitled			11.61				mg/L	28	2/2/2026 9:11:40 PM	
+Unknown	IC	DI	Untitled			2.022				mg/L	0	2/2/2026 9:20:34 PM	
+Unknown	IC	KW_7_A	Untitled			26.93				mg/L	29	2/2/2026 9:31:55 PM	
+Unknown	IC	KW_7_B	Untitled			26.87				mg/L	30	2/2/2026 9:43:03 PM	
+Unknown	IC	KW_8_A	Untitled			25.26				mg/L	31	2/2/2026 9:54:23 PM	
+Unknown	IC	KW_8_B	Untitled			24.97				mg/L	32	2/2/2026 10:05:28 PM	
+Unknown	IC	KW_9_A	Untitled			25.18				mg/L	33	2/2/2026 10:16:38 PM	
+Unknown	IC	KW_9_B	Untitled			25.21				mg/L	34	2/2/2026 10:28:13 PM	
+Unknown	IC	KW_10_A	Untitled			25.28				mg/L	35	2/2/2026 10:39:24 PM	
+Unknown	IC	KW_10_B	Untitled			25.38				mg/L	36	2/2/2026 10:50:31 PM	
+Unknown	IC	KW_11_A	Untitled			25.33				mg/L	37	2/2/2026 11:01:39 PM	
+Unknown	IC	KW_11_B	Untitled			25.57				mg/L	38	2/2/2026 11:13:17 PM	
+Unknown	IC	KW_12_A	Untitled			25.63				mg/L	39	2/2/2026 11:24:21 PM	
+Unknown	IC	KW_12_B	Untitled			25.63				mg/L	40	2/2/2026 11:35:23 PM	
+Unknown	IC	DI	Untitled			2.023				mg/L	0	2/2/2026 11:44:17 PM	
+Unknown	IC	Chk_Std_crm221-0866	Untitled			24.13				mg/L	41	2/2/2026 11:56:01 PM	
+Unknown	IC	DI	Untitled			2.032				mg/L	0	2/3/2026 12:07:06 AM	
+Unknown	IC	KW_13_A	Untitled			26.45				mg/L	42	2/3/2026 12:18:26 AM	
+Unknown	IC	KW_13_B	Untitled			26.55				mg/L	43	2/3/2026 12:29:38 AM	
+Unknown	IC	KW_14_A	Untitled			28.11				mg/L	44	2/3/2026 12:40:55 AM	
+Unknown	IC	KW_14_B	Untitled			28.18				mg/L	45	2/3/2026 12:54:42 AM	
+Unknown	IC	KW_16_A	Untitled			30.70				mg/L	46	2/3/2026 1:06:59 AM	
+Unknown	IC	KW_16_B	Untitled			30.42				mg/L	47	2/3/2026 1:18:47 AM	
+Unknown	IC	KW_17_A	Untitled			30.27				mg/L	48	2/3/2026 1:30:43 AM	
+Unknown	IC	KW_17_B	Untitled			30.65				mg/L	49	2/3/2026 1:41:58 AM	
+Unknown	IC	KW_18_A	Untitled			31.12				mg/L	50	2/3/2026 1:54:15 AM	
+Unknown	IC	KW_18_B	Untitled			31.02				mg/L	51	2/3/2026 2:06:21 AM	
+Unknown	IC	KW_19_A	Untitled			30.77				mg/L	52	2/3/2026 2:17:55 AM	
+Unknown	IC	KW_19_B	Untitled			31.05				mg/L	53	2/3/2026 2:29:37 AM	
+Unknown	IC	DI	Untitled			2.039				mg/L	0	2/3/2026 2:40:42 AM	
+Unknown	IC	Chk_Std_10mgL	Untitled			11.43				mg/L	54	2/3/2026 2:54:05 AM	
+Unknown	IC	DI	Untitled			2.040				mg/L	0	2/3/2026 3:05:10 AM	
+Unknown	IC	KW_20_A	Untitled			30.98				mg/L	55	2/3/2026 3:16:48 AM	
+Unknown	IC	KW_20_B	Untitled			30.72				mg/L	56	2/3/2026 3:27:57 AM	
+Unknown	IC	KW_21_A	Untitled			30.73				mg/L	57	2/3/2026 3:39:17 AM	
+Unknown	IC	KW_21_B	Untitled			30.57				mg/L	58	2/3/2026 3:50:31 AM	
+Unknown	IC	KW_22_A	Untitled			30.44				mg/L	59	2/3/2026 4:01:44 AM	
+Unknown	IC	KW_22_B	Untitled			30.63				mg/L	60	2/3/2026 4:12:58 AM	
+Unknown	IC	KW_23_A	Untitled			30.50				mg/L	61	2/3/2026 4:24:11 AM	
+Unknown	IC	KW_23_B	Untitled			30.38				mg/L	62	2/3/2026 4:35:27 AM	
+Unknown	IC	KW_24_A	Untitled			29.89				mg/L	63	2/3/2026 4:46:43 AM	
+Unknown	IC	KW_24_B	Untitled			30.10				mg/L	64	2/3/2026 4:57:55 AM	
+Unknown	IC	KW_25_A	Untitled			30.67				mg/L	65	2/3/2026 5:09:07 AM	
+Unknown	IC	KW_25_B	Untitled			30.68				mg/L	66	2/3/2026 5:20:19 AM	
+Unknown	IC	KW_26_A	Untitled			30.42				mg/L	67	2/3/2026 5:31:35 AM	
+Unknown	IC	KW_26_B	Untitled			30.42				mg/L	68	2/3/2026 5:42:58 AM	
+Unknown	IC	DI	Untitled			2.037				mg/L	0	2/3/2026 5:51:52 AM	
+Unknown	IC	Chk_Std_crm221-0866	Untitled			24.05				mg/L	69	2/3/2026 6:02:58 AM	
+Unknown	IC	DI	Untitled			2.032				mg/L	0	2/3/2026 6:14:03 AM	
+Unknown	IC	KW_28_A	Untitled			30.82				mg/L	70	2/3/2026 6:25:52 AM	
+Unknown	IC	KW_28_B	Untitled			30.68				mg/L	71	2/3/2026 6:37:21 AM	
+Unknown	IC	KW_29_A	Untitled			30.08				mg/L	72	2/3/2026 6:48:51 AM	
+Unknown	IC	KW_29_B	Untitled			30.17				mg/L	73	2/3/2026 7:01:05 AM	
+Unknown	IC	KW_30_A	Untitled			29.31				mg/L	74	2/3/2026 7:15:19 AM	
+Unknown	IC	KW_30_B	Untitled			29.36				mg/L	75	2/3/2026 7:26:35 AM	
+Unknown	IC	KW_SW_1_A	Untitled			30.88				mg/L	76	2/3/2026 7:38:14 AM	
+Unknown	IC	KW_SW_1_B	Untitled			30.89				mg/L	77	2/3/2026 7:49:35 AM	
+Unknown	IC	KW_SW_2_A	Untitled			31.07				mg/L	78	2/3/2026 8:00:45 AM	
+Unknown	IC	KW_SW_2_B	Untitled			31.28				mg/L	79	2/3/2026 8:11:59 AM	
+Unknown	IC	KW_SW_3_A	Untitled			30.44				mg/L	80	2/3/2026 8:23:17 AM	
+Unknown	IC	KW_SW_3_B	Untitled			30.84				mg/L	81	2/3/2026 8:34:36 AM	
+Unknown	IC	DI	Untitled			2.031				mg/L	0	2/3/2026 8:43:30 AM	
+Unknown	IC	Chk_Std_10mgL	Untitled			11.43				mg/L	82	2/3/2026 8:54:33 AM	
+Unknown	IC	DI	Untitled			2.034				mg/L	0	2/3/2026 9:05:55 AM	
+Unknown	IC	KW_SW_4_A	Untitled			31.13				mg/L	83	2/3/2026 9:18:18 AM	
+Unknown	IC	KW_SW_4_B	Untitled			30.59				mg/L	84	2/3/2026 9:47:15 AM	
+Unknown	IC	KW_SW_5_A	Untitled			30.76				mg/L	85	2/3/2026 9:58:58 AM	
+Unknown	IC	KW_SW_5_B	Untitled			30.62				mg/L	86	2/3/2026 10:10:33 AM	
+Unknown	IC	KW_SW_6_A	Untitled			30.50				mg/L	87	2/3/2026 10:21:52 AM	
+Unknown	IC	KW_SW_6_B	Untitled			30.58				mg/L	88	2/3/2026 10:33:13 AM	
+Unknown	IC	KW_PW_1_A	Untitled			260.2				mg/L	1	2/3/2026 10:47:46 AM	
+Unknown	IC	KW_PW_1_B	Untitled			267.2				mg/L	2	2/3/2026 11:02:12 AM	
+Unknown	IC	KW_PW_2_A	Untitled			223.5				mg/L	3	2/3/2026 11:16:19 AM	
+Unknown	IC	KW_PW_2_B	Untitled			219.0				mg/L	4	2/3/2026 11:30:08 AM	
+Unknown	IC	KW_PW_3_B
+KW_PW_3_A	Untitled			222.1				mg/L	5	2/3/2026 11:44:16 AM	
+Unknown	IC	KW_PW_3_A	Untitled			219.5				mg/L	6	2/3/2026 11:58:23 AM	
+Unknown	IC	KW_PW_4_A	Untitled			229.6				mg/L	7	2/3/2026 12:12:33 PM	
+Unknown	IC	KW_PW_4_B	Untitled			222.7				mg/L	8	2/3/2026 12:29:47 PM	
+Unknown	IC	KW_PW_5_A	Untitled			227.3				mg/L	9	2/3/2026 12:43:45 PM	
+Unknown	IC	KW_PW_5_B	Untitled			215.0				mg/L	10	2/3/2026 1:03:30 PM	
+Unknown	IC	KW_PW_6_A	Untitled			231.6				mg/L	11	2/3/2026 1:20:50 PM	
+Unknown	IC	KW_PW_6_B	Untitled			231.2				mg/L	12	2/3/2026 1:34:43 PM	
+Unknown	IC	DI	Untitled			2.293				mg/L	0	2/3/2026 1:48:02 PM	
+Unknown	IC	Chk_Std_crm221-0866	Untitled			24.57				mg/L	13	2/3/2026 2:05:07 PM	
+Unknown	IC	DI	Untitled			2.137				mg/L	0	2/3/2026 2:14:02 PM	
+Unknown	IC	MD_31_A	Untitled			20.62				mg/L	14	2/3/2026 2:31:54 PM	
+Unknown	IC	MD_31_B	Untitled			20.73				mg/L	15	2/3/2026 2:48:14 PM	
+Unknown	IC	MD_32_A	Untitled			22.95				mg/L	16	2/3/2026 2:59:29 PM	
+Unknown	IC	MD_32_B	Untitled			22.87				mg/L	17	2/3/2026 3:17:05 PM	
+Unknown	IC	MD_33_A	Untitled			23.05				mg/L	18	2/3/2026 3:28:00 PM	
+Unknown	IC	MD_33_B	Untitled			23.20				mg/L	19	2/3/2026 3:38:56 PM	
+Unknown	IC	MD_34_A	Untitled			24.59				mg/L	20	2/3/2026 3:50:16 PM	
+Unknown	IC	MD_34_B	Untitled			24.60				mg/L	21	2/3/2026 4:01:25 PM	
+Unknown	IC	MD_35_A	Untitled			26.35				mg/L	22	2/3/2026 4:12:26 PM	
+Unknown	IC	MD_35_B	Untitled			25.98				mg/L	23	2/3/2026 4:29:24 PM	
+Unknown	IC	MD_36_A	Untitled			27.25				mg/L	24	2/3/2026 4:40:37 PM	
+Unknown	IC	MD_36_B	Untitled			27.19				mg/L	25	2/3/2026 4:54:23 PM	
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	Chk_Std_10mgL	Untitled			0.000				mg/L	26		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_37_A	Untitled			0.000				mg/L	27		
+Unknown	IC	MD_37_B	Untitled			0.000				mg/L	28		
+Unknown	IC	MD_38_A	Untitled			0.000				mg/L	29		
+Unknown	IC	MD_38_B	Untitled			0.000				mg/L	30		
+Unknown	IC	MD_39_A	Untitled			0.000				mg/L	31		
+Unknown	IC	MD_39_B	Untitled			0.000				mg/L	32		
+Unknown	IC	MD_40_A	Untitled			0.000				mg/L	33		
+Unknown	IC	MD_40_B	Untitled			0.000				mg/L	34		
+Unknown	IC	MD_41_A	Untitled			0.000				mg/L	35		
+Unknown	IC	MD_41_B	Untitled			0.000				mg/L	36		
+Unknown	IC	MD_42_A	Untitled			0.000				mg/L	37		
+Unknown	IC	MD_42_B	Untitled			0.000				mg/L	38		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	Chk_Std_crm221-0866	Untitled			0.000				mg/L	39		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_43_A	Untitled			0.000				mg/L	40		
+Unknown	IC	MD_43_B	Untitled			0.000				mg/L	41		
+Unknown	IC	MD_44_A	Untitled			0.000				mg/L	42		
+Unknown	IC	MD_44_B	Untitled			0.000				mg/L	43		
+Unknown	IC	MD_45_A	Untitled			0.000				mg/L	44		
+Unknown	IC	MD_45_B	Untitled			0.000				mg/L	45		
+Unknown	IC	MD_46_A	Untitled			0.000				mg/L	46		
+Unknown	IC	MD_46_B	Untitled			0.000				mg/L	47		
+Unknown	IC	MD_47_A	Untitled			0.000				mg/L	48		
+Unknown	IC	MD_47_B	Untitled			0.000				mg/L	49		
+Unknown	IC	MD_48_A	Untitled			0.000				mg/L	50		
+Unknown	IC	MD_48_B	Untitled			0.000				mg/L	51		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	Chk_Std_10mgL	Untitled			0.000				mg/L	52		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_49_A	Untitled			0.000				mg/L	53		
+Unknown	IC	MD_49_B	Untitled			0.000				mg/L	54		
+Unknown	IC	MD_50_A	Untitled			0.000				mg/L	55		
+Unknown	IC	MD_50_B	Untitled			0.000				mg/L	56		
+Unknown	IC	MD_51_A	Untitled			0.000				mg/L	57		
+Unknown	IC	MD_51_B	Untitled			0.000				mg/L	58		
+Unknown	IC	MD_52_A	Untitled			0.000				mg/L	59		
+Unknown	IC	MD_52_B	Untitled			0.000				mg/L	60		
+Unknown	IC	MD_SW_13_A	Untitled			0.000				mg/L	61		
+Unknown	IC	MD_SW_13_B	Untitled			0.000				mg/L	62		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	Chk_Std_crm221-0866	Untitled			0.000				mg/L	63		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_SW_14_A	Untitled			0.000				mg/L	64		
+Unknown	IC	MD_SW_14_B	Untitled			0.000				mg/L	65		
+Unknown	IC	MD_SW_15_A	Untitled			0.000				mg/L	66		
+Unknown	IC	MD_SW_15_B	Untitled			0.000				mg/L	67		
+Unknown	IC	MD_SW_16_A	Untitled			0.000				mg/L	68		
+Unknown	IC	MD_SW_16_B	Untitled			0.000				mg/L	69		
+Unknown	IC	MD_SW_17_A	Untitled			0.000				mg/L	70		
+Unknown	IC	MD_SW_17_B	Untitled			0.000				mg/L	71		
+Unknown	IC	MD_SW_18_A	Untitled			0.000				mg/L	72		
+Unknown	IC	MD_SW_18_B	Untitled			0.000				mg/L	73		
+Unknown	IC	MD_PW_13_A	Untitled			0.000				mg/L	74		
+Unknown	IC	MD_PW_13_B	Untitled			0.000				mg/L	75		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	Chk_Std_10mgL	Untitled			0.000				mg/L	76		
+Unknown	IC	DI	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_14_A	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_14_B	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_14_A_syringe	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_14_B_syringe	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_15_A	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_15_B	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_15_A_syringe	Untitled			0.000				mg/L	0		
+Unknown	IC	MD_PW_15_B_syringe	Untitled			0.000				mg/L	0		
+Unknown	IC	Untitled	Untitled			0.000				mg/L	0		
+Unknown	IC	Untitled	Untitled			0.000				mg/L	0		
+Unknown	IC	Untitled	Untitled			0.000				mg/L	0		
+Unknown	IC	Untitled	Untitled			0.000				mg/L			
+Unknown	IC	Untitled	Untitled			0.000				mg/L			
+Unknown	IC	Untitled	Untitled			0.000				mg/L			
+Unknown	IC	Untitled	Untitled			0.000				mg/L			
+Unknown	IC	Untitled	Untitled			0.000				mg/L			
