@@ -1,0 +1,13 @@
+---
+title: "GCReW_Flume_TidalSurvey_TA_QAQC_202308"
+author: "Stephanie J. Wilson"
+date: "2026-04-29"
+output: pdf_document
+---
+#Basically need to just bring in the TA data from Amanda and clean it up & add metadata 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#
