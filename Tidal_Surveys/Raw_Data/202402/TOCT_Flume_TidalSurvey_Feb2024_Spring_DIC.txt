@@ -1,0 +1,55 @@
+[Header]	
+System	Smithsonian TCTN	
+S/W Version	1.00	
+User	sjw	
+Date/Time	2/18/2024 12:14:31 PM	
+
+[System]	
+Instrument Options	TOC/ASI/IC Unit/TN/	
+
+[Data]	
+Type	Anal.	Sample Name	Sample ID	Result(TOC)	Result(TC)	Result(IC)	Result(POC)	Result(NPOC)	Result(TN)	Unit	Vial	Date / Time	
+Unknown	IC	DI	Untitled			1.636				mg/L	0	2/17/2024 12:10:33 PM	
+Unknown	IC	DI	Untitled			1.633				mg/L	0	2/17/2024 12:19:31 PM	
+Unknown	IC	DI_Bubbled	Untitled			1.581				mg/L	1	2/17/2024 12:30:20 PM	
+Unknown	IC	Chk_Std_40mgL	Untitled			38.83				mg/L	2	2/17/2024 12:43:58 PM	
+Unknown	IC	DI	Untitled			1.635				mg/L	0	2/17/2024 12:57:14 PM	
+Unknown	IC	DI	Untitled			1.635				mg/L	0	2/17/2024 1:23:12 PM	
+Standard	IC	CalCurve_IC	Untitled			200.0				mg/L	3, 4, 5, 6, 7, 8, 9, 10	2/17/2024 3:10:44 PM	
+Unknown	IC	DI	Untitled			1.671				mg/L	0	2/17/2024 3:24:19 PM	
+Unknown	IC	Chk_Std_40mgL	Untitled			38.71				mg/L	11	2/17/2024 3:37:57 PM	
+Unknown	IC	DI	Untitled			1.665				mg/L	0	2/17/2024 3:49:01 PM	
+Unknown	IC	20240215_GCReW_Flume_0800	Untitled			8.984				mg/L	12	2/17/2024 4:01:09 PM	
+Unknown	IC	20240215_GCReW_Flume_0900	Untitled			9.004				mg/L	13	2/17/2024 4:13:06 PM	
+Unknown	IC	20240215_GCReW_Flume_1000	Untitled			8.240				mg/L	14	2/17/2024 4:24:57 PM	
+Unknown	IC	20230215_GCReW_Flume_1100	Untitled			9.883				mg/L	15	2/17/2024 4:37:01 PM	
+Unknown	IC	20230215_GCReW_Flume_1200	Untitled			10.07				mg/L	16	2/17/2024 4:49:01 PM	
+Unknown	IC	20230215_GCReW_Flume_1300	Untitled			9.667				mg/L	17	2/17/2024 5:00:59 PM	
+Unknown	IC	20230215_GCReW_Flume_1400	Untitled			9.553				mg/L	18	2/17/2024 5:12:59 PM	
+Unknown	IC	20230215_GCReW_Flume_1500	Untitled			9.681				mg/L	19	2/17/2024 5:25:06 PM	
+Unknown	IC	20232015_GCReW_Flume_1600	Untitled			9.831				mg/L	20	2/17/2024 5:37:12 PM	
+Unknown	IC	20230215_GCReW_Flume_1700	Untitled			10.02				mg/L	21	2/17/2024 5:49:17 PM	
+Unknown	IC	DI	Untitled			1.667				mg/L	0	2/17/2024 5:58:11 PM	
+Unknown	IC	Chk_Std_80mgL	Untitled			78.30				mg/L	22	2/17/2024 6:12:38 PM	
+Unknown	IC	DI	Untitled			1.660				mg/L	0	2/17/2024 6:24:05 PM	
+Unknown	IC	20230215_GCReW_Flume_1800	Untitled			10.49				mg/L	23	2/17/2024 6:36:11 PM	
+Unknown	IC	20230215_GCReW_Flume_1900	Untitled			10.67				mg/L	24	2/17/2024 6:48:22 PM	
+Unknown	IC	20230215_GCReW_Flume_GW1	Untitled			44.60				mg/L	25	2/17/2024 7:02:05 PM	
+Unknown	IC	20230215_GCReW_Flume_GW2	Untitled			76.46				mg/L	26	2/17/2024 7:16:44 PM	
+Unknown	IC	20231215_GCReW_Flume_GW4	Untitled			28.64				mg/L	27	2/17/2024 7:29:51 PM	
+Unknown	IC	20230215_GCReW_Flume_GW6	Untitled			25.82				mg/L	28	2/17/2024 7:43:20 PM	
+Unknown	IC	20230215_GCReW_Flume_FW1	Untitled			23.81				mg/L	29	2/17/2024 7:59:46 PM	
+Unknown	IC	20230215_GCReW_Flume_FW2	Untitled			26.13				mg/L	30	2/17/2024 8:13:10 PM	
+Unknown	IC	20230215_GCReW_Flume_FS1	Untitled			31.96				mg/L	31	2/17/2024 8:26:46 PM	
+Unknown	IC	DI	Untitled			1.791				mg/L	0	2/17/2024 8:40:10 PM	
+Unknown	IC	DI	Untitled			1.716				mg/L	0	2/17/2024 8:51:15 PM	
+Standard	IC	CalCurve_IC	Untitled			200.0				mg/L	32, 33, 34, 35, 36, 37, 38	2/17/2024 10:27:44 PM	
+Unknown	IC	DI	Untitled			1.674				mg/L	0	2/17/2024 10:41:24 PM	
+Unknown	IC	TEMPEST_Aquifer_20240124_A	Untitled			10.46				mg/L	39	2/17/2024 10:53:39 PM	
+Unknown	IC	TEMPEST_Aquifer_20240124_B	Untitled			8.571				mg/L	40	2/17/2024 11:05:50 PM	
+Unknown	IC	TEMPEST_Aquifer_20230124_C	Untitled			8.742				mg/L	41	2/17/2024 11:18:00 PM	
+Unknown	IC	DI	Untitled			1.680				mg/L	0	2/17/2024 11:31:17 PM	
+Unknown	IC	DI	Untitled			1.671				mg/L	0	2/17/2024 11:42:22 PM	
+Unknown	IC	DI
+DI	Untitled			1.659				mg/L	0	2/17/2024 11:51:16 PM	
+Unknown	IC	DI	Untitled			1.666				mg/L	0	2/18/2024 12:02:21 AM	
