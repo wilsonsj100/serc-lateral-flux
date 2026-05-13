@@ -1,5 +1,5 @@
 # Source
-# source(here::here("R", "drop_dir.R"))
+source(here::here("R", "drop_dir.R"))
 source(here::here("R", "get_dropbox_token.R"))
 source(here::here("R", "load_file.R"))
 library(tidyverse)
@@ -20,9 +20,9 @@ download_new_data <- function(gcrew_folder = here::here("Raw_data"),
                               search_term = "MARSH_OUTLET") {
   # Identify all files
   message("Looking for new data files on dropbox")
-  relevant_files <- rdrop2::drop_dir(path = archive_path) %>%
+  relevant_files <- drop_dir(path = archive_path) %>%
     filter(grepl(search_term, name))
-  current <- rdrop2::drop_dir(path = current_path) %>%
+  current <- drop_dir(path = current_path) %>%
     filter(
       grepl(search_term, name),
       !grepl("backup", name)

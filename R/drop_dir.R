@@ -97,7 +97,13 @@ drop_dir <- function(
   }
 
   # coerce to tibble, one row per item found
-  dplyr::bind_rows(purrr::map(results, LinearizeNestedList))
+  # Changed 13 May 2026 because it wouldn't bind and we only use name
+  #dplyr::bind_rows(purrr::map(results, LinearizeNestedList))
+  
+  purrr::map_dfr(results, ~ tibble::tibble(
+    name = .x$name,
+    server_modified = .x$server_modified,
+    path_display = .x$path_display))
 }
 
 
