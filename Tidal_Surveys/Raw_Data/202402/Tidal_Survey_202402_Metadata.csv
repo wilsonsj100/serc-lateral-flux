@@ -1,0 +1,56 @@
+﻿Survey_Type,Site,Date,Time_EDT,Time_EST,Sample_Type,Sample_ID,DO_mgL,pH,Salinity_ppt,Temp,DIC,DICex,SO4_H2S,NUTR,DOC,GHGs,TA,Radium_Vol_L,Notes 
+Tidal Survey,Flume,2/8/2024,9:00,10:00,SW,Flume_20240208_SW_0900,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,10:00,11:00,SW,Flume_20240208_SW_1000,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,11:00,12:00,SW,Flume_20240208_SW_1100,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,12:00,13:00,SW,Flume_20240208_SW_1200,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,13:00,14:00,SW,Flume_20240208_SW_1300,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,14:00,15:00,SW,Flume_20240208_SW_1400,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,15:00,16:00,SW,Flume_20240208_SW_1500,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,16:00,17:00,SW,Flume_20240208_SW_1600,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,17:00,18:00,SW,Flume_20240208_SW_1700,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,18:00,19:00,SW,Flume_20240208_SW_1800,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,19:00,20:00,SW,Flume_20240208_SW_1900,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,20:00,21:00,SW,Flume_20240208_SW_2000,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,21:00,22:00,SW,Flume_20240208_SW_2100,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,16:00,17:00,SW,Flume_20240208_SW_1600_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,17:00,18:00,SW,Flume_20240208_SW_1700_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,18:00,19:00,SW,Flume_20240208_SW_1800_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,19:00,20:00,SW,Flume_20240208_SW_1900_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,20:00,21:00,SW,Flume_20240208_SW_2000_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,21:00,22:00,SW,Flume_20240208_SW_2100_isco,NA,NA,NA,NA,x,x,x,x,x,x,x,5,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,22:00,23:00,SW,Flume_20240208_SW_2200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,23:00,0:00,SW,Flume_20240208_SW_2300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,0:00,1:00,SW,Flume_20240208_SW_2400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,1:00,2:00,SW,Flume_20240209_SW_0000,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,2:00,3:00,SW,Flume_20240209_SW_0100,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,3:00,4:00,SW,Flume_20240209_SW_0200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,4:00,5:00,SW,Flume_20240209_SW_0300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,5:00,6:00,SW,Flume_20240209_SW_0400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/8/2024,12:45,13:45,GW,Flume_20240208_GW_1,23:24,7.54,21:36,9.5,x,x,x,x,x,x,x,1.65,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,13:45,14:45,GW,Flume_20240208_GW_2,4.09,6.76,8.6,8.8,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,14:45,15:45,GW,Flume_20240208_GW_3,NA,7.32,5.1,8.7,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,15:45,16:45,GW,Flume_20240208_GW_4,2.865,7.07,8,7.1,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,16:45,17:45,GW,Flume_20240208_GW_5,NA,NA,4.7,7,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/8/2024,NA,NA,GW,Flume_20240208_GW_6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,February: Neap Tide 
+Tidal Survey,Flume,2/9/2024,11:45,12:45,FW,Flume_20240209_FW_2,8.269,5.93,0,11.87,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/9/2024,12:15,13:15,FW,Flume_20240209_FW_1,11.521,4.79,0,13.4,x,x,x,x,x,x,x,3.5,February: Neap Tide 
+Tidal Survey,Flume,2/15/2024,8:00,9:00,SW,Flume_20240215_SW_0800,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,9:00,10:00,SW,Flume_20240215_SW_0900,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,10:00,11:00,SW,Flume_20240215_SW_1000,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,11:00,12:00,SW,Flume_20240215_SW_1100,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,12:00,13:00,SW,Flume_20240215_SW_1200,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,13:00,14:00,SW,Flume_20240215_SW_1300,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,14:00,15:00,SW,Flume_20240215_SW_1400,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,15:00,16:00,SW,Flume_20240215_SW_1500,NA,NA,NA,NA,x,x,x,x,x,NA,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,16:00,17:00,SW,Flume_20240215_SW_1600,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,17:00,18:00,SW,Flume_20240215_SW_1700,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,18:00,19:00,SW,Flume_20240215_SW_1800,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,19:00,20:00,SW,Flume_20240215_SW_1900,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,8:45,9:45,GW,Flume_20240215_GW_1,1.535,6.76,6,8.6,x,x,x,x,x,x,x,1.225,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,9:45,10:45,GW,Flume_20240215_GW_2,0.554,6.89,10.2,7.3,x,x,x,x,x,x,x,3.7,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,NA,NA,GW,Flume_20240215_GW_3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,10:45,11:45,GW,Flume_20240215_GW_4,5:42,7.01,7.7,6.9,x,x,x,x,x,x,x,3.7,February: Spring Tide 
+Tidal Survey,Flume,2/15/2024,11:45,12:45,GW,Flume_20240215_GW_6,3:25,7.14,5.4,7.3,x,x,x,x,x,x,x,3.7,February: Spring Tide 
+Tidal Survey,Flume,2/16/2024,8:45,9:45,FW,Flume_20240216_FW_1,4.001,6.43,0,11.1,x,x,x,x,x,x,x,3.7,February: Spring Tide 
+Tidal Survey,Flume,2/16/2024,10:00,11:00,FW,Flume_20240215_FW_2,6.406,4.5,0,11.4,x,x,x,x,x,x,x,3.7,February: Spring Tide 
+Tidal Survey,Flume,2/16/2024,10:15,11:15,FW,Flume_20240215_FS_1,4.334,4.18,0,11.5,x,x,x,x,x,x,x,3.7,February: Spring Tide 

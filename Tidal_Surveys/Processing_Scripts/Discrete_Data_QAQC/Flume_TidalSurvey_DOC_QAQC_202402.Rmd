@@ -18,14 +18,13 @@ cat("Setup Information")
   Script_run_by = "Stephanie J. Wilson" #Code user 
   run_notes = "Standard Curve was assessed manually on the instrument."  #any notes from the run
   #samples <- c("Flume") #whatever identifies your samples within the same names 
-  samples_pattern <- "Flume" #paste(samples, collapse = "|") 
+  samples_pattern <- "Flume|50|50 dup|51|52|53|54|55|56|57|58|59|60|60 dup" #paste(samples, collapse = "|") 
     #samples_pattern <- "GCW" #use this instead of the line above if you have only one site code 
   chks_name = "Chk_Std_50C_2N"  #what did you name your check standards? 
   
 library(here)  
 ###### File Names - PLEASE CHANGE 
 #file path and name for raw summary data file 
-    #raw_file_name = "Raw Data/COMPASS_SynopticCB_PW_DOC_202505.txt" #example
     raw_file_name = c(here("Tidal_Surveys/Raw_Data/202402", "TOCT_Flume_TidalSurvey_Feb2024_Spring_DOC_notfinished.txt"), 
                             here("Tidal_Surveys/Raw_Data/202402", "2024_0225_DOC_ForStephAvg.txt"))
     
@@ -40,7 +39,10 @@ library(here)
 
 ###### Log Files - PLEASE CHECK 
 #downloaded metadata csv - downloaded from Google drive as csv for this year
-  #Raw_Metadata = here("Tidal_Surveys/Raw_Data/202402", "Tidal_Survey_202402_Metadata.csv")
+  Raw_Metadata = here("Tidal_Surveys/Raw_Data/202402", "Tidal_Survey_202402_Metadata.csv")
+  
+#### This set of samples had some reruns and we need to use them 
+  Sample_IDs <- read.csv(here("Tidal_Surveys/Raw_Data/202402", "202402_DOC_rerun_ids.csv"))
   
 #qaqc log file path for this year 
   #Log_path = "Raw Data/COMPASS_Synoptic_TOCTN_QAQClog_2024.csv"
@@ -135,12 +137,33 @@ cat("Import Sample Data")
 #Pull in data that from the raw data file based on the sample info input above 
 dat_raw <- raw_file_name %>%
   map_df(read_data) %>%
-  filter(str_detect(sample_name, samples_pattern))
+  filter(str_detect(sample_name, samples_pattern)) %>%
+  filter(!sample_name == "Chk_Std_50C_2N") %>%
+  filter(npoc_raw != 0) %>%
+  mutate(
+    sample_name = recode(
+      sample_name,
+      "Flume_20240209_SW1200" = "Flume_20240208_SW1200",
+      "Flume_20240208_SW-0000" = "Flume_20240209_SW-0000",
+      "Flume_20240208_SW-0100" = "Flume_20240209_SW-0100",
+      "Flume_20240208_SW-0200" = "Flume_20240209_SW-0200",
+      "Flume_20240208_SW-0300" = "Flume_20240209_SW-0300",
+      "Flume_20240208_SW-0400" = "Flume_20240209_SW-0400",
+      "Flume_20240208_SW-0500" = "Flume_20240209_SW-0500",
+      "Flume_20240208_SW-0600" = "Flume_20240209_SW-0600",
+      "Flume_20240208_SW-0700" = "Flume_20240209_SW-0700"
+    )
+  )
 
-#dat_raw <- dat_raw %>% 
- # mutate(sample_name = str_remove(sample_name, "^[0-9]+_")) %>% 
-  #mutate(sample_name = if_else(sample_name == "02305_SWH_UP_LysC_20cm",
-   #                            "202305_SWH_UP_LysC_20cm", sample_name) )
+dat_raw <- dat_raw %>%
+  left_join(
+    Sample_IDs %>% select(num_id, new_name = sample_name),
+    by = c("sample_name" = "num_id")
+  ) %>%
+  mutate(
+    sample_name = coalesce(new_name, sample_name)
+  ) %>%
+  select(-new_name)
 
 head(dat_raw)
 ```
@@ -492,7 +515,39 @@ cat("Visualize Data")
 
 dat_flagged <- dat_flagged %>%
   mutate(sample_name = str_replace_all(sample_name, "-", "_")) %>%
-  filter(!str_detect(sample_name, "_dup"))
+  filter(!str_detect(sample_name, "_dup"))  %>%
+  mutate(
+    sample_name = str_replace(
+      sample_name,
+      "SW_1600isco",
+      "SW_1600_isco"
+    )
+  ) %>%
+  mutate(
+    sample_name = str_replace(
+      sample_name,
+      "SW1200",
+      "SW_1200"
+    )
+  )
+
+dat_flagged <- dat_flagged %>%
+  mutate(
+    sample_name = case_when(
+      
+      # only Flume_YYYYMMDD_HHMM (no GW/FW already present)
+      str_detect(sample_name, "^Flume_\\d{8}_\\d{4}$") ~
+        str_replace(sample_name,
+                    "^(Flume_\\d{8})_(\\d{4})$",
+                    "\\1_SW_\\2"),
+      
+      # leave everything else unchanged
+      TRUE ~ sample_name
+    )
+  ) %>%
+  mutate(
+    sample_name = str_replace(sample_name, "(GW|FW|FS)(\\d+)", "\\1_\\2")
+  )
 
 #Plot samples to get a first look at concentrations (sanity check)
 IDs <- data.frame(do.call('rbind', strsplit(as.character(dat_flagged$sample_name),'_',fixed=TRUE)))
@@ -505,15 +560,13 @@ dat_flagged_id <- cbind(IDs, dat_flagged)
 #group the data for plotting
 dat_flagged_id <- dat_flagged_id %>%
   group_by(Sample_Type) %>%
-  mutate(row_num = factor(row_number())) %>%  # create row_num as factor per group
-  mutate(sample_name = factor(sample_name, 
-                              levels = sample_name[order(Sample_Type)])) %>%  # create row_num as factor per group
+  mutate(sample_name = factor(sample_name, levels = unique(sample_name))) %>%
   ungroup()
 
 #Plot data and change colors based on flags to check it: 
 viz_c_plot <- ggplot(dat_flagged_id, aes(x = sample_name, y = npoc_raw, fill = Sample_Type)) +
   geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
-  scale_fill_manual(values = c("#419973", "#25ABE6" )) +
+  scale_fill_manual(values = c("#419973", "#25ABE6" , "darkblue", "purple" )) +
   theme_classic() +
   labs(x = " ", y = "NPOC (mg/L)", title = "Samples: NPOC") +
   theme(legend.position = "none") +
@@ -523,7 +576,7 @@ viz_c_plot <- ggplot(dat_flagged_id, aes(x = sample_name, y = npoc_raw, fill = S
 
 viz_n_plot <-  ggplot(dat_flagged_id, aes(x = sample_name, y = tdn_raw, fill = Sample_Type)) +
   geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
-  scale_fill_manual(values = c("#419973", "#25ABE6" )) +
+  scale_fill_manual(values = c("#419973", "#25ABE6", "darkblue", "purple" )) +
   theme_classic() +
   labs(x = " ", y = "TN (mg/L)", title = "Samples: TN") +
   theme(legend.position = "none")  +
@@ -573,7 +626,7 @@ if (all_present) {
   message("Some sample IDs are missing from metadata.")
   
   # Optional: Which ones are missing?
-  missing_ids <- setdiff(all_data_flagged$sample_name, doc_metadata$DOC_ID)
+  missing_ids <- setdiff(all_data_flagged$sample_name, doc_metadata$Sample_ID)
   print(missing_ids)
 }
 
@@ -594,7 +647,7 @@ cat("Export Processed Data")
 #Prepare data to be exported 
 #Add any dentifiers ### IMPORTANT AND STANDARD FOR PROJECT ####
 final_data <- merged_data %>% 
-  select(!row_num) %>%
+  #select(!row_num) %>%
   select(!Date.x) %>%
   mutate(
     Project = "SERC Lateral Flux",   
