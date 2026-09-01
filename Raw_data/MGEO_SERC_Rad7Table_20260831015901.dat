@@ -1,0 +1,8 @@
+"TOA5","MGEO_SERC","CR1000X","50443","CR1000X.8.5.0","CPU:MGEO_SERCv31INT.CR1X","63885","Rad7Table"
+"TIMESTAMP","RECORD","Record_RAD7","Year_RAD7","Month_RAD7","Day_Rad7","Hour_Rad7","Minute_Rad7","Total_Counts_Rad7","Live_Time_Rad7","PER_TOT_A_Rad7","PER_TOT_B_Rad7","PER_TOT_C_Rad7","PER_TOT_D_Rad7","High_Voltage_Level_Rad7","High_Voltage_Duty_Rad7","Temp_sample_Rad7","RH_sample_Rad7","Leakage_Current_Rad7","Battery_Volt_Rad7","Pump_current_Rad7","Flags_Byte_Rad7","Radon_concentration_Rad7","Radon_concentration_uncertainty_Rad7","Units_Byt_Rad7"
+"TS","RN","###","YY","MM","dd","hh","mm","integer","minutes","percent","percent","percent","percent","Volts","percent","celcius","percent","integer","Volts","mA","integer","Bq/m3","Bq/m3","integer"
+"","","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp","Smp"
+"2026-08-31 00:00:00",8387,0,-2147483648,-2147483648,-2147483648,-2147483648,-2147483648,"NAN",-2147483648,"NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN",-2147483648,"NAN","NAN",-2147483648
+"2026-08-31 00:15:00",8388,0,-2147483648,-2147483648,-2147483648,-2147483648,-2147483648,"NAN",-2147483648,"NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN",-2147483648,"NAN","NAN",-2147483648
+"2026-08-31 00:30:00",8389,0,-2147483648,-2147483648,-2147483648,-2147483648,-2147483648,"NAN",-2147483648,"NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN",-2147483648,"NAN","NAN",-2147483648
+"2026-08-31 00:45:00",8390,0,-2147483648,-2147483648,-2147483648,-2147483648,-2147483648,"NAN",-2147483648,"NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN","NAN",-2147483648,"NAN","NAN",-2147483648
