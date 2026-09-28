@@ -265,15 +265,9 @@ write.csv(dat, "combined-raw-data/sensor-data.csv")
 ```{r, include=FALSE}
 
 #pull in the chemical data files and combine if needed / pull out the columns we need 
-setwd("raw-chem-data/")
-path <- "raw-chem-data/"
-
-#list all the files in the directory
-#create a list of the files there 
-  #exo_files <- dir(pattern = "csv$", full.names = FALSE)
 
 ## Create a dataframe
-chem <- read.csv("LatT_GCW_AllData_forNASATrial.csv")
+chem <- read.csv("raw-chem-data/LatT_GCW_AllData_forNASATrial.csv")
 head(chem)
 
 #Pull out only the columns that we need from the file 
@@ -285,11 +279,45 @@ chem_lite <- chem %>%
   mutate(DOC_umolL = ((as.numeric(NPOC..mg.L.) / 1000)/12.011)*1000000)%>%
   mutate(TA_umolL = (TA..mmol.L. * 1000))
 
-#need to make a time stamp from the date and time sampled 
-#datetime_str <- paste(chem_lite$date, chem_lite$time_sampled_est)
+# Need to add in new data: 
+dic_files <- list.files(
+  here("FATE Monitoring", "DIC_data", "Processed Data"),
+  pattern = "\\.csv$",
+  full.names = TRUE)
 
-# Parse with mdy_hm for month/day/year format and hours:minutes
-#chem_lite$timestamp <- mdy_hm(datetime_str)
+#read in the dic data and subset to just the flume data 
+chem_2025_dic <- dic_files %>%
+  map_dfr(read_csv) %>%
+  filter(Sample_Location == "Flume")
+
+#might want to summarize these by the day 
+chem_2025_dic <- chem_2025_dic %>%
+  group_by(Date, Sample_Location) %>%
+  summarize(IC_mgL_mean = mean(ic_mgL), 
+            IC_mgL_sd = sd(ic_mgL),
+            IC_uM_mean = mean(ic_uM), 
+            IC_uM_sd = sd(ic_uM), 
+            ic_flag = first(ic_flag), 
+            Sampler = first(Sampler)
+            
+  )
+
+#list the doc files and then read them in and subset to the flume 
+doc_files <- list.files(
+  here("FATE Monitoring", "DOC_data", "Processed Data"),
+  pattern = "\\.csv$",
+  full.names = TRUE)
+
+chem_2025_doc <- doc_files %>%
+  map_dfr(read_csv) %>%
+  filter(Sample_Location == "Flume")
+
+
+#don't have TA data for 2025 just yet 
+
+#combine the DIC, DOC, and TA data then merge with the existing chem data 
+
+
 
 ```
 

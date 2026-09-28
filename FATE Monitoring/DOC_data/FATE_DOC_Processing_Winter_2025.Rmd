@@ -39,7 +39,8 @@ cat("Setup Information")
 
 ###### Log Files - PLEASE CHECK 
 #downloaded metadata csv - downloaded from Google drive as csv for this year
-  #Raw_Metadata = "Raw Data/COMPASS_SynopticCB_PW_SampleLog_2025.csv"
+  library(here)
+  Raw_Metadata = here("FATE Monitoring", "Metadata", "FATE_Monitoring_Metadata_2025.csv")
   
 #qaqc log file path for this year 
   Log_path = "Raw Data/FATE_TOCTN_QAQClog_2025.csv"
@@ -135,6 +136,14 @@ cat("Import Sample Data")
 dat_raw <- raw_file_name %>%
   map_df(read_data) %>%
   filter(str_detect(sample_name, samples_pattern))
+
+#I wrote the name of two samples incorrectly 20251110 should be 20251011
+dat_raw <- dat_raw %>%
+  mutate(sample_name = recode(
+    sample_name, 
+    "FATE_Dock_20251110" = "FATE_Dock_20251011", 
+    "FATE_Flume_20251110" = "FATE_Flume_20251011"
+  ))
 
 head(dat_raw)
 ```
@@ -769,9 +778,57 @@ final_data <- final_data %>%
 
 head(final_data)
 
+
+#we need to bring in the metadata for these to get the time that they were sampled 
+metadata <- read.csv(Raw_Metadata)
+
+head(metadata)
+
+#have to parse the dates: 
+final_data <- final_data %>%
+  mutate(Date = ymd(Date))
+
+metadata <- metadata %>%
+  mutate(Date = mdy(Date)) %>%
+  select(Date, Sample_Location, Time, Sampler, YSI_Temp_C, YSI_Sal_ppt, Field_Notes)
+
+#now we can join them together 
+combined_data <- final_data %>%
+  left_join(
+    metadata,
+    by = c("Date", "Sample_Location")
+  )
+
+head(combined_data)
+
+#Now reorder the information
+combined_data <- combined_data %>%
+  select(
+    Project, 
+    Date, 
+    Time,
+    Sample_Location, 
+    #Replicate, 
+    
+    npoc_mgL, 
+    npoc_uM, 
+    npoc_flag, 
+    tdn_mgL, 
+    tdn_uM, 
+    tdn_flag,  
+    
+    Sampler, 
+    Analysis_runtime,
+    Run_notes, 
+    YSI_Temp_C, 
+    YSI_Sal_ppt, 
+    Field_Notes  )
+
 #will put final data in processed data folder 
 #Write out data frame 
-  write.csv(final_data, processed_file_name)
+  write.csv(combined_data, processed_file_name)
+
+
 
 ```
 

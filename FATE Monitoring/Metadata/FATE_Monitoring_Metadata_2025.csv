@@ -1,0 +1,52 @@
+﻿Date,Time,Sampler,Sample_Location,DIC_24ml,DIC_ex_1ml,SO4/H2S_5ml,Nutr_10ml,DOC_20ml,TA_250ml,CO2Scout_ppm,CO2Scout_Temp_C,IRGA_CO2_ppm,IRGA_CH4_ppm,IRGA_H2O_ppm,YSI_Temp_C,YSI_DO_percent,YSI_DO_mgL,YSI_SPCond_uS,YSI_Cond_us,YSI_Sal_ppt,YSI_pH_NBS,YSI_pH_mV,Field_Notes
+5/9/2025,14:49,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,629,22.8,615,59565,324,20.5,76.7,6.49,17808,16288,10.54,NA,NA,
+5/4/2025,16:00,A. Reynolds,Flume,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Total flood @ flume - H20 trap flooded, vacuum apparent. Licor/Scout taken offline to fix H20 pump + BB ???, no samples"
+5/29/2025,14:02,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,17.2,69,6.27,8188,6983,4.62,NA,NA,Scout/LGR not running
+5/29/2025,15:53,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,398,19.4,447,61906,308,18.2,121.4,11.09,11507,9994,6.58,NA,NA,
+6/5/2025,11:15,A. Reynolds,Flume,Y,Y,Y,Y,Y,Y,NA,NA,NA,NA,NA,19.6,25.2,3.14,10921,9836,6.36,NA,NA,System still off at flume
+6/5/2025,12:59,A. Reynolds,Dock,Y,Y,Y,Y,Y,Y,485,25.1,475,62160,322,23.1,163.3,8.48,12590,12125,7.22,NA,NA,Licor system
+6/12/2025,10:54,A. Reynolds,Flume,Y,Y,Y,Y,Y,Y,NA,NA,NA,NA,NA,22.1,27.8,2.39,11276,10645,6.44,NA,NA,System offline flume
+6/12/2025,12:34,A. Reynolds,Dock,Y,Y,Y,Y,Y,Y,892,27.4,NA,NA,NA,25.4,90.7,7.14,13547,13615,7.8,NA,NA,
+6/27/2025,12:10,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,23.4,25.1,2.05,8899,8747,5.57,NA,NA,LGR/CO2 scout not deployed
+6/27/2025,15:19,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,2016,NA,NA,NA,29.1,26.7,61.3,4.59,11971,12356,6.82,NA,NA,
+7/16/2025,15:30,A. Reynolds,Dock,Y,N,N,Y,Y,Y,35,31.8,NA,NA,NA,29.3,119.4,8.15,12119,13162,6.88,NA,NA,MACAN Demo sampling w/ canister filter 0.45
+7/24/2025,11:28,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,>9999,25.6,NA,NA,NA,24.2,39.2,3.16,11092,10930,6.29,NA,NA,
+7/24/2025,13:12,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,498,30.4,NA,NA,NA,28.4,103.5,7.63,12504,13407,7.13,NA,NA,
+7/16/2025,15:00,S. Wilson,Flume,Y,N,Y,Y,Y,Y,>9999,29.4,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,Also collected for MACAN
+8/13/2025,11:03,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,9410,26.7,NA,NA,NA,24.3,25.1,2,12561,12403,7.19,NA,NA,No LGR
+8/13/2025,12:18,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,879,29.4,NA,NA,NA,27,78,5.84,13215,13710,7.58,NA,NA,No Licor
+8/29/2025,13:54,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,>9999,22.8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No LGR, YSI needs batteries, use exo sonde for data for flume"
+8/29/2025,15:38,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,1291,26.2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No Licor, YSI needs batteries, use exo sonde for data @ dock"
+9/5/2025,11:39,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,9050,22.4,NA,NA,NA,18.6,39.4,3.4,17760,15956,10.52,NA,NA,
+9/5/2025,12:55,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,1209,25.8,NA,NA,NA,23.2,87.1,6.93,19082,18436,11.34,NA,NA,
+9/12/2025,13:56,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,8950,22.2,NA,NA,NA,20.3,49.9,4.16,11577,15119,9.78,NA,NA,"Ebb tide, near(?) slack, LGR pump on but not recording CO2/CH4 yet"
+9/12/2025,15:36,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,22.7,116,9.38,20031,19139,11.97,NA,NA,No CO2 scout running
+3/27/2025,14:31,S. Wilson,Flume,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,127.2,13.47,12258,9341,7.16,NA,NA,"Flow rate @ ~0.5 Lpm, downloaded RAD7 flume data"
+3/27/2025,16:05,S. Wilson,Dock,NA,NA,NA,NA,NA,NA,107,12.4,160,11950,NA,NA,129.6,13.67,17430,12557,10.17,NA,NA,YSI measurements from bucket also recorded on scanned data sheet
+4/3/2025,13:00,"S. Wilson, A. Reynolds",Dock,NA,NA,NA,NA,NA,NA,123,15.6,154,15133,NA,14.2,104.1,10.78,14772,11822,10.19,NA,NA,
+4/3/2025,14:43,"S. Wilson, A. Reynolds",Flume,NA,NA,NA,NA,NA,NA,2100,15.4,NA,NA,NA,16,91.4,8.4,16331,13526,9.61,NA,NA,
+NA,14:00,S. Wilson,Flume,Y,Y,Y,Y,Y,Y,NA,NA,NA,NA,NA,22.3,51.4,3.23,15407,15569,9.63,7.33,-57.3,"Low tide, air 8.0C breezy"
+NA,15:00,S. Wilson,Dock,Y,Y,Y,Y,Y,Y,NA,NA,NA,NA,NA,21.7,109.4,9.15,17465,16368,10.31,8.98,-147.7,
+1/2/2025,13:25,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,5.8,50.1,6.26,9534,NA,7.6,NA,NA,
+1/8/2025,12:05,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,1.9,44,6.2,11070,NA,6.57,NA,NA,
+1/15/2025,11:06,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,1.9,38.8,5.39,17202,NA,9.68,NA,NA,
+3/6/2025,10:58,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,7.6,19.4,14.35,19119,NA,11.67,NA,NA,
+3/6/2025,11:37,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,7.6,64,7.59,14530,NA,8.39,NA,NA,
+3/14/2025,14:35,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,9.5,82.5,8.9,21842,NA,13.04,NA,NA,
+3/14/2025,15:44,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,9.2,127.7,14.4,20162,NA,11.95,NA,NA,
+3/20/2025,14:31,A. Reynolds,Flume,NA,,,,,,NA,NA,NA,NA,NA,12.3,102.7,10.69,14653,NA,9.91,NA,NA,
+3/20/2025,16:03,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,12.2,110.9,11.7,17907,NA,10.6,NA,NA,
+4/14/2025,13:35,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,13.6,122.7,12.31,12120,NA,8.74,NA,NA,
+4/14/2025,14:40,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6.31,NA,NA,
+4/24/2025,14:46,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9.58,NA,NA,
+4/24/2025,16:37,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,21.2,149,13.09,17006,NA,10.05,NA,NA,
+4/30/2025,12:00,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9.33,NA,NA,
+4/30/2025,15:00,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8.98,NA,NA,
+10/2/2025,14:30,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,21.2,40.4,3.6,16642,NA,9.89,NA,NA,
+10/2/2025,15:45,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,21.4,244.2,19.44,20821,NA,12.49,NA,NA,scout offline
+10/11/2025,11:48,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,11.9,40.6,4.42,17025,NA,10.06,NA,NA,
+10/11/2025,13:18,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,10.8,85.6,8.62,22172,NA,13.37,NA,NA,
+11/3/2025,11:45,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,12.1,70.2,7.17,13974,NA,8.32,NA,NA,
+11/3/2025,14:35,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,11.3,99.6,9.92,21730,NA,13.09,NA,NA,scout offline
+12/4/2025,11:23,A. Reynolds,Flume,Y,,,,,,NA,NA,NA,NA,NA,5.2,63.5,8.16,10083,NA,5.66,NA,NA,
+12/4/2025,12:24,A. Reynolds,Dock,Y,,,,,,NA,NA,NA,NA,NA,3.9,95.3,11.82,16754,NA,9.72,NA,NA,scout offline
