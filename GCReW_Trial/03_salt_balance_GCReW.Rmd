@@ -18,6 +18,7 @@ library(rmarkdown)
 library(pracma)
 library(patchwork)
 library(zoo)
+library(swfscMisc)
 ```
 
 ```{r read data, include=FALSE}
@@ -187,18 +188,88 @@ write.csv(salt_balance_GW, "derived-data/monthly_salt_balance_GW.csv",
 ## ET and precip
 
 ```{r water budgets}
-A <- 4134
+A <- 86573 ##This is the marsh area? 
 
 # read data and correct timezone
-MET <- read_csv("../../Data/Original/SLP_USGS_WHOI/WQBCHMET/WQBCHMET.csv")
-MET$DateTimeStamp <- mdy_hm(MET$DateTimeStamp)
+# MET <- read_csv("../../Data/Original/SLP_USGS_WHOI/WQBCHMET/WQBCHMET.csv")
+
+##Needed: DateTimeStamp,ATemp,RH,BP,WSpd,SolRad
+
+##Average air temperature over 15 minute period (degC)
+ATemp2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-tempavg15_L1_v2-0.csv")
+ATemp2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-tempavg15_L1_v2-0.csv")
+ATemp <- bind_rows(ATemp2023, ATemp2024)
+ATemp <- ATemp %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(ATemp = Value)
+
+##Relative humidity (perc)
+RH2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-rh15_L1_v2-0.csv")
+RH2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-rh15_L1_v2-0.csv")
+RH <- bind_rows(RH2023, RH2024)
+RH <- RH %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(RH = Value)
+
+##Barometric pressure (mbar)
+BP2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-barpress15_L1_v2-0.csv")
+BP2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-barpress15_L1_v2-0.csv")
+BP <- bind_rows(BP2023, BP2024)
+BP <- BP %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(BP = Value)
+
+##Wind speed (m/s)
+WSpd2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-windspeed15_L1_v2-0.csv")
+WSpd2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-windspeed15_L1_v2-0.csv")
+WSpd <- bind_rows(WSpd2023, WSpd2024)
+WSpd <- WSpd %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(WSpd = Value)
+
+## Average solar flux over 15 minute period (wx-slr-fd15)
+SolRad2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-slr-fd15_L1_v2-0.csv")
+SolRad2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-slr-fd15_L1_v2-0.csv")
+SolRad <- bind_rows(SolRad2023, SolRad2024)
+SolRad <- SolRad %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(SolRad = Value)
+
+##Total rain over 15 minute period (mm)
+TotPrcp2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-gcrew-rain15_L1_v2-0.csv")
+TotPrcp2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-gcrew-rain15_L1_v2-0.csv")
+TotPrcp <- bind_rows(TotPrcp2023, TotPrcp2024)
+TotPrcp <- TotPrcp %>% 
+  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+  select(Site, Plot, TIMESTAMP, Value) %>% 
+  rename(TotPrcp = Value)
+
+##Merge MET Station data
+MET_list <- list(ATemp, RH, BP, WSpd, SolRad, TotPrcp)
+MET <- MET_list %>% reduce(full_join, by = c("Site", "Plot", "TIMESTAMP"))
+# MET$DateTimeStamp <- ymd_hms(as.character(MET$TIMESTAMP)) This made all the midnight values NA
+
+##Format timestamps
+MET$DateTimeStamp <- parse_date_time(
+  as.character(MET$TIMESTAMP),
+  orders = c("ymd HMS", "ymd"))
 MET$DateTimeStamp <- force_tz(MET$DateTimeStamp,tz="EST")
 MET$DateTimeStamp <- with_tz(MET$DateTimeStamp,tz="UTC") 
 
-# filter flagged data
+# filter flagged data - should we do this using the L1 data flags? 
 MET <- mutate(MET, year = year(DateTimeStamp),
-              month = month(DateTimeStamp),
-              ATemp = ifelse(grepl("-3",F_ATemp),NA,ATemp))
+              month = month(DateTimeStamp)) #,ATemp = ifelse(grepl("-3",F_ATemp),NA,ATemp))
 
 METseason <- group_by_at(MET,c("year","month"))%>%
   summarize(tot_precip_m3 = sum(TotPrcp,na.rm=TRUE)/1000*A, # integrated total precip over marsh area
@@ -207,16 +278,18 @@ METseason <- group_by_at(MET,c("year","month"))%>%
 
 ################################################################################
 
-SoRad13 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2013_21.csv")
-SoRad14 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2014_21.csv")
-SoRad15 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2015_21.csv")
-SoRad16 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2016_21.csv")
+# SoRad13 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2013_21.csv")
+# SoRad14 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2014_21.csv")
+# SoRad15 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2015_21.csv")
+# SoRad16 <- read_csv("../../Data/Original/SLP_USGS_WHOI/WBNERRMET/WBNERR_SageLot_MET_2016_21.csv")
+# 
+# SoRad <- rbind(SoRad13,SoRad14,SoRad15,SoRad16)%>% select(Datetime,SolRad)
+# SoRad$Datetime <- mdy_hm(SoRad$Datetime)
+# 
+# ET <- merge(MET,SoRad, by.x = "DateTimeStamp",by.y = "Datetime",
+#             all = TRUE)%>% select(DateTimeStamp,ATemp,RH,BP,WSpd,SolRad) # merge data from each year
 
-SoRad <- rbind(SoRad13,SoRad14,SoRad15,SoRad16)%>% select(Datetime,SolRad)
-SoRad$Datetime <- mdy_hm(SoRad$Datetime)
-
-ET <- merge(MET,SoRad, by.x = "DateTimeStamp",by.y = "Datetime",
-            all = TRUE)%>% select(DateTimeStamp,ATemp,RH,BP,WSpd,SolRad) # merge data from each year
+ET <- MET %>% select(DateTimeStamp,ATemp,RH,BP,WSpd,SolRad) # merge data from each year
 
 ET$day <- date(ET$DateTimeStamp) # get date
 
@@ -284,7 +357,7 @@ WBseason <- merge(WBseason,select(METseason,year, month, precipm3yr),
                   by = c("year","month"))%>%
   mutate(precipm3yr = -1*precipm3yr)
 
-#write_csv(WBseason,"precip_ET_calc.csv")
+write_csv(WBseason,"derived-data/precip_ET_calc.csv")
 ```
 
 ## Combine with salt balance results
@@ -292,7 +365,8 @@ WBseason <- merge(WBseason,select(METseason,year, month, precipm3yr),
 ```{r final}
 ##read groundwater
 #load("../../Data/Derivative/SLP_USGS_WHOI/salt_balance_30d.Rdata")
-salt_balance_GW<-read.csv( "../../Data/Derivative/SLP_USGS_WHOI/monthly_salt_balance_GW.csv")
+# salt_balance_GW<-read.csv( "../../Data/Derivative/SLP_USGS_WHOI/monthly_salt_balance_GW.csv")
+salt_balance_GW<-read.csv("derived-data/monthly_salt_balance_GW.csv")
 #WBsy2
 a <- salt_balance_GW 
 a$salt_bal_m3s <- -a$GW_m3s
@@ -312,5 +386,5 @@ WBsy2 <- WBseason %>%
   mutate(salt_bal=ifelse(salt_bal_raw<0, salt_bal_raw, 0))%>%
   mutate(salt_bal_m3s=salt_bal/(365*24*3600))
 
-write.csv(WBsy2, "../../Data/Derivative/SLP_USGS_WHOI/monthly_WBsy2.csv", row.names = FALSE)
+write.csv(WBsy2, "derived-data/monthly_WBsy2.csv", row.names = FALSE)
 ```
