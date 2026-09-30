@@ -34,9 +34,9 @@ sensor_data <- sensor_data %>% mutate_all(~ifelse(is.nan(.), NA, .))
 
 sensor_data <- sensor_data%>%
   select(datetime, odo_mg_l, fdom_qsu,  salinity_ppt , ph, #ORP_mV, (don't have)
-         water_depth, water_temperature_c, flowrate )%>%
+         water_depth, water_temperature_c, index_velocity )%>%
   #mutate(DO_mgL=DO_mgL/32*1000)%>% #unit conversion
-  rename(DO = odo_mg_l, fDOM = fdom_qsu,  flow = flowrate, #ORP = ORP_mV,
+  rename(DO = odo_mg_l, fDOM = fdom_qsu,  flow = index_velocity, #ORP = ORP_mV,
          S = salinity_ppt, H = water_depth, T = water_temperature_c, pH = ph)
 
 
