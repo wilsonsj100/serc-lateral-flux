@@ -21,8 +21,8 @@ library(patchwork)
 
 ```{r read data, include=FALSE}
 rm(list=ls())
-sensor_data <- read.csv("../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv")
-WBsy2 <- read.csv("../../Data/Original/SLP_USGS_WHOI/WBsy2.csv")
+sensor_data <- read.csv("derived-data/sensor_data.csv")
+WBsy2 <- read.csv("derived-data/monthly_WBsy2.csv")
 if("X" %in% colnames(sensor_data))
 {sensor_data=select(sensor_data, -X)}
 source("flux_processing_functions.R")
@@ -31,10 +31,10 @@ source("flux_processing_functions.R")
 
 ## Marsh platform
 
-A = 4132 m$^2$
+A = 86573 m$^2$
 
 ```{r marsh}
-A <- 4132
+A <- 86573 ##Is this correct? 
 s2y <- 3600*24*365
 ```
 
@@ -261,8 +261,10 @@ WBsy2$year<- as.character(WBsy2$year)
 
 #add groundwater flows
 data_sum$season<-month2season(data_sum$month)
-#WBsy2<-select(WBsy2,GW_m3yr,season,year)
-data_sum<-left_join(data_sum,WBsy2,by=c("season","year"))
+# WBsy2<-select(WBsy2,GW_m3yr,season,year)
+
+# data_sum<-left_join(data_sum,WBsy2,by=c("season","year")) 
+data_sum<-left_join(data_sum,WBsy2,by=c("month","year")) ##Should WBsy2 have seasons instead of months? 
 
 #final calculations
 data_sum$TA_flux_f <- data_sum$TA_flux_avg + data_sum$GW_m3yr*GW_TA/A/1000
@@ -331,10 +333,10 @@ p_month_flux2
 
 
 ```{r save data}
-write.csv(sensor_data, "../../Data/Derivative/SLP_USGS_WHOI/sensor_data.csv",
+write.csv(sensor_data, "derived-data/sensor_data.csv",
           row.names = FALSE)
-write.csv(data_sum, "../../Data/Derivative/SLP_USGS_WHOI/flux_final.csv",
+write.csv(data_sum, "derived-data/flux_final.csv",
           row.names = FALSE)
-write.csv(WBsy2, "../../Data/Derivative/SLP_USGS_WHOI/WBsy2.csv",
+write.csv(WBsy2, "derived-data/WBsy2.csv",
           row.names = FALSE)
 ```
