@@ -39,7 +39,7 @@ H>2
 
 ```{r Overland flow}
 sensor_data <- mutate(sensor_data, flow_land = flow)
-# flow_land = if_else(H>0.5, (H*9.170833-1.320587)*flow, flow))
+# sensor_data <- mutate(sensor_data, flow_land = if_else(H>0.5, (H*9.170833-1.320587)*flow, flow))
 
   #where do the numbers here come from? The 9.170833 and 1.32058??
       #these numbers are specific to the DEM model for their site and the waterdrop analysis
