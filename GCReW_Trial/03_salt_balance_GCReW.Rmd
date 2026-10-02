@@ -294,7 +294,8 @@ ET <- MET %>% select(DateTimeStamp,ATemp,RH,BP,WSpd,SolRad) # merge data from ea
 ET$day <- date(ET$DateTimeStamp) # get date
 
 # correct wind speed for height and define constants
-Wcorrfact <- 4.87/log(67.8*10-5.42)
+# Wcorrfact <- 4.87/log(67.8*10-5.42)
+Wcorrfact <- 1 ##Need to figure out windspeed correction
 
 # P <- 101.3
 # g <-  0.000665*P
