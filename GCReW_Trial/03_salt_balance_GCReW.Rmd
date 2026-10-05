@@ -207,15 +207,23 @@ ATemp <- ATemp %>%
 plot(ATemp ~ TIMESTAMP, data = ATemp)
 
 ##Relative humidity (perc) - ####RH might not have coverage until 202407
-RH2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-rh15_L1_v2-0.csv")
-RH2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-rh15_L1_v2-0.csv")
-RH <- bind_rows(RH2023, RH2024)
+# RH2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-rh15_L1_v2-0.csv")
+# RH2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-rh15_L1_v2-0.csv")
+# RH <- bind_rows(RH2023, RH2024)
+
+RH <- read.csv("raw-met-data/gcrew_rh.csv")
 RH <- RH %>% 
   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
-  rename(RH = Value)
+  mutate(Site = "GCW", 
+         Plot = "W", 
+         TIMESTAMP = gsub("T", " ", TIMESTAMP), 
+         TIMESTAMP = gsub("Z", " ", TIMESTAMP), 
+         TIMESTAMP = ymd_hms(TIMESTAMP, tz = "EST")) %>% 
+  mutate(RH = ifelse(RH > 100 & RH < 108, 100, RH)) %>% #Clean RH
+  select(Site, Plot, TIMESTAMP, RH)
 plot(RH ~ TIMESTAMP, data = RH)
+
 
 ##Barometric pressure (mbar)
 BP2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-barpress15_L1_v2-0.csv")
@@ -250,16 +258,20 @@ SolRad <- SolRad %>%
   rename(SolRad = Value)
 plot(SolRad ~ TIMESTAMP, data = SolRad)
 
-##Total rain over 15 minute period (mm) - #### missing data for the end of 2024? 
-TotPrcp2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-gcrew-rain15_L1_v2-0.csv")
-TotPrcp2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-gcrew-rain15_L1_v2-0.csv")
-TotPrcp <- bind_rows(TotPrcp2023, TotPrcp2024)
-TotPrcp <- TotPrcp %>% 
-  # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
-  # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
-  rename(TotPrcp = Value)
-plot(TotPrcp ~ TIMESTAMP, data = TotPrcp)
+##Total rain over 15 minute period (mm) - #### GCReW rain gauge was out August 2024 - July 2025. Use weather station data. See issue #366
+# TotPrcp2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-gcrew-rain15_L1_v2-0.csv")
+# TotPrcp2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-gcrew-rain15_L1_v2-0.csv")
+# TotPrcp <- bind_rows(TotPrcp2023, TotPrcp2024)
+# TotPrcp <- TotPrcp %>% 
+#   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
+#   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
+#   select(Site, Plot, TIMESTAMP, Value) %>% 
+#   rename(TotPrcp = Value) %>% 
+#   mutate(TotPrcp = TotPrcp*10) %>% # GCReW rain is in cm! Convert to mm
+# plot(TotPrcp ~ TIMESTAMP, data = TotPrcp)
+
+
+
 
 ##Merge MET Station data
 MET_list <- list(ATemp, RH, BP, WSpd, SolRad, TotPrcp)
