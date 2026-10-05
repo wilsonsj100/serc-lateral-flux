@@ -525,7 +525,7 @@ if (all_present) {
 }
 
 doc_metadata_selected <- doc_metadata %>%
-  select(Sample_ID, Date, Time_EDT, Time_EST, DO_mgL,  pH, Salinity_ppt, Temp, Radium_Vol_L, Notes) 
+  select(Sample_ID, Date, Time_Local, Time_EST, DO_mgL,  pH, Salinity_ppt, Temp, Radium_Vol_L, Notes) 
 
 #merge metadata with sample run data 
 merged_data <- all_data_flagged %>%
@@ -561,7 +561,7 @@ final_data <- final_data %>%
     # add more rename pairs as needed
   ) %>%
   select(
-    Project, Site, Replicate, Sample_Type, Sample_ID, Date, Time_EDT, Time_EST, 
+    Project, Site, Replicate, Sample_Type, Sample_ID, Date, Time_Local, Time_EST, 
     ic_mgL, ic_uM, ic_flag, Analysis_runtime,
     Run_notes, Field_notes, DO_mgL, pH, Salinity_ppt, Temp, Radium_Vol_L
     # list columns in the order you want them

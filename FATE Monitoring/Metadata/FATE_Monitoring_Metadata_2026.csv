@@ -1,65 +1,59 @@
-﻿Date,Time,Sampler,Sample_Location,Sample_Name,DIC_24ml,DIC_ex_1ml,SO4/H2S_5ml,Nutr_10ml,DOC_20ml,TA_250ml,CO2Scout_ppm,CO2Scout_Temp_C,IRGA_CO2_ppm,IRGA_CH4_ppm,IRGA_H2O_ppm,YSI_Temp_C,YSI_DO_percent,YSI_DO_mgL,YSI_SPCond_uS,YSI_Cond_us,YSI_Sal_ppt,YSI_pH_NBS,YSI_pH_mV,Field_Notes,,,,,
-4/9/2026,14:32,A. Reynolds,Dock,dock_9apr2026,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,11.9,137.9,14.45,10079,,5.61,NULL,,need to add meta data,,,,,
-4/9/2026,15:48,A. Reynolds,Flume,flume_09apr2026,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,13.6,105.8,40.82,8095,,4.52,NULL,,need to add metadata,,,,,
-4/29/2026,11:30,A. Reynolds,Flume,Tidal_Flume_SW_T1,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,12:30,A. Reynolds,Flume,Tidal_Flume_SW_T2,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,13:30,A. Reynolds,Flume,Tidal_Flume_SW_T3,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,14:30,A. Reynolds,Flume,Tidal_Flume_SW_T4,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,15:30,A. Reynolds,Flume,Tidal_Flume_SW_T5,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,16:30,A. Reynolds,Flume,Tidal_Flume_SW_T6,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,17:30,A. Reynolds,Flume,Tidal_Flume_SW_T7,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,18:30,A. Reynolds,Flume,Tidal_Flume_SW_T8,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,19:30,A. Reynolds,Flume,Tidal_Flume_SW_T9,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,20:30,A. Reynolds,Flume,Tidal_Flume_SW_T10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,21:30,A. Reynolds,Flume,Tidal_Flume_SW_T11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,22:30,A. Reynolds,Flume,Tidal_Flume_SW_T12,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,23:30,A. Reynolds,Flume,Tidal_Flume_SW_T13,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,0:30,A. Reynolds,Flume,Tidal_Flume_SW_T14,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,1:30,A. Reynolds,Flume,Tidal_Flume_SW_T15,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,2:30,A. Reynolds,Flume,Tidal_Flume_SW_T16,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,3:30,A. Reynolds,Flume,Tidal_Flume_SW_T17,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,4:30,A. Reynolds,Flume,Tidal_Flume_SW_T18,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,5:30,A. Reynolds,Flume,Tidal_Flume_SW_T19,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,6:30,A. Reynolds,Flume,Tidal_Flume_SW_T20,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,7:30,A. Reynolds,Flume,Tidal_Flume_SW_T21,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,8:30,A. Reynolds,Flume,Tidal_Flume_SW_T22,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,9:30,A. Reynolds,Flume,Tidal_Flume_SW_T23,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,10:30,A. Reynolds,Flume,Tidal_Flume_SW_T24,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,11:30,A. Reynolds,Dock,Tidal_Dock_SW_T1,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,12:30,A. Reynolds,Dock,Tidal_Dock_SW_T2,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,13:30,A. Reynolds,Dock,Tidal_Dock_SW_T3,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,14:30,A. Reynolds,Dock,Tidal_Dock_SW_T4,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,15:30,A. Reynolds,Dock,Tidal_Dock_SW_T5,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,16:30,A. Reynolds,Dock,Tidal_Dock_SW_T6,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,17:30,A. Reynolds,Dock,Tidal_Dock_SW_T7,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,18:30,A. Reynolds,Dock,Tidal_Dock_SW_T8,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,19:30,A. Reynolds,Dock,Tidal_Dock_SW_T9,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,20:30,A. Reynolds,Dock,Tidal_Dock_SW_T10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,21:30,A. Reynolds,Dock,Tidal_Dock_SW_T11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,22:30,A. Reynolds,Dock,Tidal_Dock_SW_T12,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,23:30,A. Reynolds,Dock,Tidal_Dock_SW_T13,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,0:30,A. Reynolds,Dock,Tidal_Dock_SW_T14,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,1:30,A. Reynolds,Dock,Tidal_Dock_SW_T15,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,2:30,A. Reynolds,Dock,Tidal_Dock_SW_T16,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,3:30,A. Reynolds,Dock,Tidal_Dock_SW_T17,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,4:30,A. Reynolds,Dock,Tidal_Dock_SW_T18,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; estimated filter finish time,,,,,
-4/30/2026,5:30,A. Reynolds,Dock,Tidal_Dock_SW_T19,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,6:30,A. Reynolds,Dock,Tidal_Dock_SW_T20,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,7:30,A. Reynolds,Dock,Tidal_Dock_SW_T21,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,8:30,A. Reynolds,Dock,Tidal_Dock_SW_T22,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,9:30,A. Reynolds,Dock,Tidal_Dock_SW_T23,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/30/2026,10:30,A. Reynolds,Dock,Tidal_Dock_SW_T24,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey,,,,,
-4/29/2026,11:30,A. Reynolds,Flume,Tidal_Flume_SW_T1_pair,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; paired isco sample,,,,,
-4/29/2026,12:30,A. Reynolds,Flume,Tidal_Flume_SW_T2_pair,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; paired isco sample,,,,,
-6/11/2026,12:06,A. Reynolds,Flume,DK_2026_06_11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,21.2,13.8,1.06,10849,,6.16,NULL,,FATE,,,,,
-6/11/2026,13:57,A. Reynolds,Dock,DK_2026_06_11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24,94.8,7.59,15154,,8.83,NULL,,FATE,,,,,
-6/26/2026,14:00,A. Reynolds,Flume,KPM_2026_06_26,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24.5,62,4.9,14242,,8.71,NULL,,FATE,,,,,
-6/26/2026,15:30,A. Reynolds,Dock,DK_2026_06_26,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,28.4,129.9,9.89,18757,,11.1,NULL,,FATE,,,,,
-7/10/2026,13:05,A. Reynolds,Flume,KPM_2026_07_10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24.6,45.5,3.53,18704,,11.14,NULL,,FATE,,,,,
-7/10/2026,14:06,A. Reynolds,Dock,DK_2026_07_10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,29.6,114.3,8.58,20960,,12.52,NULL,,FATE,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+﻿Date,Time_Local,Sampler,Sample_Location,Sample_Name,DIC_24ml,DIC_ex_1ml,SO4/H2S_5ml,Nutr_10ml,DOC_20ml,TA_250ml,CO2Scout_ppm,CO2Scout_Temp_C,IRGA_CO2_ppm,IRGA_CH4_ppm,IRGA_H2O_ppm,YSI_Temp_C,YSI_DO_percent,YSI_DO_mgL,YSI_SPCond_uS,YSI_Cond_us,YSI_Sal_ppt,YSI_pH_NBS,YSI_pH_mV,Field_Notes
+4/9/2026,14:32,A. Reynolds,Dock,dock_9apr2026,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,11.9,137.9,14.45,10079,,5.61,NULL,,need to add meta data
+4/9/2026,15:48,A. Reynolds,Flume,flume_09apr2026,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,13.6,105.8,40.82,8095,,4.52,NULL,,need to add metadata
+4/29/2026,11:30,A. Reynolds,Flume,Tidal_Flume_SW_T1,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,12:30,A. Reynolds,Flume,Tidal_Flume_SW_T2,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,13:30,A. Reynolds,Flume,Tidal_Flume_SW_T3,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,14:30,A. Reynolds,Flume,Tidal_Flume_SW_T4,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,15:30,A. Reynolds,Flume,Tidal_Flume_SW_T5,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,16:30,A. Reynolds,Flume,Tidal_Flume_SW_T6,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,17:30,A. Reynolds,Flume,Tidal_Flume_SW_T7,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,18:30,A. Reynolds,Flume,Tidal_Flume_SW_T8,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,19:30,A. Reynolds,Flume,Tidal_Flume_SW_T9,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,20:30,A. Reynolds,Flume,Tidal_Flume_SW_T10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,21:30,A. Reynolds,Flume,Tidal_Flume_SW_T11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,22:30,A. Reynolds,Flume,Tidal_Flume_SW_T12,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,23:30,A. Reynolds,Flume,Tidal_Flume_SW_T13,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,0:30,A. Reynolds,Flume,Tidal_Flume_SW_T14,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,1:30,A. Reynolds,Flume,Tidal_Flume_SW_T15,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,2:30,A. Reynolds,Flume,Tidal_Flume_SW_T16,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,3:30,A. Reynolds,Flume,Tidal_Flume_SW_T17,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,4:30,A. Reynolds,Flume,Tidal_Flume_SW_T18,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,5:30,A. Reynolds,Flume,Tidal_Flume_SW_T19,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,6:30,A. Reynolds,Flume,Tidal_Flume_SW_T20,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,7:30,A. Reynolds,Flume,Tidal_Flume_SW_T21,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,8:30,A. Reynolds,Flume,Tidal_Flume_SW_T22,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,9:30,A. Reynolds,Flume,Tidal_Flume_SW_T23,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,10:30,A. Reynolds,Flume,Tidal_Flume_SW_T24,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,11:30,A. Reynolds,Dock,Tidal_Dock_SW_T1,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,12:30,A. Reynolds,Dock,Tidal_Dock_SW_T2,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,13:30,A. Reynolds,Dock,Tidal_Dock_SW_T3,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,14:30,A. Reynolds,Dock,Tidal_Dock_SW_T4,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,15:30,A. Reynolds,Dock,Tidal_Dock_SW_T5,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,16:30,A. Reynolds,Dock,Tidal_Dock_SW_T6,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,17:30,A. Reynolds,Dock,Tidal_Dock_SW_T7,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,18:30,A. Reynolds,Dock,Tidal_Dock_SW_T8,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,19:30,A. Reynolds,Dock,Tidal_Dock_SW_T9,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,20:30,A. Reynolds,Dock,Tidal_Dock_SW_T10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,21:30,A. Reynolds,Dock,Tidal_Dock_SW_T11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,22:30,A. Reynolds,Dock,Tidal_Dock_SW_T12,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,23:30,A. Reynolds,Dock,Tidal_Dock_SW_T13,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,0:30,A. Reynolds,Dock,Tidal_Dock_SW_T14,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,1:30,A. Reynolds,Dock,Tidal_Dock_SW_T15,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,2:30,A. Reynolds,Dock,Tidal_Dock_SW_T16,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,3:30,A. Reynolds,Dock,Tidal_Dock_SW_T17,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,4:30,A. Reynolds,Dock,Tidal_Dock_SW_T18,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; estimated filter finish time
+4/30/2026,5:30,A. Reynolds,Dock,Tidal_Dock_SW_T19,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,6:30,A. Reynolds,Dock,Tidal_Dock_SW_T20,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,7:30,A. Reynolds,Dock,Tidal_Dock_SW_T21,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,8:30,A. Reynolds,Dock,Tidal_Dock_SW_T22,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,9:30,A. Reynolds,Dock,Tidal_Dock_SW_T23,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/30/2026,10:30,A. Reynolds,Dock,Tidal_Dock_SW_T24,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey
+4/29/2026,11:30,A. Reynolds,Flume,Tidal_Flume_SW_T1_pair,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; paired isco sample
+4/29/2026,12:30,A. Reynolds,Flume,Tidal_Flume_SW_T2_pair,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,NULL,NULL,NULL,NULL,,NULL,NULL,,Tidal_survey; paired isco sample
+6/11/2026,12:06,A. Reynolds,Flume,DK_2026_06_11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,21.2,13.8,1.06,10849,,6.16,NULL,,FATE
+6/11/2026,13:57,A. Reynolds,Dock,DK_2026_06_11,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24,94.8,7.59,15154,,8.83,NULL,,FATE
+6/26/2026,14:00,A. Reynolds,Flume,KPM_2026_06_26,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24.5,62,4.9,14242,,8.71,NULL,,FATE
+6/26/2026,15:30,A. Reynolds,Dock,DK_2026_06_26,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,28.4,129.9,9.89,18757,,11.1,NULL,,FATE
+7/10/2026,13:05,A. Reynolds,Flume,KPM_2026_07_10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,24.6,45.5,3.53,18704,,11.14,NULL,,FATE
+7/10/2026,14:06,A. Reynolds,Dock,DK_2026_07_10,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,29.6,114.3,8.58,20960,,12.52,NULL,,FATE

@@ -1,4 +1,4 @@
-﻿Date,Time,Sampler,Sample_Location,DIC_24ml,DIC_ex_1ml,SO4/H2S_5ml,Nutr_10ml,DOC_20ml,TA_250ml,CO2Scout_ppm,CO2Scout_Temp_C,IRGA_CO2_ppm,IRGA_CH4_ppm,IRGA_H2O_ppm,YSI_Temp_C,YSI_DO_percent,YSI_DO_mgL,YSI_SPCond_uS,YSI_Cond_us,YSI_Sal_ppt,YSI_pH_NBS,YSI_pH_mV,Field_Notes
+﻿Date,Time_Local,Sampler,Sample_Location,DIC_24ml,DIC_ex_1ml,SO4/H2S_5ml,Nutr_10ml,DOC_20ml,TA_250ml,CO2Scout_ppm,CO2Scout_Temp_C,IRGA_CO2_ppm,IRGA_CH4_ppm,IRGA_H2O_ppm,YSI_Temp_C,YSI_DO_percent,YSI_DO_mgL,YSI_SPCond_uS,YSI_Cond_us,YSI_Sal_ppt,YSI_pH_NBS,YSI_pH_mV,Field_Notes
 5/9/2025,14:49,A. Reynolds,Dock,Y,N,Y,Y,Y,Y,629,22.8,615,59565,324,20.5,76.7,6.49,17808,16288,10.54,NA,NA,
 5/4/2025,16:00,A. Reynolds,Flume,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Total flood @ flume - H20 trap flooded, vacuum apparent. Licor/Scout taken offline to fix H20 pump + BB ???, no samples"
 5/29/2025,14:02,A. Reynolds,Flume,Y,N,Y,Y,Y,Y,NA,NA,NA,NA,NA,17.2,69,6.27,8188,6983,4.62,NA,NA,Scout/LGR not running

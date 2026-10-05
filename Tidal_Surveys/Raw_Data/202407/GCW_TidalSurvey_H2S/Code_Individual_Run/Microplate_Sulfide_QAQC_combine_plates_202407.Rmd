@@ -1,0 +1,63 @@
+---
+title: "combine_datafiles"
+author: "giessnerm"
+date: '2024-06-11'
+output: html_document
+---
+
+#info
+
+```{r}
+#packages
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(matrixStats)
+library(gridExtra)
+library(ggpubr)
+library(grid)
+library(stringr)
+library(plater)
+library(raster)
+library(tidyverse)
+```
+
+```{r}
+#set working directory
+setwd("S:/GlobalChangeEco/porewater_r scripts & Data/Data")
+
+#read in plates
+
+plate1 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate1_Summary_Data.csv")
+plate1 <- plate1[,c(2:8)]
+plate2 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate2_Summary_Data.csv")
+plate2 <- plate2[,c(2:8)]
+plate3 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate3_Summary_Data.csv")
+plate3 <- plate3[,c(2:8)]
+plate4 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate4_Summary_Data.csv")
+plate4 <- plate4[,c(2:8)]
+plate5 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate5_Summary_Data.csv")
+plate5 <- plate5[,c(2:8)]
+plate6 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240725_plate6_Summary_Data.csv")
+plate6 <- plate6[,c(2:8)]
+plate7 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240729_plate7_Summary_Data.csv")
+plate7 <- plate7[,c(2:8)]
+plate8 <- read_csv("S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240729_plate8_Summary_Data.csv")
+plate8 <- plate8[,c(2:8)]
+```
+#combine plates 
+```{r}
+all_plate <- rbind(plate1, plate2, plate3, plate4, plate5, plate6, plate7, plate8)
+head(all_plate)
+```
+```{r}
+# export data
+write.csv(all_plate, file="S:/GlobalChangeEco/Porewater_R scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_-_H2S_202407_plate1-8_Summary_Data.csv")
+```
+
+
+
+
+
+
+

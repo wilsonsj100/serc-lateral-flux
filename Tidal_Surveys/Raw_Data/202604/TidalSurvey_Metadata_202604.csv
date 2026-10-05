@@ -1,4 +1,4 @@
-﻿Project,Site,Sample,Sample_ID,Replicate,Sample_Type,Date_collected,Time_collected_EDT,Time_collected_EST,Date_filtered,Time_filtered_EDT,Time_filtered_EST,DOC,NUTR,SO4_Cl,TA,Notes,Salinity_probe,Temp_probe,pH_probe
+﻿Project,Site,Sample,Sample_ID,Replicate,Sample_Type,Date_collected,Time_collected_local,Time_collected_EST,Date_filtered,Time_filtered_EDT,Time_filtered_EST,DOC,NUTR,SO4_Cl,TA,Notes,Salinity_probe,Temp_probe,pH_probe
 SERC Lateral Flux,Flume,Flume_T1,Tidal_Flume_SW_T1,T1,SW,4/29/2026,11:30,10:30,4/30/2026,12:35,11:35,x,x,x,x,,NA,NA,NA
 SERC Lateral Flux,Flume,Flume_T2,Tidal_Flume_SW_T2,T2,SW,4/29/2026,12:30,11:30,4/30/2026,12:50,11:50,x,x,x,x,,NA,NA,NA
 SERC Lateral Flux,Flume,Flume_T3,Tidal_Flume_SW_T3,T3,SW,4/29/2026,13:30,12:30,4/30/2026,13:00,12:00,x,x,x,x,,NA,NA,NA

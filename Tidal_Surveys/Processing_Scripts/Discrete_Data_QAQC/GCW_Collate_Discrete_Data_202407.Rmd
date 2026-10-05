@@ -1,0 +1,47 @@
+---
+title: "Combine GCW Discrete Data"
+author: "Stephanie J. Wilson"
+date: "2025-11-12"
+output: pdf_document
+---
+
+##Set up 
+```{r setup, include=FALSE}
+
+# Load necessary packages 
+library(data.table); library(tidyverse)
+library(readxl); library(lubridate)
+library(ggpubr); library(cowplot)
+library(plotrix); library(dplyr); library(here)
+```
+
+# Read in all the GCW Discrete Data & Combine
+```{r}
+
+#read in each type of data 
+gcw_dic <- read.csv("Processed_GCW_Data/GCW_DIC_processed.csv")
+  #remove unneeded columns 
+  gcw_dic <- gcw_dic %>%
+  select(-c("Analysis_runtime", "Run_notes", "ic_flag", "X" , "sample_name"))
+
+gcw_doc <- read.csv("Processed_GCW_Data/GCW_DOC_processed.csv")
+  #remove unneeded columns 
+  gcw_doc <- gcw_doc %>%
+  select(-c("Analysis_runtime", "Run_notes", "npoc_flag", "tdn_flag", "X", "sample_name" ))
+
+gcw_so4 <- read.csv("Processed_GCW_Data/GCW_SO4_Cl_processed.csv")
+  #remove unneeded columns 
+  gcw_so4 <- gcw_so4 %>%
+  select(-c("Analysis_runtime", "Run_notes", "SO4_QAQC_flag", "Cl_QAQC_flag", "X", "sample_name" ))
+
+gcw_ta <- read.csv("Processed_GCW_Data/GCW_TA_TitratorEstimate.csv")
+
+
+#now we need to merge these all into one 
+gcw_all <- merge(gcw_dic, gcw_doc)
+
+
+```
+
+
+
