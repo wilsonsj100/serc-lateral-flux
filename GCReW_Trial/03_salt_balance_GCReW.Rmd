@@ -204,8 +204,9 @@ ATemp <- ATemp %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(ATemp = Value)
+plot(ATemp ~ TIMESTAMP, data = ATemp)
 
-##Relative humidity (perc)
+##Relative humidity (perc) - ####RH might not have coverage until 202407
 RH2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-rh15_L1_v2-0.csv")
 RH2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-rh15_L1_v2-0.csv")
 RH <- bind_rows(RH2023, RH2024)
@@ -214,6 +215,7 @@ RH <- RH %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(RH = Value)
+plot(RH ~ TIMESTAMP, data = RH)
 
 ##Barometric pressure (mbar)
 BP2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-barpress15_L1_v2-0.csv")
@@ -224,6 +226,7 @@ BP <- BP %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(BP = Value)
+plot(BP ~ TIMESTAMP, data = BP)
 
 ##Wind speed (m/s)
 WSpd2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-windspeed15_L1_v2-0.csv")
@@ -234,6 +237,7 @@ WSpd <- WSpd %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(WSpd = Value)
+plot(WSpd ~ TIMESTAMP, data = WSpd)
 
 ## Average solar flux over 15 minute period (wx-slr-fd15)
 SolRad2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-slr-fd15_L1_v2-0.csv")
@@ -244,8 +248,9 @@ SolRad <- SolRad %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(SolRad = Value)
+plot(SolRad ~ TIMESTAMP, data = SolRad)
 
-##Total rain over 15 minute period (mm)
+##Total rain over 15 minute period (mm) - #### missing data for the end of 2024? 
 TotPrcp2023 <- read_csv("raw-met-data/2023/GCW_W_20230101-20231231_wx-gcrew-rain15_L1_v2-0.csv")
 TotPrcp2024 <- read_csv("raw-met-data/2024/GCW_W_20240101-20241231_wx-gcrew-rain15_L1_v2-0.csv")
 TotPrcp <- bind_rows(TotPrcp2023, TotPrcp2024)
@@ -254,6 +259,7 @@ TotPrcp <- TotPrcp %>%
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
   select(Site, Plot, TIMESTAMP, Value) %>% 
   rename(TotPrcp = Value)
+plot(TotPrcp ~ TIMESTAMP, data = TotPrcp)
 
 ##Merge MET Station data
 MET_list <- list(ATemp, RH, BP, WSpd, SolRad, TotPrcp)
