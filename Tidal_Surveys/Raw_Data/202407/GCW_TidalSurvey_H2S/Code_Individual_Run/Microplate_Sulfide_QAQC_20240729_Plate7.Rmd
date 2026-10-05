@@ -1,0 +1,619 @@
+---
+title: "Microplate_Sulfide_Code"
+author: "Alia Al-Haj"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Information
+```{r}
+#######################################################################################
+####### COMPASS Synoptic
+####### Brackish
+####### Data Analysis Code: Porewater sulfide 
+####### MONTH: July
+##############################################################################################
+
+
+############################# Information ##################################
+#Author: Alia N. Al-Haj
+#Edited: 20240530
+
+#Samples taken from porewater peepers
+#Samples were filtered with 0.2 uM, kept on ice and then in fridge until analysis
+#Field Protocol: 
+#Samples Analyzed using compass sulfide microplate method 
+#Lab Protocol:
+```
+
+## Code Set up 
+```{r}
+Date_Run = "20240729"
+Run_by = "Melanie Giessner"
+Project = "COMPASS"
+Top_STD = 100
+
+#packages:
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(matrixStats)
+library(gridExtra)
+library(ggpubr)
+library(grid)
+library(stringr)
+library(plater)
+library(raster)
+
+
+```
+
+##Notes
+#Alia needs to add a way to look at previous slopes
+#We currently need to remove bad reps manually (check cv). Alia is working on automating this. 
+
+#Files Required: 
+#csv of samples and standard absorbance (1st box), IDs (second box), and dilutions (third box): see template
+
+## Read in data
+```{r}
+#set working directory 
+setwd("S:/GlobalChangeEco/porewater_r scripts & Data")
+
+# Read in raw data csv
+dat <- stds <- read_plate(
+  file = "S:/GlobalChangeEco/porewater_r scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/Tidy Data/20240729_TidalSurvey_H2S_plate8.csv",             # full path to the .csv file
+  well_ids_column = "Wells",    # name to give column of well IDs (optional)
+  sep = ","                     # separator used in the csv file (optional)
+)
+str(dat)
+head(dat)
+
+#Change the headers
+colnames(dat) <- c("Wells", "Abs", "IDs", "Dilution")
+
+#subset by H2s Stds
+H2S_stds_all <- dat %>%  
+  filter(str_detect(dat$IDs, "Std"))  
+head(H2S_stds_all)
+
+#Add H2S std concentrations to std dataframe
+#Std 0 = 0 uM
+#Std 1 = 5.0 uM
+#Std 2 = 12.5 uM
+#Std 3 = 25.0 uM
+#Std 4 = 50.0 uM
+#Std 5 = 100.0 uM
+#make a concentration column
+H2S_stds_all$Conc = NA
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 0'] <- 0
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 1'] <- 5.0
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 2'] <- 12.5
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 3'] <- 25.0
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 4'] <- 50.0
+H2S_stds_all$Conc[H2S_stds_all$IDs == 'Std 5'] <- 100.0
+
+#Remove check standards which have NAs in the Conc column
+H2S_stds <- na.omit(H2S_stds_all)
+```
+
+## Plot standards 
+
+#TO DO for the Standard Curve:
+  1. Need to calculate CVs for each of the standards
+  2. If CV is high (>0.2) figure out an automated way to remove one point and find the lowest CV
+  3. Export the slope, yint, R2, etc into a QAQC file
+```{r}
+
+##manually remove high cv points
+#hash for first run
+H2S_stds <- subset(H2S_stds, !(Wells %in% c( "D03","D02","D01","F01" )))
+
+#Plot stds and calculate the slope, intercept, and R2 
+H2S <- ggplot(H2S_stds, aes(Conc, Abs)) + geom_point() + geom_smooth(method = "lm", se = FALSE)
+H2S
+
+H2S_lm <- lm(H2S_stds$Abs ~ H2S_stds$Conc)
+summary(H2S_lm)
+cf <- coef(H2S_lm)
+
+#create data frame with 1 rows and 0 columns
+Slopes <- data.frame(matrix(ncol = 0, nrow = 1))
+Slopes$Curve <- "H2S"
+Slopes$R2 <- summary(H2S_lm)$adj.r.squared
+Slopes$Slope <- cf[2]
+Slopes$Intercept <- cf[1]
+head(Slopes)
+
+#Calculate cv for STDs
+
+H2S_stds1 <- H2S_stds %>%
+  group_by(IDs) %>%
+  summarise(H2S_mean_Abs = mean(Abs), H2S_sd = sd(Abs), H2S_cv = cv(Abs), 
+            Dilution = first(Dilution))
+
+head(H2S_stds1)
+
+#Flag high cvs
+H2S_stds1$H2S_cv_flag <- ifelse(H2S_stds1$H2S_cv > 10, 'High CV', 'within range')
+head(H2S_stds1)
+
+
+#Was the standard curve ok for this plate? Do we need to rerun the plate? Continue means plate is ok. Rerun plate means the R2 is too low.
+if(Slopes$R2 > 0.985){
+print("Continue")
+} else {
+print("Rerun plate")
+}
+```
+#remove high cv
+
+# Checking STD Data against QAQC file
+
+```{r}
+#read in datafile with all the slopes
+qlogO <- read.csv("S:/GlobalChangeEco/porewater_r scripts & Data/BGC_GCE_PorewaterAnalysis/Sulfide/Sulfide_STD_QAQC.csv")
+qlogO <- qlogO[,c(2:7)]
+colnames(qlogO) <- c("Date", "Project", "R2", "Slope", "Intercept", "Top_STD")
+head(qlogO)
+
+#create data frame 
+Date <- Date_Run
+R2 <-summary(H2S_lm)$adj.r.squared
+Slope <- cf[2]
+Intercept <- cf[1]
+qplate <- data.frame(Date, Project , R2, Slope, Intercept, Top_STD, row.names = NULL)
+head(qplate)
+
+#add data to file
+qlog <- rbind(qplate, qlogO)
+head(qlog)
+
+# pull date run
+qlog_Date <- subset(qlog, Date == Date_Run) 
+
+##plot the slopes to make sure there are no crazy outliers 
+slope1 <- ggplot(data=qlog, aes(x=Date, y=Slope)) +
+           geom_hline(yintercept= (mean(qlog$Slope)+ (2*sd(qlog$Slope))), linetype="dashed", color = "red", size=2)+
+            geom_hline(yintercept= (mean(qlog$Slope)- (2*sd(qlog$Slope))), linetype="dashed", color = "red", size=2)+
+            geom_point(aes(size=3)) + 
+            theme_classic() + ylim(0, 0.02) + 
+           theme(legend.position="none") + 
+           ggtitle("Sulfide Slopes")+
+  guides(x = guide_axis(angle = 70))
+  
+slope1
+
+
+if (qlog_Date$Slope[1] > (mean(qlog$Slope)+ (2*sd(qlog$Slope)))| qlog_Date$Slope[1] < (mean(qlog$Slope)- (2*sd(qlog$Slope)))) {
+print("rerun Plate")
+} else {
+print("continue")
+}
+
+#Rerun if outside of red lines
+
+##plot the intercepts to make sure there are no crazy outliers 
+int1 <- ggplot(data=qlog, aes(x=Date, y=Intercept)) +
+  geom_hline(yintercept= (mean(qlog$Intercept)+ (2*sd(qlog$Intercept))), linetype="dashed", color = "red", size=2)+
+  geom_hline(yintercept= (mean(qlog$Intercept)- (2*sd(qlog$Intercept))), linetype="dashed", color = "red", size=2)+
+  geom_point(aes(size=3)) + 
+  theme_classic() + ylim(0.05,0.125) + 
+  theme(legend.position="none")+ 
+  ggtitle("Sulfide Intercepts")+
+  guides(x = guide_axis(angle = 70))
+
+int1
+
+if (qlog_Date$Intercept[1] > (mean(qlog$Intercept)+ (2*sd(qlog$Intercept)))| qlog_Date$Intercept[1] < (mean(qlog$Intercept)- (2*sd(qlog$Intercept)))) {
+print("rerun Plate")
+} else {
+print("continue")
+}
+
+#plot the R2s to make sure there are no crazy outliers 
+Rsq1 <- ggplot(data=qlog, aes(x=Date, y=R2)) +
+  geom_hline(yintercept= (0.98), linetype="dashed", color = "red", size=2)+
+  geom_point(aes(size=3)) + 
+  theme_classic() + ylim(0.96, 1.01) + 
+  theme(legend.position="none")+ 
+  ggtitle("Sulfide R2s")+
+  guides(x = guide_axis(angle = 70))
+
+Rsq1
+if (qlog_Date$R2[1] < (0.985)) {
+print("rerun Plate")
+} else {
+print("continue")
+}
+
+```
+## Check standards QAQC
+```{r}
+#Make sure check standards are not different from standard concentration
+#subset Check Standards from the rest of the dataset
+H2S_std_Chk <- H2S_stds_all %>%  filter(!IDs =='Std 0') %>%  filter(!IDs =='Std 1') %>%  filter(!IDs =='Std 2') %>%  filter(!IDs =='Std 3') %>%  filter(!IDs =='Std 4') %>%  filter(!IDs =='Std 5')
+head(H2S_std_Chk)
+
+#Calculate Check standard Concentration
+H2S_std_Chk$Conc <- (H2S_std_Chk$Abs-cf[1])/cf[2]
+
+#Are the check standards significantly different from the standards?
+#subset datasets for comparison
+std0 <- subset(H2S_stds, IDs == "Std 0")
+Chkstd0 <- subset(H2S_std_Chk, IDs == "ChkStd 0")
+std3 <- subset(H2S_stds, IDs == "Std 3")
+Chkstd3 <- subset(H2S_std_Chk, IDs == "ChkStd 3")
+std4 <- subset(H2S_stds, IDs == "Std 4")
+Chkstd4 <- subset(H2S_std_Chk, IDs == "ChkStd 4")
+
+t.test.std0 <- t.test(std0$Abs,Chkstd0$Abs,var.equal = T)
+t.test.std0
+
+if(t.test.std0$p.value > 0.05){
+print("Continue")
+} else {
+print("Rerun plate")
+}
+
+#t.test.std3 <- t.test(std3$Abs,Chkstd3$Abs,var.equal = T)
+#t.test.std3
+
+#if(t.test.std3$p.value > 0.05){
+#print("Continue")
+#} else {
+#print("Rerun plate")
+#}
+
+t.test.std4 <- t.test(std4$Abs,Chkstd4$Abs,var.equal = T)
+t.test.std4
+
+if(t.test.std4$p.value > 0.05){
+print("Continue")
+} else {
+print("Rerun plate")
+}
+```
+
+## Matrix Check QAQC
+#Uncomment MC20 if you used the 20 ppt matrix check
+```{r}
+std5 <- subset(H2S_stds, IDs == "Std 5")
+MC10 <- subset(dat, IDs == "MC: 10ppt S5")
+MC20 <- subset(dat, IDs == "MC: 20ppt S5")
+
+#10ppt matrix check
+t.test.MC10 <- t.test(std5$Abs,MC10$Abs,var.equal = T)
+t.test.MC10
+
+if(t.test.MC10$p.value > 0.05){
+print("Continue")
+} else {
+print("Rerun plate")
+}
+
+#20ppt matrix check
+ t.test.MC20 <- t.test(std5$Abs,MC20$Abs,var.equal = T)
+ t.test.MC20
+ 
+ if(t.test.MC20$p.value > 0.05){
+ print("Continue")
+ } else {
+ print("Rerun plate")
+ }
+
+
+```
+
+
+## Read in Sample Data subset 
+```{r}
+
+dat <- dat %>%  filter(!IDs =='Std 0') %>%  filter(!IDs =='Std 1') %>%  filter(!IDs =='Std 2') %>%  filter(!IDs =='Std 3') %>%  filter(!IDs =='Std 4') %>%  filter(!IDs =='Std 5') %>%  filter(!IDs =='ChkStd 0') %>%  filter(!IDs =='ChkStd 3') %>%  filter(!IDs =='ChkStd 4') %>%  filter(!IDs =='MC: 10ppt S5') %>%  filter(!IDs =='MC: 20ppt S5') 
+head(dat)
+Std5_ABS=mean(std5$Abs)
+#Now flag any Abs that are above the 100uM standard absorbance (1.55)
+dat$H2S_Dilute <- ifelse(dat$Abs > Std5_ABS , "Dilute", "Ok")
+head(dat)
+
+```
+
+
+## Subset Data and Calculate Concentrations 
+```{r}
+#Calculate concentrations of Sulfide
+dat$Conc <- ((dat$Abs-cf[1])/cf[2])*(dat$Dilution)
+head(dat)
+
+#Use ifelse to make any negative values equal to zero
+dat$H2S_Conc_Final <- ifelse(dat$Conc <0, 0, dat$Conc)
+
+#Use ifelse to mark samples that were below detection limit and changed to zero
+dat$H2S_info <- ifelse(dat$Conc <0, 'bdl', ifelse(dat$Abs > mean(std5$Abs), "adl", "Within_Range"))
+
+head(dat)
+```
+
+
+## Calculate Averages across wells and std. dev.  
+```{r}
+head(dat)
+
+#summarize by sampleID so that we can calculate the mean and std. dev. of the three wells 
+dat1 <- dat %>%
+  group_by(IDs) %>%
+  summarise(H2S_mean = mean(H2S_Conc_Final), H2S_sd = sd(H2S_Conc_Final), H2S_cv = cv(H2S_Conc_Final), 
+            H2S_flag = first(H2S_info), 
+            Dilution = first(Dilution))
+
+head(dat1)
+
+#Flag high cvs 
+dat1$H2S_cv_flag <- ifelse(dat1$H2S_cv > 10, 'High CV', 'within range')
+## to flag high dilutions 
+#dat1$H2S_Dilute <- ifelse(dat1$H2S_mean/dat1$Dilution > ((Std5_ABS-cf[1])/cf[2])*(1) , "Dilute", "Ok")
+
+head(dat1)
+
+
+#plot data and sd's just to check and see what they look like - just a quick first look 
+H2S <- ggplot(dat1, aes(x=IDs, y=H2S_mean))+ 
+  geom_point(size=4) +  theme_classic() + 
+  labs(y="Sulfide (uM)", x="Sample ID") + 
+  geom_errorbar(aes(ymin=H2S_mean-H2S_sd,
+                    ymax=H2S_mean+H2S_sd),width=0.3,position=position_dodge(.1))+
+  guides(x = guide_axis(angle = 70))
+H2S
+
+#If CVs are high manually go in and remove the one rep that you think is causing the issue (see below). Alia will automate this eventually
+
+```
+
+## Remove bad reps
+```{r}
+
+#auto remove bad reps
+# filter High CV Samples
+dat1_HCV <- dat1 %>%  
+  filter(str_detect(H2S_cv_flag, "High CV")) 
+head(dat1_HCV)
+
+dat_HCV <- subset(dat, (IDs %in% dat1_HCV$IDs ))
+head(dat_HCV)
+
+#Columns 4 7 10
+Column1= c("A04", "A07","A10", "B04","B10" ,"C04" , "C07", "C10",
+"D04","D10", "E04","E07", "E10" ,"F04" , "F07" ,"G04","G07" ,"G10" ,"H04","H07")
+
+#Columns 5,8,11
+Column2= c("A05", "A08","A11", "B05","B11" ,"C05" , "C08", "C11",
+"D05","D11", "E05","E08", "E11" ,"F05" , "F08" ,"G05","G08" ,"G11" ,"H05","H08")
+
+#Columns 6,9,12
+Column3= c("A06", "A09","A12", "B06" ,"B12" ,"C06" , "C09", "C12",
+"D06","D12", "E06","E09", "E12" ,"F06" , "F09" ,"G06","G09" ,"G12" ,"H06","H09")
+
+
+#delete Column one
+dat_HCV1 <- subset(dat_HCV, !(Wells %in% Column1 ))
+#delete Column two
+dat_HCV2 <- subset(dat_HCV, !(Wells %in% Column2 ))
+#delete Column three
+dat_HCV3 <- subset(dat_HCV, !(Wells %in% Column3 ))
+
+##Find CV for each Data set
+#W/out column1
+dat_HCV1 <- dat_HCV1 %>%
+  group_by(IDs) %>%
+  summarise(H2S_mean = mean(H2S_Conc_Final), H2S_sd = sd(H2S_Conc_Final), H2S_cv = cv(H2S_Conc_Final), 
+            H2S_flag = first(H2S_info), 
+            Dilution = first(Dilution))
+dat_HCV1$H2S_cv_flag <- ifelse(dat_HCV1$H2S_cv > 10, 'High CV', 'within range')
+#W/out column2
+dat_HCV2 <- dat_HCV2 %>%
+  group_by(IDs) %>%
+  summarise(H2S_mean = mean(H2S_Conc_Final), H2S_sd = sd(H2S_Conc_Final), H2S_cv = cv(H2S_Conc_Final), 
+            H2S_flag = first(H2S_info), 
+            Dilution = first(Dilution))
+dat_HCV2$H2S_cv_flag <- ifelse(dat_HCV2$H2S_cv > 10, 'High CV', 'within range')
+#W/out column3
+dat_HCV3 <- dat_HCV3 %>%
+  group_by(IDs) %>%
+  summarise(H2S_mean = mean(H2S_Conc_Final), H2S_sd = sd(H2S_Conc_Final), H2S_cv = cv(H2S_Conc_Final), 
+            H2S_flag = first(H2S_info), 
+            Dilution = first(Dilution))
+dat_HCV3$H2S_cv_flag <- ifelse(dat_HCV3$H2S_cv > 10, 'High CV', 'within range')
+#find lowest CVs
+
+dat_HCV1_1 <- subset(dat_HCV1, dat_HCV1$H2S_cv < dat_HCV2$H2S_cv & dat_HCV1$H2S_cv < dat_HCV3$H2S_cv)
+head(dat_HCV1_1)
+
+dat_HCV2_2 <- subset(dat_HCV2, dat_HCV2$H2S_cv < dat_HCV1$H2S_cv & dat_HCV2$H2S_cv < dat_HCV3$H2S_cv)
+head(dat_HCV1_1)
+
+dat_HCV3_3 <- subset(dat_HCV3, dat_HCV3$H2S_cv < dat_HCV2$H2S_cv & dat_HCV3$H2S_cv < dat_HCV1$H2S_cv)
+head(dat_HCV3_3)
+
+
+#recombine data frames
+dat2_HCV <- rbind(dat_HCV1_1,dat_HCV2_2,dat_HCV3_3)
+head(dat2_HCV)
+
+dat1 <- subset(dat1, (!IDs %in% dat2_HCV$IDs ))
+dat1 <- rbind(dat2_HCV, dat1)
+head(dat1)
+
+#dat1$H2S_mean <- ifelse(dat1$H2S_cv_flag == 'High CV',  dat2_HCV$H2S_mean, dat1$H2S_mean)
+#dat1$H2S_H2S_sd <- ifelse(dat1$H2S_cv_flag == 'High CV',  dat2_HCV$H2S_H2S_sd, dat1$H2S_H2S_sd)
+#dat1$H2S_H2S_cv <- ifelse(dat1$H2S_cv_flag == 'High CV',  dat2_HCV$H2S_H2S_cv, dat1$H2S_H2S_cv)
+#dat1$H2S_H2S_cv_flag <- ifelse(dat1$H2S_cv_flag == 'High CV',  dat2_HCV$H2S_H2S_cv_flag, dat1$H2S_H2S_cv_flag)
+
+
+
+###Manually Remove bad reps by row number in original dataframe
+#dat <- dat[-c(10,13,16,21,28,31,37,40,48,52,60),]
+#dat <- subset(dat, !(Wells %in% c("B04," )))
+
+
+#rerun lines 231-253
+#head(dat)
+
+#summarize by sampleID so that we can calculate the mean and std. dev. of the three wells 
+#dat1 <- dat %>%
+#  group_by(IDs) %>%
+ # summarise(H2S_mean = mean(H2S_Conc_Final), H2S_sd = sd(H2S_Conc_Final), H2S_cv = cv(H2S_Conc_Final), 
+           # H2S_flag = first(H2S_info), 
+           # Dilution = first(Dilution))
+
+#head(dat1)
+
+#Flag high cvs
+#dat1$H2S_cv_flag <- ifelse(dat1$H2S_cv > 10, 'High CV rerun', 'within range')
+
+#head(dat1)
+
+#plot data and sd's just to check and see what they look like - just a quick first look 
+H2S <- ggplot(dat1, aes(x=IDs, y=H2S_mean))+ 
+  geom_point(size=4) +  theme_classic() + 
+  labs(y="Sulfide (uM)", x="Sample ID") + 
+  geom_errorbar(aes(ymin=H2S_mean-H2S_sd,
+                    ymax=H2S_mean+H2S_sd),width=0.3,position=position_dodge(.1))+
+  guides(x = guide_axis(angle = 70))
+H2S
+
+#If samples with cv >10 rerun those samples 
+```
+
+
+
+## Check the dups for QAQC 
+```{r}
+
+#Show me the data that we have from the calculations 
+head(dat1)
+
+#pull out any rows that have "Dup" in the ID column
+dups <- dat1 %>%  
+  filter(str_detect(IDs, "Dup")) 
+head(dups)
+
+#remove these from dat1
+dat2 <- dat1 %>%  
+  filter(!str_detect(IDs, "Dup")) %>%  
+  filter(!str_detect(IDs, "Spike")) 
+head(dat2)
+
+#remove the dup from these IDs so we will have duplicates 
+dups$IDs<-gsub("Dup ",'',dups$IDs)
+head(dups)
+colnames(dups) <- c('IDs', 'mean_dup')
+
+
+#put it back together with the old data set and look for duplicates 
+QAdups <- merge(dat2, dups)
+head(QAdups)
+
+QAdups$dups_chk <- ((abs(QAdups$H2S_mean-QAdups$mean_dup))/((QAdups$H2S_mean+QAdups$mean_dup)/2))*100
+QAdups$dups_flag <-  ifelse(QAdups$dups_chk <15.5, 'OK', 'Rerun')
+
+head(QAdups)
+
+#plot dups output as a bar graph to easily check - want any over 10% to be red need to work on this 
+dupsbar <- ggplot(data = QAdups, aes(x = IDs, y = dups_chk, fill=dups_chk)) +
+       geom_bar(stat = 'identity') + 
+        scale_fill_gradient2(low='darkgreen', mid='darkgreen', high='darkgrey', space='Lab') + 
+        theme_classic() + labs(x= "Sample ID", y="Difference Between Duplicates (%)") + 
+        theme(legend.position="none") +  geom_hline(yintercept=10, linetype="dashed", 
+                color = "black", size=1)
+
+dupsbar
+
+#check for any one's that would warrant reruns 
+```
+
+
+## Check the spks for QAQC 
+```{r}
+
+#Show me the data that we have from the calculations 
+head(dat1)
+
+#pull out any rows that have "d" in the SampleID column
+spks <- dat1 %>%  
+  filter(str_detect(IDs, "Spike")) 
+head(spks)
+
+#remove these from dat1
+dat2 <- dat1 %>%  
+  filter(!str_detect(IDs, "Dup")) %>%  
+  filter(!str_detect(IDs, "Spike")) 
+head(dat2)
+
+#remove the Spike from these IDs so we will have duplicates 
+spks$IDs<-gsub("Spike ","",spks$IDs)
+head(spks)
+colnames(spks) <- c('IDs', 'mean_spk')
+
+
+#put it back together with the old data set and look for duplicates 
+QAspks <- merge(dat2, spks)
+head(QAspks)
+
+#now we need to calculate the spike concentration and calculate the spike recovery 
+#spike for these samples was 10 uL of the 100uM standard
+QAspks$spk_Conc <- (100*(10/1000000))                        # this would be in umoles of S2- in the spk 
+QAspks$unspkd <- (QAspks$H2S_mean/QAspks$Dilution)*(250/1000000) #gives us the total S2- in the sample in umoles
+QAspks$spkd <-    (QAspks$mean_spk/QAspks$Dilution)*((250+10)/1000000)        ##total fe in spiked sample in umoles 
+QAspks$expctd_spkd <-  (QAspks$unspkd + QAspks$spk_Conc)
+QAspks$spk_recovery <-    (QAspks$spkd/QAspks$expctd_spkd)*100
+QAspks$spks_flag <-  ifelse(QAspks$spk_recovery >80 & QAspks$spk_recovery <120, 'OK', 'NO, rerun')   
+
+head(QAspks)
+
+#plot spk recoveries output as a bar graph to easily check - want any over 10% to be red need to work on this 
+spksbar <- ggplot(data = QAspks, aes(x = IDs, y = spk_recovery)) +
+        geom_bar(stat = 'identity') + 
+        scale_fill_manual(values=c("gray48")) + 
+        theme_classic() + labs(x= "Sample ID", y="Spike Recovery (%)") + 
+        theme(legend.position="none") +  
+        geom_hline(yintercept=80, linetype="dashed", color = "black", size=1) + 
+        geom_hline(yintercept=120, linetype="dashed", color = "black", size=1)
+
+spksbar
+
+#check for any no's that would warrant reruns! 
+```
+
+
+
+## Export full data then just final data 
+```{r}
+dat_IDs <- dat1
+
+#Read out the summarized data
+head(dat_IDs)
+  write.csv(dat_IDs, file="S:/GlobalChangeEco/Porewater_R scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240729_plate8_Summary_Data.csv")
+
+#Read out all the data in dat 
+head(dat)
+write.csv(dat, file="S:/GlobalChangeEco/Porewater_R scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd Data/TidalSurvey_H2S_20240729_plate8_Data.csv")
+
+#Now take out the absorbance and stuff 
+head(dat)
+dat3 <- dat[ ,-(1:2)]
+dat3 <- dat3[ ,-(2:5)]
+head(dat3)
+write.csv(dat3, file="S:/GlobalChangeEco/Porewater_R scripts & Data/Data/Sulfide Microplate/COMPASS/Tidal Survey/QAQC'd data/TidalSurvey_H2S_20240729_plate8_short_Data.csv")
+
+#save to QAQC Data to QAQC File
+write.csv(qlog, file="S:/GlobalChangeEco/porewater_r scripts & Data/BGC_GCE_PorewaterAnalysis/Sulfide/Sulfide_STD_QAQC.csv")
+
+
+```
+
+### END
+
+
+
+
+

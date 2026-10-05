@@ -1,0 +1,82 @@
+Titration report,,,,,,,,,,,,,,
+Method,,,,,,,,,,,,,,
+Method ID,,,SERCALKSAMPLES,,,,"Release state
+",,,,Released,,,
+Name,,,TA of Seawater,,,,Modified by,,,,SystemInternal,,,
+Modified on,,,2/6/2024 11:26:27 AM,,,,,,,,,,,
+Summary,,,,,,,,,,,,,,
+Samples,,,,,,,,,,,,,,
+,Sample ID,,,,,Name,,,,Result,,,,State
+1,"CRM 209-0435-1, 1",,,,,Sample size,,,,53.165 g,,,,
+,,,,,,Content R1,,,,2.2082 mmol/L ???,,,,OK
+2,"CRM 209-0435-2, 2",,,,,Sample size,,,,52.925 g,,,,
+,,,,,,Content R1,,,,2.2184 mmol/L ???,,,,OK
+3,"FTS 8/8 6:30-rep3, 3",,,,,Sample size,,,,58.169 g,,,,
+,,,,,,Content R1,,,,1.3699 mmol/L ?¹?,,,,OK
+4,"FTS 8/8 11:30-rep3, 4",,,,,Sample size,,,,55.239 g,,,,
+,,,,,,Content R1,,,,1.4064 mmol/L,,,,OK
+5,"FTS 8/8 13:30  rep3, 5",,,,,Sample size,,,,57.592 g,,,,
+,,,,,,Content R1,,,,1.8106 mmol/L ???,,,,OK
+6,"FTS 8/8 17:30  rep3, 6",,,,,Sample size,,,,56.336 g,,,,
+,,,,,,Content R1,,,,1.9168 mmol/L ???,,,,OK
+7,"FTS 8/7 GW1-11:10, 7",,,,,Sample size,,,,63.914 g,,,,
+,,,,,,Content R1,,,,2.5304 mmol/L ???,,,,OK
+8,"FTS 8/8 6:30-rep4, 8",,,,,Sample size,,,,59.504 g,,,,
+,,,,,,Content R1,,,,1.3740 mmol/L ?¹?,,,,OK
+9,"FTS 8/8 11:30 rep4, 9",,,,,Sample size,,,,49.459 g,,,,
+,,,,,,Content R1,,,,1.4037 mmol/L,,,,OK
+10,"FTS 8/8 17;30 rep4, 10",,,,,Sample size,,,,59.652 g,,,,
+,,,,,,Content R1,,,,1.9163 mmol/L ???,,,,OK
+11,"FTS 8/8 13:30 rep4, 11",,,,,Sample size,,,,58.796 g,,,,
+,,,,,,Content R1,,,,1.8075 mmol/L ???,,,,OK
+12,"GW1 8/15 11:30 rep1, 12",,,,,Sample size,,,,60.672 g,,,,
+,,,,,,Content R1,,,,4.2568 mmol/L ???,,,,OK
+13,"GW1 8/15 11:30 rep2, 13",,,,,Sample size,,,,54.293 g,,,,
+,,,,,,Content R1,,,,4.2616 mmol/L ???,,,,OK
+14,"GW2 8/15 11:10 rep1, 14",,,,,Sample size,,,,55.613 g,,,,
+,,,,,,Content R1,,,,2.9547 mmol/L ???,,,,OK
+15,"GW2 8/15 11:10 rep2, 15",,,,,Sample size,,,,57.603 g,,,,
+,,,,,,Content R1,,,,2.9565 mmol/L ???,,,,OK
+16,"GW3 8/15 10:50 rep1, 16",,,,,Sample size,,,,55.742 g,,,,
+,,,,,,Content R1,,,,1.6699 mmol/L ???,,,,OK
+17,"GW3 8/15 10:50 rep2, 17",,,,,Sample size,,,,56.106 g,,,,
+,,,,,,Content R1,,,,1.6664 mmol/L ?¹?,,,,OK
+18,"GW4 8/15 10:30 rep1, 1(18)",,,,,Sample size,,,,56.438 g,,,,
+,,,,,,Content R1,,,,2.4342 mmol/L ???,,,,OK
+19,"GW4 8/15 10:30 rep2, 2(19)",,,,,Sample size,,,,56.220 g,,,,
+,,,,,,Content R1,,,,2.4270 mmol/L ???,,,,OK
+20,"GW5 8/15 rep1, 3(20)",,,,,Sample size,,,,58.360 g,,,,
+,,,,,,Content R1,,,,5.7750 mmol/L ?¹?,,,,OK
+21,"GW6 8/15 09:44 rep1, 4(21)",,,,,Sample size,,,,57.310 g,,,,
+,,,,,,Content R1,,,,3.2414 mmol/L ???,,,,OK
+22,"GW6 8/15 09:44 rep2, 5(22)",,,,,Sample size,,,,58.555 g,,,,
+,,,,,,Content R1,,,,3.2472 mmol/L ???,,,,OK
+23,"CRM 209-0435, 6(23)",,,,,Sample size,,,,53.038 g,,,,
+,,,,,,Content R1,,,,2.2138 mmol/L ???,,,,OK
+24,"GW2 8/7 10:30 rep3, 7(24)",,,,,Sample size,,,,54.363 g,,,,
+,,,,,,Content R1,,,,2.4384 mmol/L ???,,,,OK
+25,"GW2 8/7 10:30 rep4, 8(25)",,,,,Sample size,,,,54.556 g,,,,
+,,,,,,Content R1,,,,2.3975 mmol/L ???,,,,OK
+26,"GW3 8/7 0945rep3, 9(26)",,,,,Sample size,,,,54.881 g,,,,
+,,,,,,Content R1,,,,1.7870 mmol/L ???,,,,OK
+27,"GW4 8/7 0920 rep3, 10(27)",,,,,Sample size,,,,59.300 g ?¹²?,,,,
+,,,,,,Content R1,,,,2.5497 mmol/L ?¹'¹²?,,,,OK
+Statistics,,,,,,,,,,,,,,
+R1,,,,,,,,,,,,,,
+Minimum,,,2.4533 mmol/L ?¹'?'¹²?,,,,,,,,,,,
+,,,,,,,,Minimum,,,,1.3699 mmol/L ?¹?,,
+Maximum,,,5.7750 mmol/L ?¹?,,,,,,,,,,,
+,,,,,,,,Rel. standard deviation,,,,41.633 % ?¹'?'¹²?,,
+Standard deviation,,,1.0214 ?¹'?'¹²?,,,,,,,,,,,
+,,,,,,,,Samples excluded,,,,0,,
+Total samples,,,27,,,,,,,,,,,
+Used Instruments,,,,,,,,,,,,,,
+Name,,,SERCtitrate,,,,,Serial number,,,,B433917554,,
+Responsible User,,,,,,,,,,,,,,
+Time,,,,,Login name,,,,Full name,,,,,
+2/20/2024 11:58:05 AM,,,,,SystemInternal,,,,System internal account,,,,,
+(1),,Modified,,,,,,,,,,,,
+(9),,Standard evaluation used,,,,,,,,,,,,
+(12),,Unfinished sample,,,,,,,,,,,,
+(22),,New (Manual),,,,,,,,,,,,
+2/22/2024 6:46:19 PM,,,,SystemInternal,,,,,,,,,1/1,
