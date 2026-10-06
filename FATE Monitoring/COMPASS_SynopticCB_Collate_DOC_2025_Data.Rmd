@@ -1,0 +1,199 @@
+---
+title: "COMPASS_SynopticCB_Collate_DOC_2025_Data"
+author: "Stephanie J. Wilson"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(stringr)
+library(readxl)
+library(tidyr)
+library(tibble)
+library(lubridate)
+```
+
+#Read in and collate all the files in the DOC Processed Data folder 
+```{r}
+
+files <- list.files(path = "DOC_data/Processed Data", pattern = "\\.csv$", full.names = TRUE)
+
+data_list <- lapply(files, function(f) {
+  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
+  # df$Site <- as.character(df$Site)             # ensures character
+  return(df)
+})
+
+# Combine all files
+DOC_data <- bind_rows(data_list)
+
+#remove the first unneeded column
+DOC_data <- DOC_data[, -which(names(DOC_data) == "X")]
+
+```
+
+#Read in and collate all the files in the DIC Processed Data folder 
+```{r}
+
+files <- list.files(path = "DIC_data/Processed Data", pattern = "\\.csv$", full.names = TRUE)
+
+data_list <- lapply(files, function(f) {
+  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
+  # df$Site <- as.character(df$Site)             # ensures character
+  return(df)
+})
+
+# Combine all files
+DIC_data <- bind_rows(data_list)
+
+#remove the first unneeded column
+DIC_data <- DIC_data[, -which(names(DIC_data) == "X")]
+
+
+
+```
+
+#Read in and collate all the files in the TA Processed Data folder 
+```{r}
+
+files <- list.files(path = "TA_data", pattern = "\\.csv$", full.names = TRUE)
+
+data_list <- lapply(files, function(f) {
+  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
+  # df$Site <- as.character(df$Site)             # ensures character
+  return(df)
+})
+
+# Combine all files
+TA_data <- bind_rows(data_list)
+
+#remove the first unneeded column
+TA_data <- TA_data[, -which(names(TA_data) == "X")]
+
+##Match DIC/DOC columns names
+TA_data1 <- TA_data %>% 
+  mutate(Project = "FATE", 
+         TA_mmolL = Alk_GP_avg/100, 
+         Date = mdy(date), 
+         Time = gsub(":00", "", time)) %>% 
+  rename(Sample_Location = location, 
+         Replicate = sample_id) %>% 
+  select(Project, Date, Time, Sample_Location, Replicate, TA_mmolL)
+
+```
+
+##Combine dataframes
+```{r}
+
+DIC_DOC <- merge(DIC_data, DOC_data, by)
+
+colnames(DIC_data)
+colnames(DOC_data)
+
+
+```
+
+
+##Collate the data 
+```{#r}
+colnames(all_data)
+
+#Put together the final lysimeter data 
+final_data_lys <- all_data %>%
+    rename(Analysis_rundate = Analysis_runtime) %>%
+    select(
+    Project, Region, Site, Zone, Replicate, Depth_cm, 
+         Sample_ID, Year, Month, Day, Time, Time_Zone,
+         npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag,
+         Analysis_rundate,  Run_notes, Field_notes
+        # list columns in the order you want them
+  )
+
+
+```
+
+
+
+## Visualize Data
+```{#r Visualize Data, echo=FALSE, warning=FALSE, fig.width=16, fig.height=10}
+
+data_plotting <- rbind(all_data)
+
+#Order by Zone from Upland to Surface Water
+data_plotting$Zone = factor(data_plotting$Zone, levels = c("UP", "SWAMP", "TR", "WC", "SW"))
+data_plotting <- data_plotting[order(data_plotting$Zone), ]
+
+#Order by Site from SWH, GCW, MSM, GWI order, which is oligohaline to polyhaline
+data_plotting$Site = factor(data_plotting$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
+data_plotting <- data_plotting[order(data_plotting$Site), ]
+
+
+data_plotting$Month_name <- month.name[data_plotting$Month]
+data_plotting$months_factor <- factor(data_plotting$Month_name, levels = month.name)
+
+#Plot samples to get a first look at concentrations (sanity check)
+#group the data for plotting
+data_plotting_all <- data_plotting %>%
+  group_by(Site, Zone, months_factor) %>%
+  mutate(row_num = factor(row_number())) %>%  # create row_num as factor per group
+  ungroup()
+
+
+data_plotting_all$Date <- as.Date(paste(data_plotting_all$Year, data_plotting_all$Month, data_plotting_all$Day, sep = "-"))
+
+
+#Plot data and change colors based on Zone:
+viz_NPOC_plot <- ggplot(data_plotting_all, aes(x = months_factor, y = npoc_mgL, fill = Zone)) +
+  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
+  facet_grid( ~ Site, scales="free") +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "NPOC (mg/L)", title = "Synoptic CB Porewater: NPOC 2025") +
+  theme(
+    panel.spacing = unit(.05, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
+  theme(text = element_text(size = 20))
+
+print(viz_NPOC_plot)
+
+viz_TDN_plot <- ggplot(data_plotting_all, aes(x = months_factor, y = tdn_mgL, fill = Zone)) +
+  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
+  facet_grid( ~ Site, scales="free") +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "TDN (mg/L)", title = "Synoptic CB Porewater: TDN 2025") +
+  theme(
+    panel.spacing = unit(.05, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
+  theme(text = element_text(size = 20))
+
+print(viz_NPOC_plot)
+
+```
+
+
+## Write the 2023 file out to the folder 
+```{r, echo=FALSE}
+
+#write out all the lysimeter sample data 
+write.csv(all_data, "FATE_DOC.csv")
+
+```
+
+##END
+

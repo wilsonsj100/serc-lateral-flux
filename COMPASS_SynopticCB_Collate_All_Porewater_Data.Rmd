@@ -1,0 +1,238 @@
+---
+title: "COMPASS_SynopticCB_Collate_All_Porewater_Data"
+author: "Zoe Read"
+date: "2026-05-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(stringr)
+library(readxl)
+library(tidyr)
+library(tibble)
+library(purrr)
+# detach("package:raster", unload = TRUE)
+```
+
+#Read in and collate all the collated analyte files
+```{r}
+
+##Collated data by analyte
+##Desired Sample ID format: SWH_202511_WC_LYSC_45CM
+
+DIC <- read.csv("DIC/Synoptic-CB/COMPASS_SynopticCB_PW_DIC_AllData.csv", )
+DIC <- DIC %>%
+  rename_with(
+    .cols = c(11:12, (ncol(.) - 2):(ncol(.))),
+    .fn = ~paste0("DIC_", .)) %>%
+  mutate(Sample_ID = toupper(Sample_ID)) %>% 
+  dplyr::select(c("Sample_ID", "ic_mgL", "ic_uM", "ic_flag"))
+
+DOC <- read.csv("DOC/Synoptic-CB/COMPASS_SynopticCB_PW_DOC_AllData.csv")
+DOC <- DOC %>%
+  rename_with(
+    .cols = c(7:8, (ncol(.) - 2):(ncol(.))),
+    .fn = ~paste0("DOC_", .)) %>%
+  mutate(Sample_ID = toupper(Sample_ID)) %>% 
+  dplyr::select(c("Sample_ID", "npoc_mgL", "npoc_uM", "npoc_flag", "tdn_mgL", "tdn_uM", "tdn_flag"))
+
+Nutrients <- read.csv("Nutrients/Synoptic-CB/COMPASS_SynopticCB_Nutrient_AllData.csv")
+Nutrients <- Nutrients %>%
+  rename_with(
+    .cols = c(7:8, (ncol(.) - 2):(ncol(.))),
+    .fn = ~paste0("Nutr_", .)) %>%
+  mutate(Sample_ID = toupper(Sample_ID)) %>% 
+  rename(
+    NOx_mgL = NOx_Conc_mgL, 
+    NOx_uM = NOx_Conc_uM, 
+    NH3_mgL = NH3_Conc_mgL, 
+    NH3_uM = NH3_Conc_uM, 
+    PO4_mgL = PO4_Conc_mgL, 
+    PO4_uM = PO4_Conc_uM
+  ) %>% 
+  dplyr::select(c("Sample_ID", "NOx_mgL", "NOx_uM", "NOx_Conc_Flag", "NH3_mgL", "NH3_uM",  "NH3_Conc_Flag", "PO4_mgL", "PO4_uM", "PO4_Conc_Flag"))
+
+
+SO4_Cl <- read.csv("Sulfate_Chloride/Synoptic-CB/COMPASS_SynopticCB_SO4_Cl_AllData.csv")
+SO4_Cl <- SO4_Cl %>%
+  rename_with(
+    .cols = c(7:8, (ncol(.) - 2):(ncol(.))),
+    .fn = ~paste0("SO4_Cl_", .)) %>%
+  mutate(Sample_ID = toupper(Sample_ID)) %>% 
+  dplyr::select(c("Sample_ID", "SO4_ppm", "SO4_mM", "SO4_Conc_flag", "SO4_QAQC_flag", "Cl_ppm", "Cl_mM", "Cl_Conc_flag", "salinity"))
+
+Sulfide <- read.csv("Sulfide/Synoptic-CB/COMPASS_SynopticCB_Sulfide_AllData.csv")
+Sulfide <- Sulfide %>%
+  rename_with(
+    .cols = c(7:8, (ncol(.) - 2):(ncol(.))),
+    .fn = ~paste0("H2S_", .)) %>%
+  mutate(Sample_ID = toupper(Sample_ID)) %>% 
+  mutate(Month = as.integer(Month)) %>% 
+  dplyr::select(c("Sample_ID", "H2S_mean_uM", "H2S_sd_uM", "H2S_cv", "H2S_Conc_flag", "H2S_cv_flag")) %>% 
+  mutate(Sample_ID = gsub("GCERW", "GCW", Sample_ID))
+
+
+##Combine data
+df_list <- list(DIC, DOC, Nutrients, SO4_Cl, Sulfide)
+merged_df <- df_list %>% reduce(full_join)
+
+colnames(merged_df)
+merged_df <- merged_df %>% 
+  mutate(Project = "COMPASS:Synoptic", 
+         Region = "CB")
+
+
+##Need to figure out duplicates
+df_duplicates <- merged_df %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+
+##Fix SO4/Cl duplicates
+df_duplicates_SO4 <- SO4_Cl %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+##Based on sample list order, 36_202207_GWI_UP_LysA_10cm was probably actually 36_202207_GWI_TR_LysA_10cm
+
+##33_GWI_202208_UP_LysB_10cm was ran 4 times for SO4/Cl for some reason. The 2-4 times the values were similar, should I average them? I removed this sample because even though the last 3 values were close, there was a trend of increase in SO4 between each sample, which I thought might indicate an issue here. 
+
+##29_202209_GWI_UP_LysA_20cm and 30_202209_GWI_UP_LysA_20cm - ran twice for some reason, values are not that close but should I still average them? I removed these because I'm not sure what happened here and the values are not that close to each other. 
+ 
+##100_202211_GCrew_TR_LysC_45cm was ran twice for some reason, they're close so should I average or take the first one? 
+
+
+##119_202211_GWI_UP_LysC_20cm was ran twice for some reason, they're close so should I average or take the first one? Based on the raw data, it looks like the second one was supposed to be a dup. Fixed this in the processing code. 
+
+##MSM TR 202211 samples ran several times with different SO4: 
+# 12_202211_MSM_TR_LysB_10cm	
+# 13_202211_MSM_TR_LysB_20cm	
+# 14_202211_MSM_TR_LysB_45cm	
+# 15_202211_MSM_TR_LysB_10cm	
+# 16_202211_MSM_TR_LysB_20cm	
+# 17_202211_MSM_TR_LysB_45cm	I removed these samples because the duplicate samples were not similar in value, and I'm not sure what else they could be, unless there were WC MSM lysimeter samples on this date, but it looks like there are WC samples from sippers.
+
+##Based on sample list order, 78_SWH_202308_WC_LysC_20cm was probably actually 78_SWH_202308_WC_LysA_20cm
+
+##It looks like 50_SWH_202309_UPCON_LysA_20cm	, 50_SWH_202309_UPCON_LysA_20cm_dup	, 51_SWH_202309_UPCON_LysA_45cm, 51_SWH_202309_UPCON_LysA_45cm_spk, 61_SWH_202309_UP_LysB_10cm, 61_SWH_202309_UP_LysB_10cm_spk were added to the end of the second 202309 run, because they did not have normal/any values for the first run. So, took the values from the second run only. 
+
+##It looks like SWH_202409_SWAMP_LYSB_20CM was added to the end of the 202408 run, so kept the one from the second run because it also had values greater than 0 for Cl. 
+
+##Fixed the 202509 SO4 samples that were not in order. 71-74 GWI_202509_UP_LysA_10cm, GWI_202509_UP_LYSA_20CM, GWI_202509_UP_LYSA_45CM, GWI_202509_UP_LYSB_10CM were actually SWH_202509_UP_LysA_10cm, SWH_202509_UP_LYSA_20CM, SWH_202509_UP_LYSA_45CM, SWH_202509_UP_LYSB_10CM
+
+
+##Fix DIC duplicates
+df_duplicates_DIC <- DIC %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+##Fix DOC duplicates
+df_duplicates_DOC <- DOC %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+##Fix Nutrient duplicates
+df_duplicates_Nutrients <- Nutrients %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+##SWH_202409_WC_LYSA_10CM was ran on 7/1 and 7/10, one of them was actually SWH_202409_WC_LYSA_10CM beause it was ran with the other 202410 samples. Fixed ID in processing code. 
+
+##Fix Sulfide duplicates
+df_duplicates_Sulfide <- Sulfide %>%
+  group_by(Sample_ID) %>%
+  filter(n() > 1) %>%
+  ungroup()
+unique(df_duplicates_Sulfide$Sample_ID)
+
+##Fixed the 202509 Sulfide samples that were not in order. 71-74 GWI_202509_UP_LysA_10cm, GWI_202509_UP_LYSA_20CM, GWI_202509_UP_LYSA_45CM, GWI_202509_UP_LYSB_10CM were actually SWH_202509_UP_LysA_10cm, SWH_202509_UP_LYSA_20CM, SWH_202509_UP_LYSA_45CM, SWH_202509_UP_LYSB_10CM
+
+
+```
+##Read in metadata and create similar sample IDs for matching to samples 
+```{r pull in metadata for later, include=FALSE}
+
+#read in the raw metadata files
+meta_2022 <- read.csv("Sample Logs/COMPASS_SynopticCB_PW_SampleLog_2022.csv")
+meta_2023 <- read.csv("Sample Logs/COMPASS_SynopticCB_PW_SampleLog_2023.csv")
+meta_2023_fixed <- meta_2023 %>%
+  mutate(
+    Transect.Location = case_when(
+      Year == "2023" & Site == "SWH" & Transect.Location == "Upland" ~ "SWAMP",
+      Year == "2023" & Site == "SWH" & Transect.Location == "UPCON" ~ "Upland",
+      TRUE ~ Transect.Location
+    )) 
+
+meta_2024 <- read.csv("Sample Logs/COMPASS_SynopticCB_PW_SampleLog_2024.csv")
+meta_2025 <- read.csv("Sample Logs/COMPASS_SynopticCB_PW_SampleLog_2025.csv")
+
+raw_metadata <- bind_rows(meta_2022, meta_2023_fixed, meta_2024, meta_2025)
+
+#Create NUTR IDs from what was collected for comparison later
+metadata <- raw_metadata %>%
+  mutate(YearMonth = sprintf("%d%02d", Year, Month))  %>%
+  mutate(Zone = case_when(
+    `Transect.Location` == "Transition" ~ "TR",
+    `Transect.Location` == "Wetland"    ~ "WC",
+    `Transect.Location` == "Upland"     ~ "UP",   
+    `Transect.Location` == "Surface Water" ~ "SW",
+    TRUE                 ~ `Transect.Location`))  %>% # keep original value if no match
+  mutate(Sample_ID = paste0(Site, "_", YearMonth, "_", Zone, "_Lys", Lysimeter, "_", Depth_cm, "cm")) %>%
+  mutate(
+    Sample_ID = if_else(
+      Zone == "SW",
+      # Modify the string:
+      Sample_ID %>%
+        str_replace("_LysA", "_A") %>%                    # Replace "_LysA" with "_A"
+        str_replace("_LysB", "_B") %>%                    # Replace "_LysB" with "_B"
+        str_replace("_LysC", "_C") %>%                    # Replace "_LysC" with "_C"
+        str_replace("_0cm$", ""),                         # Remove trailing "_0cm"
+      Sample_ID))  # else keep original
+
+#Take out the columns and rows that are not relevant
+colnames(metadata)
+metadata_sel <- metadata %>%
+  rename(Sampling_Time = Time..24hr., 
+         Sampling_Time_Zone = Time.Zone_EDT.EST, 
+         Field_Notes = Field.Notes) %>% 
+  select(Sample_ID, Year, Month, Day, Site, Zone, Lysimeter, Depth_cm, Sampling_Time, Sampling_Time_Zone, Field_Notes)       
+
+
+##Merge sample data with metadata
+merged_df$Sample_ID <- toupper(merged_df$Sample_ID)
+metadata_sel$Sample_ID <- toupper(metadata_sel$Sample_ID)
+
+
+final_data <- merged_df %>%
+  left_join(metadata_sel, by = c("Sample_ID"))
+
+```
+
+
+## Write the 2023 file out to the folder 
+```{r, echo=FALSE}
+
+##Order data by Year, Month, Day
+final_data1 <- final_data[order(final_data$Year, final_data$Month, final_data$Day, final_data$Zone, final_data$Lysimeter, final_data$Depth_cm),]
+
+colnames(final_data1)
+final_data1 <- final_data1 %>% 
+  select(c("Project", "Region", "Sample_ID", "Year", "Month", "Day", "Site", "Zone", "Lysimeter", "Depth_cm", "Sampling_Time", "Sampling_Time_Zone", "Field_Notes", 
+           "ic_mgL", "ic_uM", "ic_flag", "npoc_mgL", "npoc_uM", "npoc_flag", "tdn_mgL", "tdn_uM", "tdn_flag", 
+           "NOx_mgL", "NOx_uM", "NOx_Conc_Flag", "NH3_mgL", "NH3_uM", "NH3_Conc_Flag", "PO4_mgL", "PO4_uM", "PO4_Conc_Flag", 
+           "SO4_ppm", "SO4_mM", "SO4_Conc_flag", "Cl_ppm", "Cl_mM", "Cl_Conc_flag", "salinity", 
+           "H2S_mean_uM", "H2S_sd_uM", "H2S_cv", "H2S_Conc_flag", "H2S_cv_flag"))
+
+
+write.csv(final_data1, "COMPASS_SynopticCB_AllData_AllYears.csv", row.names = FALSE)
+
+```
+

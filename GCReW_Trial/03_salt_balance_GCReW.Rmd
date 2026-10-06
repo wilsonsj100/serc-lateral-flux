@@ -202,7 +202,7 @@ ATemp <- bind_rows(ATemp2023, ATemp2024)
 ATemp <- ATemp %>% 
   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
+  select(TIMESTAMP, Value) %>% 
   rename(ATemp = Value)
 plot(ATemp ~ TIMESTAMP, data = ATemp)
 
@@ -221,7 +221,7 @@ RH <- RH %>%
          TIMESTAMP = gsub("Z", " ", TIMESTAMP), 
          TIMESTAMP = ymd_hms(TIMESTAMP, tz = "EST")) %>% 
   mutate(RH = ifelse(RH > 100 & RH < 108, 100, RH)) %>% #Clean RH
-  select(Site, Plot, TIMESTAMP, RH)
+  select(TIMESTAMP, RH)
 plot(RH ~ TIMESTAMP, data = RH)
 
 
@@ -232,7 +232,7 @@ BP <- bind_rows(BP2023, BP2024)
 BP <- BP %>% 
   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
+  select(TIMESTAMP, Value) %>% 
   rename(BP = Value)
 plot(BP ~ TIMESTAMP, data = BP)
 
@@ -243,7 +243,7 @@ WSpd <- bind_rows(WSpd2023, WSpd2024)
 WSpd <- WSpd %>% 
   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
+  select(TIMESTAMP, Value) %>% 
   rename(WSpd = Value)
 plot(WSpd ~ TIMESTAMP, data = WSpd)
 
@@ -254,7 +254,7 @@ SolRad <- bind_rows(SolRad2023, SolRad2024)
 SolRad <- SolRad %>% 
   # filter(F_OOB != 1) %>% #Flag: out of instrumental bounds
   # filter(F_OOS != 1) %>% #Flag: sensor listed as out of service
-  select(Site, Plot, TIMESTAMP, Value) %>% 
+  select(TIMESTAMP, Value) %>% 
   rename(SolRad = Value)
 plot(SolRad ~ TIMESTAMP, data = SolRad)
 
@@ -270,12 +270,17 @@ plot(SolRad ~ TIMESTAMP, data = SolRad)
 #   mutate(TotPrcp = TotPrcp*10) %>% # GCReW rain is in cm! Convert to mm
 # plot(TotPrcp ~ TIMESTAMP, data = TotPrcp)
 
-
+TotPrcp <- read_csv("raw-met-data/NEON_precip.csv")
+TotPrcp <- TotPrcp %>% 
+  rename(TIMESTAMP = startDateTime, 
+         TotPrcp = precipBulk_mm) %>% 
+  select(TIMESTAMP, TotPrcp)
+plot(TotPrcp ~ TIMESTAMP, data = TotPrcp)
 
 
 ##Merge MET Station data
 MET_list <- list(ATemp, RH, BP, WSpd, SolRad, TotPrcp)
-MET <- MET_list %>% reduce(full_join, by = c("Site", "Plot", "TIMESTAMP"))
+MET <- MET_list %>% reduce(full_join, by = c("TIMESTAMP"))
 # MET$DateTimeStamp <- ymd_hms(as.character(MET$TIMESTAMP)) This made all the midnight values NA
 
 ##Format timestamps
@@ -290,8 +295,9 @@ MET <- mutate(MET, year = year(DateTimeStamp),
               month = month(DateTimeStamp)) #,ATemp = ifelse(grepl("-3",F_ATemp),NA,ATemp))
 
 METseason <- group_by_at(MET,c("year","month"))%>%
-  summarize(tot_precip_m3 = sum(TotPrcp,na.rm=TRUE)/1000*A, # integrated total precip over marsh area
-            dur_min = length(which(!is.na(TotPrcp)))*15, # length of time with data
+  summarize(tot_precip_m3 = sum(TotPrcp,na.rm=TRUE)/1000*A, # integrated total precip over marsh area, converting precip from mm to m
+            # dur_min = length(which(!is.na(TotPrcp)))*15, # length of time with data
+            dur_min = length(which(!is.na(TotPrcp))), # NEON tower precip is in 1 minute intervals
             precipm3yr = tot_precip_m3/(dur_min/60/24/365)) # precip as an annual rate
 
 ################################################################################
