@@ -12,7 +12,7 @@ output: html_document
 ## Load packages
 require(pacman)
 p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
-       cowplot,ggpubr, plotrix)
+       cowplot,ggpubr, plotrix, here, dplyr)
 
 ## Set a common timezone, so even if your computer switches timezones, everything is static
 common_tz = "Etc/GMT+5"
@@ -30,7 +30,7 @@ path <- "raw-sontek-data/"
 
 #list all the files in the directory
 #create a list of the files there 
-sontek_files <- dir(pattern = "dat$", full.names = FALSE)
+sontek_files <- dir(pattern = "dat$", path = path, full.names = TRUE)
 
 # 3. Function ---------
 
@@ -277,11 +277,11 @@ chem_lite <- chem %>%
   select(c(site, sample_type, date, time_sampled_est, DIC..mg.L., NPOC..mg.L., TA..mmol.L.)) %>%
   mutate(DIC_umolL = ((DIC..mg.L. / 1000)/12.011)*1000000)%>%
   mutate(DOC_umolL = ((as.numeric(NPOC..mg.L.) / 1000)/12.011)*1000000)%>%
-  mutate(TA_umolL = (TA..mmol.L. * 1000))
+  mutate(TA_umolL = ifelse(TA..mmol.L. > 100, TA..mmol.L.,  TA..mmol.L. * 1000))
 
 # Need to add in new data: 
 dic_files <- list.files(
-  here("FATE Monitoring", "DIC_data", "Processed Data"),
+  here("..", "FATE Monitoring", "DIC_data", "Processed Data"),
   pattern = "\\.csv$",
   full.names = TRUE)
 
@@ -289,6 +289,7 @@ dic_files <- list.files(
 chem_2025_dic <- dic_files %>%
   map_dfr(read_csv) %>%
   filter(Sample_Location == "Flume")
+
 
 #might want to summarize these by the day 
 chem_2025_dic <- chem_2025_dic %>%
@@ -304,7 +305,7 @@ chem_2025_dic <- chem_2025_dic %>%
 
 #list the doc files and then read them in and subset to the flume 
 doc_files <- list.files(
-  here("FATE Monitoring", "DOC_data", "Processed Data"),
+  here("..", "FATE Monitoring", "DOC_data", "Processed Data"),
   pattern = "\\.csv$",
   full.names = TRUE)
 

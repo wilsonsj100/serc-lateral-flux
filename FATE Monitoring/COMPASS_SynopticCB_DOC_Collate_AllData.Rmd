@@ -1,0 +1,689 @@
+---
+title: "Synoptic CB: Porewater DOC"
+author: "2022-2025 Samples"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+    number_sections: true
+
+output_dir: "To Be Reviewed/PDF"
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(stringr)
+library(readxl)
+library(tidyr)
+library(tibble)
+library(openxlsx)
+```
+
+##Grab Each Year's All Data Files
+```{r Pull in 2022-2024 data files, message=FALSE, include=FALSE}
+
+#read in 2022 Dionex Data:
+# dat22 <- read.csv("2022/COMPASS_SynopticCB_PW_DOC_2022.csv")
+# head(dat22)
+
+#read in 2023 Dionex Data:
+dat23 <- read.csv("2023/COMPASS_SynopticCB_PW_DOC_2023.csv")
+# head(dat23)
+
+#read in 2024 Dionex Data:
+dat24 <- read.csv("2024/COMPASS_SynopticCB_PW_DOC_2024.csv")
+# head(dat24)
+
+#read in 2024 Dionex Data:
+dat25 <- read.csv("2025/COMPASS_SynopticCB_PW_DOC_2025.csv")
+# head(dat24)
+
+all_dat <- rbind(dat23, dat24, dat25)
+
+all_dat <- all_dat %>%
+  select(
+    Project, Region, Sample_ID, Year, Month, Day, Time, Time_Zone, 
+         Site, Zone, Replicate, Depth_cm,
+         npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag,
+         Analysis_rundate,  Run_notes, Field_notes
+        # list columns in the order you want them
+  )
+
+```
+
+
+##Make Relevant Metadata Sheet
+```{r make metadata, include = FALSE}
+
+#pull the column names from the all_dat dataframe and create a new dataframe with them 
+metadat <- data.frame(Column_Names = colnames(all_dat))
+metadat
+
+metadat$Description <- ""
+metadat$Units <- ""
+metadat$Instrument_ifapplicable <- ""
+
+#add information about each line: 
+
+metadat$Description <- c("Project name", 
+                         "Region samples originated from: CB = Chesapeake Bay",
+                         "Sample identifier used in laboratory and field", 
+                         "Year (YYYY) of sample collection", 
+                         "Month (#) of sample collection",
+                         "Day (#) of sample collection",
+                         "Time (HH:MM) of sample collection",
+                         "Time Zone of sample collection",
+                         "Name of sampling transect location (GCW, SWH, MSM, GWI), see dataset locations for coordinates", 
+                         "Zone within space-for-time transect (UP=Upland, SWAMP=Swamp, TR=Transition, WC=Wetland Control, SW=Surface Water)",
+                         "Lysimeter or sample replicate id (A-C)", 
+                         "Depth in centimeters from which water sample was taken", 
+                         "Non-Purgeable Organic Carbon (NPOC) concentration in mg/L", 
+                         "Non-Purgeable Organic Carbon (NPOC) concentration in uM", 
+                         "QAQC Flags generated during checks of NPOC standards, blanks, dups, and spks", 
+                         "Total Dissolved Nitrogen (TDN) concentration in mg/L", 
+                         "Total Dissolved Nitrogen (TDN) concentration in uM", 
+                         "QAQC Flags generated during checks of TDN standards, blanks, dups, and spks", 
+                         "The date that samples were run on the Shimadzu TOC-V", 
+                         "Any notes generated during QAQC", 
+                         "Notes generated during field sample collection")
+
+metadat$Units <-       c("NA", 
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "NA", 
+                         "NA", 
+                         "NA",
+                         "NA", 
+                         "cm",
+                         "mg/L", 
+                         "uM", 
+                         "NA",
+                         "mg/L", 
+                         "uM", 
+                         "NA", 
+                         "NA", 
+                         "NA", 
+                         "NA")
+
+metadat$Instrument_ifapplicable <-  
+  
+                       c("NA", 
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "NA", 
+                         "NA", 
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "TOC-V (Shimadzu)", 
+                         "TOC-V (Shimadzu)", 
+                         "NA", 
+                         "TOC-V (Shimadzu)", 
+                         "TOC-V (Shimadzu)", 
+                         "NA", 
+                         "NA", 
+                         "NA", 
+                         "NA")
+
+
+```
+
+## Write out files
+```{r write out combined data and metadata, include=FALSE}
+
+#write out a csv of all the data to the main folder: 
+write.csv(all_dat, "COMPASS_SynopticCB_PW_DOC_AllData.csv", row.names = FALSE)
+
+
+#write out a csv of the metadata associated with the data: 
+write.csv(metadat, "COMPASS_SynopticCB_PW_DOC_Metadata.csv", row.names = FALSE)
+
+```
+
+
+## All Data by Year, Site and Zone
+```{r Visualize Data, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+
+data_plotting <- all_dat
+
+#Order by Zone from Upland to Surface Water
+data_plotting$Zone = factor(data_plotting$Zone, levels = c("UP", "SWAMP", "TR", "WC", "SW"))
+data_plotting <- data_plotting[order(data_plotting$Zone), ]
+
+#Order by Site from SWH, GCW, MSM, GWI order, which is oligohaline to polyhaline
+data_plotting$Site = factor(data_plotting$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
+data_plotting <- data_plotting[order(data_plotting$Site), ]
+
+# #Order by Year from 2022-2024
+# data_plotting$Site = factor(data_plotting$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
+# data_plotting <- data_plotting[order(data_plotting$Site), ]
+
+#Plot samples to get a first look at concentrations (sanity check)
+#group the data for plotting
+data_plotting_all <- data_plotting %>%
+  group_by(Site, Zone) %>%
+  mutate(row_num = factor(row_number())) %>%  # create row_num as factor per group
+  ungroup()
+
+data_plotting_all$Date <- as.Date(paste(data_plotting_all$Year, data_plotting_all$Month, data_plotting_all$Day, sep = "-"))
+
+
+#Plot data and change colors based on Zone:
+viz_NPOC_plot <- ggplot(data_plotting_all, aes(x = as.character(Year), y = npoc_mgL, fill = Zone)) +
+  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
+  facet_grid( ~ Site, scales="free") +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "NPOC (mg/L)", title = "Barplot of NPOC by Year, Site and Zone") +
+  theme(
+    panel.spacing = unit(.05, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
+  theme(text = element_text(size = 30))
+
+ viz_NPOC_plot
+ 
+ viz_TDN_plot <- ggplot(data_plotting_all, aes(x = as.character(Year), y = tdn_mgL, fill = Zone)) +
+  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
+  facet_grid( ~ Site, scales="free") +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "TDN (mg/L)", title = "Barplot of TDN by Year, Site and Zone") +
+  theme(
+    panel.spacing = unit(.05, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
+  theme(text = element_text(size = 30))
+
+ viz_TDN_plot
+
+
+```
+
+
+## Summarized data for Site and Zone 
+```{r Summarize and Visualize Data, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+
+##Make Date Column with just Year and Month for Sample ID
+all_dat_dates <- data_plotting %>%
+  mutate(
+    YearMonth = if_else(
+      Month < 10,
+      # Modify the string:
+      YearMonth <- paste(data_plotting$Year, data_plotting$Month, sep = "-0"), 
+      YearMonth <- paste(data_plotting$Year, data_plotting$Month, sep = "-"), 
+    )
+  )
+
+##Summarize NPOC and TDN by Date, Site, and Zone
+DOC_avg <- all_dat_dates %>%
+  group_by(Month, Year, Site, Zone) %>%
+   dplyr::summarize(mean_NPOC = mean(npoc_mgL, na.rm=TRUE), 
+            sd_NPOC = sd(npoc_mgL, na.rm=TRUE), 
+            mean_TDN = mean(tdn_mgL, na.rm=TRUE), 
+            sd_TDN = sd(tdn_mgL, na.rm=TRUE), 
+            YearMonth = first(YearMonth))
+
+# Concatenate with a day (e.g., "01" for the first day)
+DOC_avg$Date <- paste0(DOC_avg$YearMonth, "-01")
+
+# Convert to Date object
+DOC_avg$Date <- as.Date(DOC_avg$Date)
+
+# Define the specific date breaks you want to display
+specific_breaks <- as.Date(c("2022-01-01", "2023-01-01", "2024-01-01"))
+
+viz_NPOC_plot_avgs <- ggplot(DOC_avg, aes(x = Date, y = mean_NPOC, color = Zone, group = Zone)) +
+  geom_point(size = 3) + 
+  geom_errorbar(aes(ymin = mean_NPOC - sd_NPOC, ymax = mean_NPOC + sd_NPOC), width = 0.2) + 
+  geom_line() + 
+  facet_grid( ~ Site, scales="free_y") +
+  scale_color_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = "Date", y = "NPOC (mg/L)", title = "Line plot of NPOC by Year, Site and Zone") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  # theme(axis.text.x = element_text(angle = 90, hjust = 0.5))+ 
+  theme(text = element_text(size = 30))+
+  scale_x_date(breaks = specific_breaks, date_labels = "%Y", expand = expansion(mult = c(0.18, 0.05)))+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))
+
+viz_NPOC_plot_avgs
+
+viz_TDN_plot_avgs <- ggplot(DOC_avg, aes(x = Date, y = mean_TDN, color = Zone, group = Zone)) +
+  geom_point(size = 3) + 
+  geom_errorbar(aes(ymin = mean_TDN - sd_TDN, ymax = mean_TDN + sd_TDN), width = 0.2) + 
+  geom_line() + 
+  facet_grid( ~ Site, scales="free_y") +
+  scale_color_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = "Date", y = "TDN (mg/L)", title = "Line plot of TDN by Year, Site and Zone") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  # theme(axis.text.x = element_text(angle = 90, hjust = 0.5))+ 
+  theme(text = element_text(size = 30))+
+  scale_x_date(breaks = specific_breaks, date_labels = "%Y", expand = expansion(mult = c(0.18, 0.05)))+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))
+
+viz_TDN_plot_avgs
+
+
+```
+
+
+## Summarized data for Depth, Site and Zone 
+```{r Depth Data, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+
+##Summarize DOC by Date, Site, and Zone
+DOC_avg_depth <- all_dat_dates %>%
+  group_by(Month, Year, Site, Zone, Depth_cm) %>%
+   dplyr::summarize(mean_NPOC = mean(npoc_mgL, na.rm=TRUE), 
+            sd_NPOC = sd(npoc_mgL, na.rm=TRUE), 
+            mean_TDN = mean(tdn_mgL, na.rm=TRUE), 
+            sd_TDN = sd(tdn_mgL, na.rm=TRUE), 
+            YearMonth = first(YearMonth))
+
+# Concatenate with a day (e.g., "01" for the first day)
+DOC_avg_depth$Date <- paste0(DOC_avg_depth$YearMonth, "-01")
+
+# Convert to Date object
+DOC_avg_depth$Date <- as.Date(DOC_avg_depth$Date)
+
+# Define the specific date breaks you want to display
+specific_breaks <- as.Date(c("2022-01-01", "2023-01-01", "2024-01-01"))
+
+viz_NPOC_plot_depth <- ggplot(DOC_avg_depth, aes(x = Date, y = mean_NPOC, color = Zone, group = Zone, shape = as.character(Depth_cm))) +
+  geom_point(size = 3) + 
+  geom_errorbar(aes(ymin = mean_NPOC - sd_NPOC, ymax = mean_NPOC + sd_NPOC), width = 0.2) + 
+  geom_line() + 
+  facet_grid( ~ Site, scales="free_y") +
+  scale_color_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "NPOC (mg/L)", title = "Line plot of NPOC by Year, Site, Zone, and Depth") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  # theme(axis.text.x = element_text(angle = 90, hjust = 0.5))+ 
+  theme(text = element_text(size = 30))+
+  scale_x_date(breaks = specific_breaks, date_labels = "%Y", expand = expansion(mult = c(0.18, 0.05))) + 
+  labs(fill = "Zone", shape = "Depth (cm)")+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))
+
+viz_NPOC_plot_depth
+
+
+viz_TDN_plot_depth <- ggplot(DOC_avg_depth, aes(x = Date, y = mean_TDN, color = Zone, group = Zone, shape = as.character(Depth_cm))) +
+  geom_point(size = 3) + 
+  geom_errorbar(aes(ymin = mean_TDN - sd_TDN, ymax = mean_TDN + sd_TDN), width = 0.2) + 
+  geom_line() + 
+  facet_grid( ~ Site, scales="free_y") +
+  scale_color_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973",
+    "SW" = "#25ABE6"
+  )) +
+  theme_classic() +
+  labs(x = " ", y = "TDN (mg/L)", title = "Line plot of TDN by Year, Site, Zone, and Depth") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  # theme(axis.text.x = element_text(angle = 90, hjust = 0.5))+ 
+  theme(text = element_text(size = 30))+
+  scale_x_date(breaks = specific_breaks, date_labels = "%Y", expand = expansion(mult = c(0.18, 0.05))) + 
+  labs(fill = "Zone", shape = "Depth (cm)")+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))
+
+viz_TDN_plot_depth
+
+
+```
+
+## Boxplot by depth
+```{r Boxplot by depth, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+
+##Remove SW
+data_plotting_depth <- data_plotting %>%
+  filter(Zone != "SW") %>%
+  mutate(Depth_cm = factor(Depth_cm, levels = c("45", "20", "10")))
+
+
+#Plot data and change colors based on Zone:
+viz_npoc_depth <-  ggplot(data_plotting_depth, aes(x = Depth_cm, y = npoc_mgL, fill = Zone)) +
+  geom_boxplot() +
+  facet_wrap( ~ Site, scales="free", nrow = 1) +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973")) +
+  theme_classic() +
+  labs(x = "Sampling Depth (cm)", y = "NPOC (mg/L)", title = "") +
+  # theme(
+  #   panel.spacing = unit(.05, "lines"), 
+  #   panel.border = element_rect(color = "black", fill = NA, linewidth = 1))+ 
+  theme(text = element_text(size = 30))+ 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+ 
+  coord_flip() 
+
+viz_npoc_depth
+
+#Plot data and change colors based on Zone:
+viz_tdn_depth <-  ggplot(data_plotting_depth, aes(x = Depth_cm, y = tdn_mgL, fill = Zone)) +
+  geom_boxplot() +
+  facet_wrap( ~ Site, scales="free", nrow = 1) +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973")) +
+  theme_classic() +
+  labs(x = "Sampling Depth (cm)", y = "TDN (mg/L)", title = "") +
+  # theme(
+  #   panel.spacing = unit(.05, "lines"), 
+  #   panel.border = element_rect(color = "black", fill = NA, linewidth = 1))+ 
+  theme(text = element_text(size = 30))+ 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+ 
+  coord_flip() 
+
+viz_tdn_depth
+
+```
+
+
+## Boxplot summary
+```{r Overall Boxplot, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+
+all_dat_dates <- all_dat_dates %>% 
+    mutate(
+    Zone_1 = case_when(
+      Zone == "UP" ~ "Upland",
+      Zone == "SWAMP" ~ "Swamp",
+      Zone == "TR" ~ "Transition",
+      Zone == "WC" ~ "Wetland",
+      Zone == "SW" ~ "Surface Water",
+      TRUE ~ Zone  # keep everything else unchanged
+    )
+  ) %>%
+  mutate(Zone_1 = factor(Zone_1, levels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water")))
+
+
+##Summarize NPOC by Date, Site, and Zone
+viz_NPOC_boxplot <- ggplot(all_dat_dates, aes(x = Zone_1, y = npoc_mgL, fill = Zone_1, group = Zone_1)) +
+  geom_boxplot() + 
+  facet_grid( ~ Site, scales = "free_x") +
+  scale_x_discrete(drop = TRUE) +
+  scale_fill_manual(values = c(
+    "Upland" = "#20063B",
+    "Transition" = "#FFBC42",
+    "Swamp" = "darkgrey",
+    "Wetland" = "#419973",
+    "Surface Water" = "#25ABE6"
+  ), labels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water")) +
+  theme_classic() +
+  labs(x = " ", y = "NPOC (mg/L)", title = "Summary Boxplot of NPOC by Site and Zone") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+ 
+  theme(text = element_text(size = 30))+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))+ 
+  #scale_x_discrete(labels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water"))+ 
+  theme(legend.position = "none")
+
+viz_NPOC_boxplot
+
+
+##Summarize TDN by Date, Site, and Zone
+viz_TDN_boxplot <- ggplot(all_dat_dates, aes(x = Zone_1, y = tdn_mgL, fill = Zone_1, group = Zone_1)) +
+  geom_boxplot() + 
+  facet_grid( ~ Site, scales = "free_x") +
+  scale_x_discrete(drop = TRUE) +
+  scale_fill_manual(values = c(
+    "Upland" = "#20063B",
+    "Transition" = "#FFBC42",
+    "Swamp" = "darkgrey",
+    "Wetland" = "#419973",
+    "Surface Water" = "#25ABE6"
+  ), labels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water")) +
+  theme_classic() +
+  labs(x = " ", y = "TDN (mg/L)", title = "Summary Boxplot of TDN by Site and Zone") +
+  theme(
+    panel.spacing = unit(0.5, "lines"), 
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+ 
+  theme(text = element_text(size = 30))+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))+ 
+  #scale_x_discrete(labels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water"))+ 
+  theme(legend.position = "none")
+
+viz_TDN_boxplot
+
+# Save as a PNG
+png("COMPASS_SynopticCB_NPOC_alldata.png", width = 2000, height = 1200, res = 100) 
+print(viz_NPOC_boxplot)  # For ggplot objects, use print()
+dev.off() 
+
+# Save as a PNG
+png("COMPASS_SynopticCB_TDN_alldata.png", width = 2000, height = 1200, res = 100) 
+print(viz_TDN_boxplot)  # For ggplot objects, use print()
+dev.off() 
+
+```
+
+##Calculate summary metrics
+```{r Additional summary metrics, include=FALSE, dpi = 300}
+# It would also be great to add to our collation codes a summary chunk that will calculate value ranges, means, and standard deviations (and errors) for each site, zone, depth for each year; also for each site zone, depth overall; and for each site and zone overall so that we have some easy access to metrics. Was just thinking this might be helpful today when re-collating the DIC data.
+
+##Metrics for each site, zone, depth for each year
+summary_by_year <- all_dat %>%
+  group_by(Year, Site, Zone, Depth_cm) %>%
+   reframe(
+     min_npoc_mgL = min(npoc_mgL, na.rm=TRUE),
+     max_npoc_mgL = max(npoc_mgL, na.rm=TRUE), 
+     mean_npoc_mgL = mean(npoc_mgL, na.rm=TRUE), 
+     sd_npoc_mgL = sd(npoc_mgL, na.rm=TRUE), 
+
+     min_tdn_mgL = min(tdn_mgL, na.rm=TRUE),
+     max_tdn_mgL = max(tdn_mgL, na.rm=TRUE), 
+     mean_tdn_mgL = mean(tdn_mgL, na.rm=TRUE), 
+     sd_tdn_mgL = sd(tdn_mgL, na.rm=TRUE))
+
+##Metrics for each site, zone, depth for all years
+summary_all_years <- all_dat %>%
+  group_by(Site, Zone, Depth_cm) %>%
+   reframe(
+     min_npoc_mgL = min(npoc_mgL, na.rm=TRUE),
+     max_npoc_mgL = max(npoc_mgL, na.rm=TRUE), 
+     mean_npoc_mgL = mean(npoc_mgL, na.rm=TRUE), 
+     sd_npoc_mgL = sd(npoc_mgL, na.rm=TRUE), 
+
+     min_tdn_mgL = min(tdn_mgL, na.rm=TRUE),
+     max_tdn_mgL = max(tdn_mgL, na.rm=TRUE), 
+     mean_tdn_mgL = mean(tdn_mgL, na.rm=TRUE), 
+     sd_tdn_mgL = sd(tdn_mgL, na.rm=TRUE))
+
+##Metrics for each site and zone for all depths and years
+summary_all_depths_years <- all_dat %>%
+  group_by(Site, Zone) %>%
+   reframe(
+     min_npoc_mgL = min(npoc_mgL, na.rm=TRUE),
+     max_npoc_mgL = max(npoc_mgL, na.rm=TRUE), 
+     mean_npoc_mgL = mean(npoc_mgL, na.rm=TRUE), 
+     sd_npoc_mgL = sd(npoc_mgL, na.rm=TRUE), 
+
+     min_tdn_mgL = min(tdn_mgL, na.rm=TRUE),
+     max_tdn_mgL = max(tdn_mgL, na.rm=TRUE), 
+     mean_tdn_mgL = mean(tdn_mgL, na.rm=TRUE), 
+     sd_tdn_mgL = sd(tdn_mgL, na.rm=TRUE))
+
+```
+
+##Calculate number of samples 
+```{r Number of samples, include=FALSE, dpi = 300}
+#  I am thinking it might be cool to add to our porewater collation files a table at the end that has total number of samples then also some info about # of samples per zone, site, depth etc.
+
+##Metrics for each year
+sample_numbers_years <- all_dat %>%
+  group_by(Year) %>%
+   reframe(
+     Number_of_samples = n())
+
+##Metrics for each site, zone, depth for all years
+sample_numbers <- all_dat %>%
+  group_by(Site, Zone, Depth_cm) %>%
+   reframe(
+     Number_of_samples = n())
+
+```
+
+## Summary Tables
+```{r Summary table metrics, echo = FALSE, message = FALSE, dpi = 100}
+
+library(kableExtra)
+
+#Order by Zone from Upland to Surface Water
+summary_all_depths_years$Zone = factor(summary_all_depths_years$Zone, levels = c("UP", "SWAMP", "TR", "WC", "SW"))
+summary_all_depths_years <- summary_all_depths_years[order(summary_all_depths_years$Zone), ]
+
+#Order by Site from SWH, GCW, MSM, GWI order, which is oligohaline to polyhaline
+summary_all_depths_years$Site = factor(summary_all_depths_years$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
+summary_all_depths_years <- summary_all_depths_years[order(summary_all_depths_years$Site), ]
+
+kable(
+  summary_all_depths_years[, c("Site", "Zone", "min_npoc_mgL",	"max_npoc_mgL",	"mean_npoc_mgL", "min_tdn_mgL",	"max_tdn_mgL",	"mean_tdn_mgL")],  
+  format = "latex",
+  booktabs = TRUE,
+  caption = "Summary Statistics"
+) %>%
+  kable_styling(
+    latex_options = c("hold_position", "striped", "scale_down"),
+    font_size = 12
+  ) %>%
+  row_spec(0, bold = TRUE) %>%   # header
+  column_spec(1, bold = TRUE)
+
+
+```
+
+## Number of Samples
+```{r number of samples tables, echo = FALSE, message = FALSE, dpi = 100}
+
+#Order by Zone from Upland to Surface Water
+sample_numbers$Zone = factor(sample_numbers$Zone, levels = c("UP", "SWAMP", "TR", "WC", "SW"))
+sample_numbers <- sample_numbers[order(sample_numbers$Zone), ]
+
+#Order by Site from SWH, GCW, MSM, GWI order, which is oligohaline to polyhaline
+sample_numbers$Site = factor(sample_numbers$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
+sample_numbers <- sample_numbers[order(sample_numbers$Site), ]
+
+kable(
+  sample_numbers_years[, c("Year", "Number_of_samples")],  
+  format = "latex",
+  booktabs = TRUE,
+  caption = paste0("Total Samples: ", nrow(all_dat))
+) %>%
+  kable_styling(
+    latex_options = c("hold_position", "striped", "scale_down"),
+    font_size = 12
+  ) %>%
+  row_spec(0, bold = TRUE) %>%   # header
+  column_spec(1, bold = TRUE)
+
+```
+
+```{r Number of Samples Barplots, echo=FALSE, warning=FALSE, message = FALSE, fig.width=16, fig.height=10, dpi = 300}
+##Remove SW samples
+sample_numbers_pw <- sample_numbers %>% 
+  filter(Zone != "SW")
+
+##Number of Samples Plots
+sample_num_barplot <- ggplot(sample_numbers_pw, aes(x = as.character(Depth_cm), y = Number_of_samples, fill = Zone)) +
+  geom_col(position = "dodge", color = "black", width = 0.75) + # 'color' adds a border to the bars
+  facet_grid(~Site , scales = "free_x") +
+  scale_x_discrete(drop = TRUE) +
+  scale_fill_manual(values = c(
+    "UP" = "#20063B",
+    "TR" = "#FFBC42",
+    "SWAMP" = "darkgrey",
+    "WC" = "#419973"
+  ), labels = c("Upland", "Swamp", "Transition", "Wetland")) +
+  theme_classic() +
+  labs(x = "Depth (cm)", y = "Number of Samples", title = "Synoptic CB Porewater Sample Numbers") +
+  theme(
+    panel.spacing = unit(0.5, "lines"),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
+  theme(text = element_text(size = 30))+
+  theme(axis.ticks.x = element_line(linewidth = 1))+
+  theme(axis.ticks.length.x = unit(0.25, "cm"))
+  #scale_x_discrete(labels = c("Upland", "Swamp", "Transition", "Wetland", "Surface Water"))+
+  # theme(legend.position = "none")
+
+sample_num_barplot
+```
+
+## Write out summarized data
+```{r write out summarized data, include=FALSE}
+
+#write out a csv of all the data to the main folder: 
+write.csv(summary_by_year, "COMPASS_SynopticCB_PW_DOC_Summarized_By_Year.csv")
+
+
+#write out a csv of the metadata associated with the data: 
+write.csv(summary_all_years, "COMPASS_SynopticCB_PW_DOC_Summarized_Years_Combined.csv")
+
+
+#write out a csv of the metadata associated with the data: 
+write.csv(summary_all_depths_years, "COMPASS_SynopticCB_PW_DOC_Summarized_Years_and_Depths_Combined.csv")
+
+```
+
+

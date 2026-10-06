@@ -86,12 +86,22 @@ DOC_bottle_data <- DOC_bottle_data%>%
 DIC_bottle_data$datetime<- round_date(DIC_bottle_data$datetime, "5 minutes")
 DOC_bottle_data$datetime<- round_date(DOC_bottle_data$datetime, "5 minutes")
 
+sensor_data <- sensor_data %>%
+  mutate(
+    datetime = parse_date_time(
+      datetime,
+      orders = c("ymd HMS", "ymd"),
+      tz = "America/New_York"
+    ),
+    datetime = round_date(datetime, "5 minutes")
+  )
+
 #extract sensor data at discrete time
 sensor_IC_subset<-subset(sensor_data,datetime %in% DIC_bottle_data$datetime)
 sensor_OC_subset<-subset(sensor_data,datetime %in% DOC_bottle_data$datetime)
 
-DIC_bottle_data$datetime <- as.character(DIC_bottle_data$datetime)
-DOC_bottle_data$datetime <- as.character(DOC_bottle_data$datetime)
+# DIC_bottle_data$datetime <- as.character(DIC_bottle_data$datetime)
+# DOC_bottle_data$datetime <- as.character(DOC_bottle_data$datetime)
 
 #sensor_IC_subset$datetime <- as.POSIXct(sensor_IC_subset$datetime)
 #sensor_OC_subset$datetime <- as.POSIXct(sensor_OC_subset$datetime)
