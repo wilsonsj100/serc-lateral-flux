@@ -1,6 +1,6 @@
 ---
-title: "COMPASS_SynopticCB_Collate_DOC_2025_Data"
-author: "Stephanie J. Wilson"
+title: "Collate_TidalSurvey_Data"
+author: "Zoe Read"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
@@ -14,52 +14,103 @@ library(readxl)
 library(tidyr)
 library(tibble)
 library(lubridate)
+library(hms)
+library(readr)
 ```
 
 #Read in and collate all the files in the DOC Processed Data folder 
 ```{r}
 
-files <- list.files(path = "DOC_data/Processed Data", pattern = "\\.csv$", full.names = TRUE)
+files <- list.files(path = "Processed_Data", pattern = "DOC.*\\.csv$", full.names = TRUE, recursive = TRUE)
 
-data_list <- lapply(files, function(f) {
-  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
-  # df$Site <- as.character(df$Site)             # ensures character
-  return(df)
-})
+data1 <- read_csv(files[1], id = "filename", col_types = cols(.default = col_character()))
+colnames(data1)
+
+data2 <- read_csv(files[2], id = "filename", col_types = cols(.default = col_character()))
+colnames(data2)
+
+data3 <- read_csv(files[3], id = "filename", col_types = cols(.default = col_character()))
+colnames(data3)
+data3_formatted <- data3 %>% 
+  mutate(Replicate = Sample_ID, 
+         Sample_ID = sample_name, 
+         Date = ymd(Sample_Date)) %>% 
+  mutate(
+  Time_Local = 
+    ifelse(is.na(Time), NA,
+    paste0(
+      substr(sprintf("%04d", as.numeric(Time)), 1, 2),
+      ":",
+      substr(sprintf("%04d", as.numeric(Time)), 3, 4)))) %>% 
+  select(-sample_name, -Time) %>% 
+  mutate(across(everything(), as.character))
+
+# data_list <- lapply(files, function(f) {
+#   df <- read.csv(f, stringsAsFactors = FALSE, colClasses = "character")  # avoids factors
+#   return(df)
+# })
 
 # Combine all files
-DOC_data <- bind_rows(data_list)
+DOC_data <- bind_rows(data1, data2, data3_formatted)
 
-#remove the first unneeded column
-DOC_data <- DOC_data[, -which(names(DOC_data) == "X")]
+colnames(DOC_data)
+
+DOC_data1 <- DOC_data %>% 
+  rename(Sample_Location = Site) %>% 
+  mutate(Sample_Location = ifelse(str_detect(Sample_ID, "GCW"), "Flume", Sample_Location)) %>% 
+  select(Project, Sample_ID, Date, Time_Local, Sample_Location, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag, filename)
 
 ```
 
 #Read in and collate all the files in the DIC Processed Data folder 
 ```{r}
 
-files <- list.files(path = "DIC_data/Processed Data", pattern = "\\.csv$", full.names = TRUE)
+files <- list.files(path = "Processed_Data", pattern = "DIC.*\\.csv$", full.names = TRUE, recursive = TRUE)
 
-data_list <- lapply(files, function(f) {
-  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
-  # df$Site <- as.character(df$Site)             # ensures character
-  return(df)
-})
+data1 <- read_csv(files[1], id = "filename", col_types = cols(.default = col_character()))
+colnames(data1)
+data1 <- data1 %>% 
+  mutate(Date = mdy(Date))
+
+data2 <- read_csv(files[2], id = "filename", col_types = cols(.default = col_character()))
+colnames(data2)
+data2 <- data2 %>% 
+  mutate(Date = mdy(Date))
+
+data3 <- read_csv(files[3], id = "filename", col_types = cols(.default = col_character()))
+colnames(data3)
+data3_formatted <- data3 %>% 
+  mutate(Replicate = Sample_ID, 
+         Sample_ID = sample_name, 
+         Date = ymd(Sample_Date)) %>% 
+  mutate(
+  Time_Local = 
+    ifelse(is.na(Time), NA,
+    paste0(
+      substr(sprintf("%04d", as.numeric(Time)), 1, 2),
+      ":",
+      substr(sprintf("%04d", as.numeric(Time)), 3, 4)))) %>% 
+  select(-sample_name, -Time) 
 
 # Combine all files
-DIC_data <- bind_rows(data_list)
+DIC_data <- bind_rows(data1, data2, data3_formatted)
+colnames(DIC_data)
 
-#remove the first unneeded column
-DIC_data <- DIC_data[, -which(names(DIC_data) == "X")]
-
-
+DIC_data1 <- DIC_data %>% 
+  rename(Sample_Location = Site) %>% 
+  mutate(Sample_Location = ifelse(str_detect(Sample_ID, "GCW"), "Flume", Sample_Location)) %>% 
+  select(Project, Sample_ID, Date, Time_Local, Sample_Location, Sample_Type, Replicate, Paired, ic_mgL, ic_uM, ic_flag)
 
 ```
 
 #Read in and collate all the files in the TA Processed Data folder 
 ```{r}
 
-files <- list.files(path = "TA_data", pattern = "\\.csv$", full.names = TRUE)
+files <- list.files(path = "Processed_Data", pattern = "TA.*\\.csv$", full.names = TRUE, recursive = TRUE)
+files
+
+data1 <- read_csv(files[1], id = "filename", col_types = cols(.default = col_character()))
+colnames(data1)
 
 data_list <- lapply(files, function(f) {
   df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
@@ -76,23 +127,39 @@ TA_data <- TA_data[, -which(names(TA_data) == "X")]
 ##Match DIC/DOC columns names
 TA_data1 <- TA_data %>% 
   mutate(Project = "FATE", 
-         TA_mmolL = Alk_GP_avg/100, 
+         TA_mmolL = Alk_GP_avg/1000, 
          Date = mdy(date), 
-         Time = gsub(":00", "", time)) %>% 
-  rename(Sample_Location = location, 
-         Replicate = sample_id) %>% 
-  select(Project, Date, Time, Sample_Location, Replicate, TA_mmolL)
+         Time = substr(time, 1, 5), 
+         location = gsub("Marsh_weir", "Flume", location)) %>% 
+  rename(Sample_Location = location) %>% 
+  select(Project, Date, Time, Sample_Location, sample_id, TA_mmolL)
 
 ```
 
 ##Combine dataframes
-```{r}
+```{r combine bottle data}
 
-DIC_DOC <- merge(DIC_data, DOC_data, by)
+DIC_DOC <- merge(DIC_data1, DOC_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
+DIC_DOC_TA <- merge(DIC_DOC, TA_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
+DIC_DOC_TA <- DIC_DOC_TA %>% 
+  rename(Time_Local = Time)
 
-colnames(DIC_data)
-colnames(DOC_data)
+```
 
+##Merge with metadata
+```{r metadata}
+
+meta_2025 <- read.csv("Metadata/FATE_Monitoring_Metadata_2025.csv", colClasses = "character")
+meta_2026 <- read.csv("Metadata/FATE_Monitoring_Metadata_2026.csv", colClasses = "character")
+
+meta <- bind_rows(meta_2025, meta_2026)
+
+meta1 <- meta %>% 
+  mutate(Date = mdy(Date)) %>% 
+  select(-c(DIC_24ml, DIC_ex_1ml, SO4.H2S_5ml, Nutr_10ml, DOC_20ml, TA_250ml))
+
+all_data <- DIC_DOC_TA %>% 
+  left_join(meta1, by = c("Date", "Time_Local", "Sample_Location"))
 
 ```
 
@@ -191,7 +258,7 @@ print(viz_NPOC_plot)
 ```{r, echo=FALSE}
 
 #write out all the lysimeter sample data 
-write.csv(all_data, "FATE_DOC.csv")
+write.csv(all_data, "FATE_DOC_DIC_TA.csv")
 
 ```
 
