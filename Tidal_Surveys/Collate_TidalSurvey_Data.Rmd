@@ -25,9 +25,13 @@ files <- list.files(path = "Processed_Data", pattern = "DOC.*\\.csv$", full.name
 
 data1 <- read_csv(files[1], id = "filename", col_types = cols(.default = col_character()))
 colnames(data1)
+data1 <- data1 %>% 
+  mutate(Date = mdy(Date))
 
 data2 <- read_csv(files[2], id = "filename", col_types = cols(.default = col_character()))
 colnames(data2)
+data2 <- data2 %>% 
+  mutate(Date = mdy(Date))
 
 data3 <- read_csv(files[3], id = "filename", col_types = cols(.default = col_character()))
 colnames(data3)
@@ -42,7 +46,7 @@ data3_formatted <- data3 %>%
       substr(sprintf("%04d", as.numeric(Time)), 1, 2),
       ":",
       substr(sprintf("%04d", as.numeric(Time)), 3, 4)))) %>% 
-  select(-sample_name, -Time) %>% 
+  select(-sample_name, -Time) #%>% 
   mutate(across(everything(), as.character))
 
 # data_list <- lapply(files, function(f) {
@@ -56,9 +60,14 @@ DOC_data <- bind_rows(data1, data2, data3_formatted)
 colnames(DOC_data)
 
 DOC_data1 <- DOC_data %>% 
+  filter(!str_detect(Sample_ID, "Pair")) %>% 
+  filter(!str_detect(Sample_ID, "isco")) %>% 
+  filter(!str_detect(Sample_ID, "INCUB")) %>% 
   rename(Sample_Location = Site) %>% 
   mutate(Sample_Location = ifelse(str_detect(Sample_ID, "GCW"), "Flume", Sample_Location)) %>% 
-  select(Project, Sample_ID, Date, Time_Local, Sample_Location, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag, filename)
+  mutate(Sample_ID = gsub("ESTUARY", "EST", Sample_ID)) %>% 
+  mutate(Replicate = gsub("ESTUARY", "EST", Replicate)) %>% 
+  select(Project, Sample_ID, Date, Time_Local, Sample_Location, Sample_Type, Replicate, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag)
 
 ```
 
@@ -97,11 +106,28 @@ DIC_data <- bind_rows(data1, data2, data3_formatted)
 colnames(DIC_data)
 
 DIC_data1 <- DIC_data %>% 
+  filter(!str_detect(Sample_ID, "Pair")) %>% 
+  filter(!str_detect(Sample_ID, "isco")) %>% 
+  filter(!str_detect(Sample_ID, "INCUB")) %>% 
   rename(Sample_Location = Site) %>% 
   mutate(Sample_Location = ifelse(str_detect(Sample_ID, "GCW"), "Flume", Sample_Location)) %>% 
-  select(Project, Sample_ID, Date, Time_Local, Sample_Location, Sample_Type, Replicate, Paired, ic_mgL, ic_uM, ic_flag)
+  select(Project, Sample_ID, Date, Time_Local, Sample_Location, Sample_Type, Replicate, ic_mgL, ic_uM, ic_flag)
 
 ```
+
+##Combine dataframes
+```{r combine bottle data}
+
+DIC_DOC <- merge(DIC_data1, DOC_data1, by = c("Project", "Date", "Time_Local", "Sample_Location", "Sample_ID", "Sample_Type", "Replicate"), all = TRUE)
+  mutate(
+    Replicate = case_when(
+      Sample_ID == "LatT_GCW_EST_20240718_1046" ~ "EST4", 
+      Sample_ID == "LatT_GCW_EST_20240718_1521" ~ "EST5", 
+      TRUE ~ Replicate
+    )
+  ) %<% 
+```
+
 
 #Read in and collate all the files in the TA Processed Data folder 
 ```{r}
@@ -111,6 +137,11 @@ files
 
 data1 <- read_csv(files[1], id = "filename", col_types = cols(.default = col_character()))
 colnames(data1)
+
+data1_formattted <- data1 %>% 
+  mutate(Sample_Location = ifelse(site == "GCW"), )
+
+
 
 data_list <- lapply(files, function(f) {
   df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
@@ -163,95 +194,6 @@ all_data <- DIC_DOC_TA %>%
 
 ```
 
-
-##Collate the data 
-```{#r}
-colnames(all_data)
-
-#Put together the final lysimeter data 
-final_data_lys <- all_data %>%
-    rename(Analysis_rundate = Analysis_runtime) %>%
-    select(
-    Project, Region, Site, Zone, Replicate, Depth_cm, 
-         Sample_ID, Year, Month, Day, Time, Time_Zone,
-         npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag,
-         Analysis_rundate,  Run_notes, Field_notes
-        # list columns in the order you want them
-  )
-
-
-```
-
-
-
-## Visualize Data
-```{#r Visualize Data, echo=FALSE, warning=FALSE, fig.width=16, fig.height=10}
-
-data_plotting <- rbind(all_data)
-
-#Order by Zone from Upland to Surface Water
-data_plotting$Zone = factor(data_plotting$Zone, levels = c("UP", "SWAMP", "TR", "WC", "SW"))
-data_plotting <- data_plotting[order(data_plotting$Zone), ]
-
-#Order by Site from SWH, GCW, MSM, GWI order, which is oligohaline to polyhaline
-data_plotting$Site = factor(data_plotting$Site, levels = c("SWH", "GCW", "MSM", "GWI"))
-data_plotting <- data_plotting[order(data_plotting$Site), ]
-
-
-data_plotting$Month_name <- month.name[data_plotting$Month]
-data_plotting$months_factor <- factor(data_plotting$Month_name, levels = month.name)
-
-#Plot samples to get a first look at concentrations (sanity check)
-#group the data for plotting
-data_plotting_all <- data_plotting %>%
-  group_by(Site, Zone, months_factor) %>%
-  mutate(row_num = factor(row_number())) %>%  # create row_num as factor per group
-  ungroup()
-
-
-data_plotting_all$Date <- as.Date(paste(data_plotting_all$Year, data_plotting_all$Month, data_plotting_all$Day, sep = "-"))
-
-
-#Plot data and change colors based on Zone:
-viz_NPOC_plot <- ggplot(data_plotting_all, aes(x = months_factor, y = npoc_mgL, fill = Zone)) +
-  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
-  facet_grid( ~ Site, scales="free") +
-  scale_fill_manual(values = c(
-    "UP" = "#20063B",
-    "TR" = "#FFBC42",
-    "SWAMP" = "darkgrey",
-    "WC" = "#419973",
-    "SW" = "#25ABE6"
-  )) +
-  theme_classic() +
-  labs(x = " ", y = "NPOC (mg/L)", title = "Synoptic CB Porewater: NPOC 2025") +
-  theme(
-    panel.spacing = unit(.05, "lines"), 
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
-  theme(text = element_text(size = 20))
-
-print(viz_NPOC_plot)
-
-viz_TDN_plot <- ggplot(data_plotting_all, aes(x = months_factor, y = tdn_mgL, fill = Zone)) +
-  geom_bar(stat = "identity", position = position_dodge2(preserve = "total")) +
-  facet_grid( ~ Site, scales="free") +
-  scale_fill_manual(values = c(
-    "UP" = "#20063B",
-    "TR" = "#FFBC42",
-    "SWAMP" = "darkgrey",
-    "WC" = "#419973",
-    "SW" = "#25ABE6"
-  )) +
-  theme_classic() +
-  labs(x = " ", y = "TDN (mg/L)", title = "Synoptic CB Porewater: TDN 2025") +
-  theme(
-    panel.spacing = unit(.05, "lines"), 
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 1)) + 
-  theme(text = element_text(size = 20))
-
-print(viz_NPOC_plot)
-
-```
 
 
 ## Write the 2023 file out to the folder 
