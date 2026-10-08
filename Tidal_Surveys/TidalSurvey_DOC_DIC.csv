@@ -1,205 +1,205 @@
-"","Sample_ID","ic_mgL","ic_uM","ic_flag","Project","Site","Replicate","Sample_Type","Date","Time_Local","npoc_mgL","npoc_uM","npoc_flag","tdn_mgL","tdn_uM","tdn_flag"
-"1","FLUME_20230807_GW_1","71.98","5992.8398967613",NA,"SERC Lateral Flux","Flume","1","GW",2023-08-07,"8:15","75.47","6283.40687702939",NA,"6.759","482.554777356551","value above cal curve"
-"2","FLUME_20230807_GW_2","48.1","4004.66239280659",NA,"SERC Lateral Flux","Flume","2","GW",2023-08-07,"8:50","38.19","3179.58538006827",NA,"0.892","63.6838084630927",NA
-"3","FLUME_20230807_GW_3","25.95","2160.51952376988",NA,"SERC Lateral Flux","Flume","3","GW",2023-08-07,"9:20","27.07","2253.76737990176",NA,"0.5365","38.3030978031942",NA
-"4","FLUME_20230807_GW_4","62.51","5204.3959703605",NA,"SERC Lateral Flux","Flume","4","GW",2023-08-07,"9:45","51.1","4254.43343601699",NA,"1.306","93.2410917632276",NA
-"5","FLUME_20230807_GW_5","30.03","2500.20814253601",NA,"SERC Lateral Flux","Flume","5","GW",2023-08-07,"10:30","36.48","3037.21588543835",NA,"0.9222","65.8399194671122",NA
-"6","FLUME_20230807_GW_6","25.54","2126.38414786446",NA,"SERC Lateral Flux","Flume","6","GW",2023-08-07,"11:10","27.97","2328.69869286487",NA,"0.5904","42.1512561845403",NA
-"7","FLUME_20230808_SW_0530","18.03","1501.12396969445",NA,"SERC Lateral Flux","Flume","0530","SW",2023-08-08,"5:30","23.36","1944.88385646491",NA,"0.5607","40.0308423825741",NA
-"8","FLUME_20230808_SW_0630","18.3","1523.60336358338",NA,"SERC Lateral Flux","Flume","0630","SW",2023-08-08,"6:30","23.57","1962.36782948963",NA,"0.5764","41.1517345270478",NA
-"9","FLUME_20230808_SW_0730","13.14","1093.99716926151",NA,"SERC Lateral Flux","Flume","0730","SW",2023-08-08,"7:30","19.03","1584.38098409791",NA,"0.516","36.8395125190088",NA
-"10","FLUME_20230808_SW_0830","13.33","1109.81600199817",NA,"SERC Lateral Flux","Flume","0830","SW",2023-08-08,"8:30","19.31","1607.69294813088",NA,"0.5036","35.9542219080869",NA
-"11","FLUME_20230808_SW_0930","17.65","1469.48630422113",NA,"SERC Lateral Flux","Flume","0930","SW",2023-08-08,"9:30","23.84","1984.84722337857",NA,"0.5866","41.8799574489352",NA
-"12","FLUME_20230808_SW_1030","19.14","1593.53925568229",NA,"SERC Lateral Flux","Flume","1030","SW",2023-08-08,"10:30","24.67","2053.95054533344",NA,"0.5468","39.0384601654922",NA
-"13","FLUME_20230808_SW_1130","17.83","1484.47256681375",NA,"SERC Lateral Flux","Flume","1130","SW",2023-08-08,"11:30","25.41","2115.56073599201",NA,"0.5719","40.830459708568",NA
-"14","FLUME_20230808_SW_1230","22.43","1867.45483306969",NA,"SERC Lateral Flux","Flume","1230","SW",2023-08-08,"12:30","27.63","2300.3913079677",NA,"0.6207","44.3145066289704",NA
-"15","FLUME_20230808_SW_1330","24.18","2013.15460827575",NA,"SERC Lateral Flux","Flume","1330","SW",2023-08-08,"13:30","28.9","2406.12771626009",NA,"0.6798","48.5339159116708",NA
-"16","FLUME_20230808_SW_1430","26.03","2167.18008492215",NA,"SERC Lateral Flux","Flume","1430","SW",2023-08-08,"14:30","31.03","2583.46515693947",NA,"0.7958","56.8156667880371",NA
-"17","FLUME_20230808_SW_1530","26.77","2228.79027558072",NA,"SERC Lateral Flux","Flume","1530","SW",2023-08-08,"15:30","31.34","2609.27483140455",NA,"0.8621","61.5491157803051",NA
-"18","FLUME_20230808_SW_1630","27.02","2249.60452918158",NA,"SERC Lateral Flux","Flume","1630","SW",2023-08-08,"16:30","31.27","2603.4468403963",NA,"0.8793","62.7770995309388",NA
-"19","FLUME_20230808_SW_1730","26.62","2216.3017234202",NA,"SERC Lateral Flux","Flume","1730","SW",2023-08-08,"17:30","31.26","2602.61427025227",NA,"0.8758","62.5272191165657",NA
-"20","FLUME_20230815_GW_1","93.88","7816.16851219715",NA,"SERC Lateral Flux","Flume","1","GW",2023-08-15,"11:30","95.66","7964.36599783532",NA,"7.927","565.943441353067","value above cal curve"
-"21","FLUME_20230815_GW_2","71.06","5916.24344351012",NA,"SERC Lateral Flux","Flume","2","GW",2023-08-15,"11:10","50.75","4225.29348097577",NA,"1.469","104.878379632604",NA
-"22","FLUME_20230815_GW_3","30.17","2511.86412455249",NA,"SERC Lateral Flux","Flume","3","GW",2023-08-15,"10:50","27.55","2293.73074681542",NA,"0.6269","44.7571519344314",NA
-"23","FLUME_20230815_GW_4","66.76","5558.23828157522",NA,"SERC Lateral Flux","Flume","4","GW",2023-08-15,"10:30","53.2","4429.27316626426",NA,"1.308","93.3838805714408",NA
-"24","FLUME_20230815_GW_5","61.92","5155.27433186246",NA,"SERC Lateral Flux","Flume","5","GW",2023-08-15,"10:11","73.39","6110.23228707019",NA,"3.08","219.894764648347","value above cal curve"
-"25","FLUME_20230815_GW_6","61.06","5083.67329947548",NA,"SERC Lateral Flux","Flume","6","GW",2023-08-15,"9:44","49.62","4131.21305469986",NA,"1.043","74.4643634831902",NA
-"26","FLUME_20230816_GW_T1_NW5","27.92","2324.5358421447",NA,"SERC Lateral Flux","Flume","T1","GW",2023-08-16,"11:00","5.562","463.075514112064",NA,"0.2516","17.9628320732221",NA
-"27","FLUME_20230816_GW_T2_NW1","17.43","1451.16976105237",NA,"SERC Lateral Flux","Flume","T2","GW",2023-08-16,"12:00","1.19","99.0758471401216",NA,"0.09205","6.57185489801309",NA
-"28","FLUME_20230816_SW_0530","18.09","1506.11939055865",NA,"SERC Lateral Flux","Flume","0530","SW",2023-08-16,"5:30","22.63","1884.10623595038",NA,"0.4809","34.3335689348669",NA
-"29","FLUME_20230816_SW_0630","18.46","1536.92448588794",NA,"SERC Lateral Flux","Flume","0630","SW",2023-08-16,"6:30","22.83","1900.75763883107",NA,"0.4976","35.5258554834472",NA
-"30","FLUME_20230816_SW_0730","20.41","1699.27566397469",NA,"SERC Lateral Flux","Flume","0730","SW",2023-08-16,"7:30","24.57","2045.6248438931",NA,"0.584","41.694331998258",NA
-"31","FLUME_20230816_SW_0830","21.96","1828.32403630006",NA,"SERC Lateral Flux","Flume","0830","SW",2023-08-16,"8:30","27.13","2258.76280076596",NA,"0.6335","45.228355001535",NA
-"32","FLUME_20230816_SW_0930","24.27","2020.64773957206",NA,"SERC Lateral Flux","Flume","0930","SW",2023-08-16,"9:30","29.7","2472.73332778287",NA,"0.6723","47.9984578808713",NA
-"33","FLUME_20230816_SW_1030","27.51","2290.40046623928",NA,"SERC Lateral Flux","Flume","1030","SW",2023-08-16,"10:30","32.44","2700.85754724836",NA,"0.7255","51.7966401793427",NA
-"34","FLUME_20230816_SW_1130","30.44","2534.34351844143",NA,"SERC Lateral Flux","Flume","1130","SW",2023-08-16,"11:30","34.81","2898.17667138456",NA,"0.7991","57.051268321589",NA
-"35","FLUME_20230816_SW_1230","31.12","2590.95828823578",NA,"SERC Lateral Flux","Flume","1230","SW",2023-08-16,"12:30","35.86","2985.5965365082",NA,"0.8427","60.164064340637",NA
-"36","FLUME_20230816_SW_1330","31.94","2659.22904004662",NA,"SERC Lateral Flux","Flume","1330","SW",2023-08-16,"13:30","35.49","2954.79144117892",NA,"0.7829","55.8946789750619",NA
-"37","FLUME_20230816_SW_1430","27.24","2267.92107235035",NA,"SERC Lateral Flux","Flume","1430","SW",2023-08-16,"14:30","33.29","2771.6260094913",NA,"0.7155","51.0826961382767",NA
-"38","FLUME_20230816_SW_1530","26.71","2223.79485471651",NA,"SERC Lateral Flux","Flume","1530","SW",2023-08-16,"15:30","32.73","2725.00208142536",NA,"0.7281","51.9822656300199",NA
-"39","FLUME_20230816_SW_1630","25.83","2150.52868204146",NA,"SERC Lateral Flux","Flume","1630","SW",2023-08-16,"16:30","31.86","2652.56847889435",NA,"0.6897","49.2407205123262",NA
-"40","FLUME_20230816_SW_1730","23.7","1973.19124136208",NA,"SERC Lateral Flux","Flume","1730","SW",2023-08-16,"17:30","29.01","2415.28598784448",NA,"0.6464","46.1493428145102",NA
-"41","FLUME_20240208_GW_1","43.66","3635.00124885522",NA,"SERC Lateral Flux","Flume","1","GW",2024-02-08,"12:45","5.504","458.246607276663",NA,"3.794","270.870369180464","value above cal curve"
-"42","FLUME_20240208_GW_2","57","4745.64982099742",NA,"SERC Lateral Flux","Flume","2","GW",2024-02-08,"13:45","5.464","454.916326700525",NA,"1.62","115.658934652702",NA
-"43","FLUME_20240208_GW_3","14","1165.59820164849",NA,"SERC Lateral Flux","Flume","3","GW",2024-02-08,"14:45","3.243","270.002497710432",NA,"0.5481","39.1312728908308",NA
-"44","FLUME_20240208_GW_4","25.24","2101.40704354342",NA,"SERC Lateral Flux","Flume","4","GW",2024-02-08,"15:45","3.654","304.221130630256",NA,"0.7795","55.6519380010995",NA
-"45","FLUME_20240208_GW_5","13.28","1105.653151278",NA,"SERC Lateral Flux","Flume","5","GW",2024-02-08,"16:45","3.471","288.985096994422",NA,"0.4599","32.8342864486282",NA
-"46","FLUME_20240208_SW_0900","10","832.570144034635",NA,"SERC Lateral Flux","Flume","0900","SW",2024-02-08,"9:00","3.596","299.392223794855",NA,"0.2855","20.383102372436",NA
-"47","FLUME_20240208_SW_1000","9.717","809.008408958455",NA,"SERC Lateral Flux","Flume","1000","SW",2024-02-08,"10:00","3.624","301.723420198152",NA,"0.2462","17.5773022910464",NA
-"48","FLUME_20240208_SW_1000","9.717","809.008408958455",NA,"SERC Lateral Flux","Flume","1000","SW",2024-02-08,"10:00","3.935","327.616351677629",NA,"0.3286","23.4602011894308",NA
-"49","FLUME_20240208_SW_1100","6.938","577.63716593123",NA,"SERC Lateral Flux","Flume","1100","SW",2024-02-08,"11:00","4.066","338.523020564483",NA,"0.4917","35.1046284992182",NA
-"50","FLUME_20240208_SW_1100","6.938","577.63716593123",NA,"SERC Lateral Flux","Flume","1100","SW",2024-02-08,"11:00","3.077","256.181833319457",NA,"0.4761","33.9908757951552",NA
-"51","FLUME_20240208_SW_1200","9.502","791.10815086171",NA,"SERC Lateral Flux","Flume","1200","SW",2024-02-08,"12:00","3.716","309.38306552327",NA,"0.6109","43.6148414687257",NA
-"52","FLUME_20240208_SW_1200","9.502","791.10815086171",NA,"SERC Lateral Flux","Flume","1200","SW",2024-02-08,"12:00","3.406","283.573391058197",NA,"0.4947","35.318811711538",NA
-"53","FLUME_20240208_SW_1300","9.457","787.361585213554",NA,"SERC Lateral Flux","Flume","1300","SW",2024-02-08,"13:00","3.353","279.160769294813",NA,"0.5275","37.6605481662347",NA
-"54","FLUME_20240208_SW_1300","9.457","787.361585213554",NA,"SERC Lateral Flux","Flume","1300","SW",2024-02-08,"13:00","3.495","290.983265340105",NA,"0.5984","42.7224114173931",NA
-"55","FLUME_20240208_SW_1400","9.902","824.410956623096",NA,"SERC Lateral Flux","Flume","1400","SW",2024-02-08,"14:00","3.227","268.670385479977",NA,"0.5434","38.7957191915298",NA
-"56","FLUME_20240208_SW_1500","10.02","834.235284322704",NA,"SERC Lateral Flux","Flume","1500","SW",2024-02-08,"15:00","3.088","257.097660477895",NA,"0.637","45.4782354159081",NA
-"57","FLUME_20240208_SW_1600","9.893","823.661643493464",NA,"SERC Lateral Flux","Flume","1600","SW",2024-02-08,"16:00","3.241","269.835983681625",NA,"0.6197","44.2431122248638",NA
-"58","FLUME_20240208_SW_1700","9.954","828.740321372076",NA,"SERC Lateral Flux","Flume","1700","SW",2024-02-08,"17:00","3.16","263.092165514945",NA,"0.5741","40.9875273976026",NA
-"59","FLUME_20240208_SW_1800","9.828","818.249937557239",NA,"SERC Lateral Flux","Flume","1800","SW",2024-02-08,"18:00","3.406","283.573391058197",NA,"0.5348","38.181727316213",NA
-"60","FLUME_20240208_SW_1900","9.957","828.990092415286",NA,"SERC Lateral Flux","Flume","1900","SW",2024-02-08,"19:00","3.654","304.221130630256",NA,"0.5042","35.9970585505508",NA
-"61","FLUME_20240208_SW_2000","9.66","804.262759137457",NA,"SERC Lateral Flux","Flume","2000","SW",2024-02-08,"20:00","3.769","313.795687286654",NA,"0.4557","32.5344299513804",NA
-"62","FLUME_20240208_SW_2100","9.828","818.249937557239",NA,"SERC Lateral Flux","Flume","2100","SW",2024-02-08,"21:00","3.73","310.548663724919",NA,"0.3587","25.6091727530396",NA
-"63","FLUME_20240208_SW_2200",NA,NA,NA,"SERC Lateral Flux","Flume","2200","SW",2024-02-08,"22:00","3.628","302.056448255766",NA,"0.2617","18.6839155546988",NA
-"64","FLUME_20240208_SW_2300",NA,NA,NA,"SERC Lateral Flux","Flume","2300","SW",2024-02-08,"23:00","3.637","302.805761385397",NA,"0.2701","19.2836285491943",NA
-"65","FLUME_20240208_SW_2400",NA,NA,NA,"SERC Lateral Flux","Flume","2400","SW",2024-02-09,"0:00","3.45","287.236699691949",NA,"0.4552","32.4987327493271",NA
-"66","FLUME_20240209_FW_1","23.25","1935.72558488053",NA,"SERC Lateral Flux","Flume","1","FW",2024-02-09,"12:15","1.136","94.5799683623345",NA,"0.1189","8.48879464827547",NA
-"67","FLUME_20240209_FW_2","25.13","2092.24877195904",NA,"SERC Lateral Flux","Flume","2","FW",2024-02-09,"11:45","1.31","109.066688868537",NA,"0.02417","1.72560274725667",NA
-"68","FLUME_20240209_SW_0000",NA,NA,NA,"SERC Lateral Flux","Flume","0000","SW",2024-02-09,"1:00","3.327","276.996086920323",NA,"0.5977","42.6724353345185",NA
-"69","FLUME_20240209_SW_0100",NA,NA,NA,"SERC Lateral Flux","Flume","0100","SW",2024-02-09,"2:00","3.386","281.908250770127",NA,"0.5869","41.9013757701671",NA
-"70","FLUME_20240209_SW_0200",NA,NA,NA,"SERC Lateral Flux","Flume","0200","SW",2024-02-09,"3:00","3.196","266.089418033469",NA,"0.6095","43.5148893029764",NA
-"71","FLUME_20240209_SW_0300",NA,NA,NA,"SERC Lateral Flux","Flume","0300","SW",2024-02-09,"4:00","3.32","276.413287819499",NA,"0.586","41.8371208064712",NA
-"72","FLUME_20240209_SW_0400",NA,NA,NA,"SERC Lateral Flux","Flume","0400","SW",2024-02-09,"5:00","3.456","287.73624177837",NA,"0.6074","43.3649610543526",NA
-"73","FLUME_20240209_SW_0500",NA,NA,NA,"SERC Lateral Flux","Flume","0500","SW",NA,NA,"3.623","301.640163183748",NA,"0.4884","34.8690269656664",NA
-"74","FLUME_20240209_SW_0600",NA,NA,NA,"SERC Lateral Flux","Flume","0600","SW",NA,NA,"3.605","300.141536924486",NA,"0.4213","30.0784624501132",NA
-"75","FLUME_20240209_SW_0700",NA,NA,NA,"SERC Lateral Flux","Flume","0700","SW",NA,NA,"3.622","301.556906169345",NA,"0.3559","25.4092684215411",NA
-"76","FLUME_20240215_FS_1","31.96","2660.89418033469",NA,"SERC Lateral Flux","Flume","1","FS",2024-02-16,"10:15","1.239","103.155440845891",NA,"0.4104","29.3002634453512",NA
-"77","FLUME_20240215_FW_1","23.81","1982.34951294647",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"78","FLUME_20240215_FW_2","26.13","2175.5057863625",NA,"SERC Lateral Flux","Flume","2","FW",2024-02-16,"10:00","4.02","334.693197901923",NA,"1.009","72.0369537435656",NA
-"79","FLUME_20240215_GW_1","44.6","3713.26284239447",NA,"SERC Lateral Flux","Flume","1","GW",2024-02-15,"8:45","5.85","487.053534260261",NA,"3.688","263.302562345163","value above cal curve"
-"80","FLUME_20240215_GW_2","76.46","6365.83132128882",NA,"SERC Lateral Flux","Flume","2","GW",2024-02-15,"9:45","7.849","653.484306052785",NA,"2.644","188.766804457867",NA
-"81","FLUME_20240215_GW_4","28.64","2384.48089251519",NA,"SERC Lateral Flux","Flume","4","GW",2024-02-15,"10:45","4.075","339.272333694114",NA,"1.123","80.1759158117187",NA
-"82","FLUME_20240215_GW_6","25.82","2149.69611189743",NA,"SERC Lateral Flux","Flume","6","GW",2024-02-15,"11:45","3.985","331.779202397802",NA,"0.7072","50.4901225841919",NA
-"83","FLUME_20240215_SW_0800","8.984","747.981017400716",NA,"SERC Lateral Flux","Flume","0800","SW",2024-02-15,"8:00","3.788","315.37757056032",NA,"0.4757","33.9623180335125",NA
-"84","FLUME_20240215_SW_0900","9.004","749.646157688785",NA,"SERC Lateral Flux","Flume","0900","SW",2024-02-15,"9:00","3.526","293.564232786612",NA,"0.3969","28.336438989912",NA
-"85","FLUME_20240215_SW_1000","8.24","686.037798684539",NA,"SERC Lateral Flux","Flume","1000","SW",2024-02-15,"10:00","3.774","314.211972358671",NA,"0.4384","31.2993067603361",NA
-"86","FLUME_20240215_SW_1100","9.883","822.82907334943",NA,"SERC Lateral Flux","Flume","1100","SW",2024-02-15,"11:00","3.757","312.796603113812",NA,"0.4805","34.3050111732242",NA
-"87","FLUME_20240215_SW_1200","10.07","838.398135042877",NA,"SERC Lateral Flux","Flume","1200","SW",2024-02-15,"12:00","3.819","317.958538006827",NA,"0.4395","31.3778406048534",NA
-"88","FLUME_20240215_SW_1300","9.667","804.845558238282",NA,"SERC Lateral Flux","Flume","1300","SW",2024-02-15,"13:00","4.056","337.690450420448",NA,"0.4104","29.3002634453512",NA
-"89","FLUME_20240215_SW_1400","9.553","795.354258596287",NA,"SERC Lateral Flux","Flume","1400","SW",2024-02-15,"14:00","4.166","346.848722004829",NA,"0.4292","30.6424782425553",NA
-"90","FLUME_20240215_SW_1500","9.681","806.01115643993",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"91","FLUME_20240215_SW_1600","9.831","818.49970860045",NA,"SERC Lateral Flux","Flume","1600","SW",2024-02-15,"16:00","3.966","330.197319124136",NA,"0.7234","51.6467119307189",NA
-"92","FLUME_20240215_SW_1700","10.02","834.235284322704",NA,"SERC Lateral Flux","Flume","1700","SW",2024-02-15,"17:00","3.877","322.787444842228",NA,"0.8576","61.2278409618254",NA
-"93","FLUME_20240215_SW_1800","10.49","873.366081092332",NA,"SERC Lateral Flux","Flume","1800","SW",2024-02-15,"18:00","3.297","274.498376488219",NA,"0.9914","70.7804122312893",NA
-"94","FLUME_20240215_SW_1900","10.67","888.352343684955",NA,"SERC Lateral Flux","Flume","1900","SW",2024-02-15,"19:00","3.105","258.513029722754",NA,"0.9366","66.8679988862473",NA
-"95","FLUME_20240216_FW_1",NA,NA,NA,"SERC Lateral Flux","Flume","1","FW",2024-02-16,"8:45","0.9676","80.5594871367913",NA,"0.324","23.1317869305404",NA
-"96","LATT_GCW_EST_20240718_1046","17.68","1471.98401465323",NA,"COMPASS: Synoptic",NA,"EST","Endmember",2024-07-18,"10:46","4.444","369.994172008992",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"97","LATT_GCW_EST_20240718_1521","17.61","1466.15602364499",NA,"COMPASS: Synoptic",NA,"EST","Endmember",2024-07-18,"15:21","4.494","374.157022729165",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"98","LATT_GCW_EST1_20240715_1730","17.55","1461.16060278078",NA,"COMPASS: Synoptic",NA,"ESTUARY1","Endmember",2024-07-15,"17:30","4.66","387.97768712014",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"99","LATT_GCW_EST2_20240715_1730","17.23","1434.51835817168",NA,"COMPASS: Synoptic",NA,"ESTUARY2","Endmember",2024-07-15,"17:30","4.634","385.81300474565",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"100","LATT_GCW_EST3_20240715_1730","17.21","1432.85321788361",NA,"COMPASS: Synoptic",NA,"ESTUARY3","Endmember",2024-07-15,"17:30","4.443","369.910914994588",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"101","LATT_GCW_T1_20240715_1100","20.35","1694.28024311048",NA,"COMPASS: Synoptic",NA,"T1","SW",2024-07-15,"11:00","6.998","582.632586795438",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"102","LATT_GCW_T10","28.17","2345.35009574557",NA,"COMPASS: Synoptic",NA,"T10","SW",NA,NA,"10.96","912.49687786196",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"103","LATT_GCW_T11","23.69","1972.35867121805",NA,"COMPASS: Synoptic",NA,"T11","SW",NA,NA,"9.172","763.633336108567",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"104","LATT_GCW_T12","23.04","1918.2416118558",NA,"COMPASS: Synoptic",NA,"T12","SW",NA,NA,"8.497","707.434851386229",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"105","LATT_GCW_T13","20.38","1696.77795354259",NA,"COMPASS: Synoptic",NA,"T13","SW",NA,NA,"6.521","542.918990924985",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"106","LATT_GCW_T14","20.17","1679.29398051786",NA,"COMPASS: Synoptic",NA,"T14","SW",NA,NA,"6.145","511.614353509283",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"107","LATT_GCW_T15","19.84","1651.81916576472",NA,"COMPASS: Synoptic",NA,"T15","SW",NA,NA,"5.951","495.462492715011",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"108","LATT_GCW_T16","19.6","1631.83748230788",NA,"COMPASS: Synoptic",NA,"T16","SW",NA,NA,"6.049","503.621680126551",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"109","LATT_GCW_T17","20.27","1687.61968195821",NA,"COMPASS: Synoptic",NA,"T17","SW",NA,NA,"6.228","518.524685704771",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"110","LATT_GCW_T18","21.12","1758.38814420115",NA,"COMPASS: Synoptic",NA,"T18","SW",NA,NA,"6.505","541.58687869453",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"111","LATT_GCW_T19","21.28","1771.7092665057",NA,"COMPASS: Synoptic",NA,"T19","SW",NA,NA,"7.12","592.78994255266",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"112","LATT_GCW_T2_20240715_1200","21.15","1760.88585463325",NA,"COMPASS: Synoptic",NA,"T2","SW",2024-07-15,"12:00","8.731","726.91699275664",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"113","LATT_GCW_T20","21.64","1801.68179169095",NA,"COMPASS: Synoptic",NA,"T20","SW",NA,NA,"7.578","630.921655149446",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"114","LATT_GCW_T21","21.29","1772.54183664974",NA,"COMPASS: Synoptic",NA,"T21","SW",NA,NA,"7.542","627.924402630922",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"115","LATT_GCW_T22","22.25","1852.46857047706",NA,"COMPASS: Synoptic",NA,"T22","SW",NA,NA,"8.075","672.300391307968",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"116","LATT_GCW_T23","20.71","1724.25276829573",NA,"COMPASS: Synoptic",NA,"T23","SW",NA,NA,"7.658","637.582216301724",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"117","LATT_GCW_T24","20.48","1705.10365498293",NA,"COMPASS: Synoptic",NA,"T24","SW",NA,NA,"6.644","553.159603696611",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"118","LATT_GCW_T25","20.43","1700.94080426276",NA,"COMPASS: Synoptic",NA,"T25","SW",NA,NA,"6.662","554.658229955874",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"119","LATT_GCW_T26","19.65","1636.00033302806",NA,"COMPASS: Synoptic",NA,"T26","SW",NA,NA,"6.429","535.259345599867",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"120","LATT_GCW_T27","20.27","1687.61968195821",NA,"COMPASS: Synoptic",NA,"T27","SW",NA,NA,"6.602","549.662809091666",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"121","LATT_GCW_T28","19.54","1626.84206144368",NA,"COMPASS: Synoptic",NA,"T28","SW",NA,NA,"7.14","594.455082840729",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"122","LATT_GCW_T29","21.42","1783.36524852219",NA,"COMPASS: Synoptic",NA,"T29","SW",NA,NA,"8.063","671.301307135126",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"123","LATT_GCW_T3","21.81","1815.83548413954",NA,"COMPASS: Synoptic",NA,"T3","SW",NA,NA,"0.09314","7.75455832153859","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"124","LATT_GCW_T30","21.31","1774.20697693781",NA,"COMPASS: Synoptic",NA,"T30","SW",NA,NA,"8.587","714.927982682541",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"125","LATT_GCW_T31","22.55","1877.4456747981",NA,"COMPASS: Synoptic",NA,"T31","SW",NA,NA,"8.915","742.236283406877",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"126","LATT_GCW_T32","24.32","2024.81059029223",NA,"COMPASS: Synoptic",NA,"T32","SW",NA,NA,"9.247","769.877612188827",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"127","LATT_GCW_T33","25.89","2155.52410290567",NA,"COMPASS: Synoptic",NA,"T33","SW",NA,NA,"9.56","795.937057697111",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"128","LATT_GCW_T34","27.11","2257.0976604779",NA,"COMPASS: Synoptic",NA,"T34","SW",NA,NA,"10.02","834.235284322704",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"129","LATT_GCW_T35","24.36","2028.14087086837",NA,"COMPASS: Synoptic",NA,"T35","SW",NA,NA,"8.754","728.831904087919",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"130","LATT_GCW_T36","22.29","1855.7988510532",NA,"COMPASS: Synoptic",NA,"T36","SW",NA,NA,"7.501","624.51086504038",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"131","LATT_GCW_T37","20.34","1693.44767296645",NA,"COMPASS: Synoptic",NA,"T37","SW",NA,NA,"6.383","531.429522937308",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"132","LATT_GCW_T38","20.1","1673.46598950962",NA,"COMPASS: Synoptic",NA,"T38","SW",NA,NA,"6.167","513.446007826159",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"133","LATT_GCW_T39","20.14","1676.79627008575",NA,"COMPASS: Synoptic",NA,"T39","SW",NA,NA,"6.043","503.12213804013",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"134","LATT_GCW_T4","22.28","1854.96628090917",NA,"COMPASS: Synoptic",NA,"T4","SW",NA,NA,"0.1118","9.30813421030722","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"135","LATT_GCW_T40","20.3","1690.11739239031",NA,"COMPASS: Synoptic",NA,"T40","SW",NA,NA,"6.085","506.618932645075",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"136","LATT_GCW_T41","20.24","1685.1219715261",NA,"COMPASS: Synoptic",NA,"T41","SW",NA,NA,"6.012","500.541170593623",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"137","LATT_GCW_T42","21.16","1761.71842477729",NA,"COMPASS: Synoptic",NA,"T42","SW",NA,NA,"6.515","542.419448838565",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"138","LATT_GCW_T43","21.55","1794.18866039464",NA,"COMPASS: Synoptic",NA,"T43","SW",NA,NA,"6.763","563.067188410624",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"139","LATT_GCW_T44","21.89","1822.49604529182",NA,"COMPASS: Synoptic",NA,"T44","SW",NA,NA,"7.317","609.191574390142",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"140","LATT_GCW_T45","22.39","1864.12455249355",NA,"COMPASS: Synoptic",NA,"T45","SW",NA,NA,"7.542","627.924402630922",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"141","LATT_GCW_T46","22.67","1887.43651652652",NA,"COMPASS: Synoptic",NA,"T46","SW",NA,NA,"7.827","651.652651735909",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"142","LATT_GCW_T47","22.12","1841.64515860461",NA,"COMPASS: Synoptic",NA,"T47","SW",NA,NA,"8.28","689.368079260678",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"143","LATT_GCW_T48","23.03","1917.40904171176",NA,"COMPASS: Synoptic",NA,"T48","SW",NA,NA,"8.369","696.777953542586",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"144","LATT_GCW_T49","22.37","1862.45941220548",NA,"COMPASS: Synoptic",NA,"T49","SW",NA,NA,"7.765","646.490716842894",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"145","LATT_GCW_T5","22.83","1900.75763883107",NA,"COMPASS: Synoptic",NA,"T5","SW",NA,NA,"0.101","8.40895845474981","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"146","LATT_GCW_T50","20.83","1734.24361002414",NA,"COMPASS: Synoptic",NA,"T50","SW",NA,NA,"6.422","534.676546499043",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"147","LATT_GCW_T51","21.01","1749.22987261677",NA,"COMPASS: Synoptic",NA,"T51","SW",NA,NA,"6.619","551.078178336525",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"148","LATT_GCW_T52","20.81","1732.57846973608",NA,"COMPASS: Synoptic",NA,"T52","SW",NA,NA,"7.687","639.996669719424",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"149","LATT_GCW_T53","20.27","1687.61968195821",NA,"COMPASS: Synoptic",NA,"T53","SW",NA,NA,"7.89","656.897843643327",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"150","LATT_GCW_T54","18.96","1578.55299308967",NA,"COMPASS: Synoptic",NA,"T54","SW",NA,NA,"8.479","705.936225126967",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"151","LATT_GCW_T55","19.48","1621.84664057947",NA,"COMPASS: Synoptic",NA,"T55","SW",NA,NA,"8.786","731.49612854883",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"152","LATT_GCW_T56","21.23","1767.54641578553",NA,"COMPASS: Synoptic",NA,"T56","SW",NA,NA,"9.338","777.454000499542",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"153","LATT_GCW_T57","24.59","2047.28998418117",NA,"COMPASS: Synoptic",NA,"T57","SW",NA,NA,"9.521","792.690034135376",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"154","LATT_GCW_T58","25.19","2097.24419282325",NA,"COMPASS: Synoptic",NA,"T58","SW",NA,NA,"10.34","860.877528931813",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"155","LATT_GCW_T59","27.08","2254.59995004579",NA,"COMPASS: Synoptic",NA,"T59","SW",NA,NA,"10.4","865.87294979602",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"156","LATT_GCW_T6","24.01","1999.00091582716",NA,"COMPASS: Synoptic",NA,"T6","SW",NA,NA,"0.1496","12.4552493547581","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"157","LATT_GCW_T60","25.72","2141.37041045708",NA,"COMPASS: Synoptic",NA,"T60","SW",NA,NA,"10.74","894.180334693198",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"158","LATT_GCW_T61","13.01","1083.17375738906",NA,"COMPASS: Synoptic",NA,"T61","SW",NA,NA,"6.74","561.152277079344",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"159","LATT_GCW_T62","23.64","1968.19582049788",NA,"COMPASS: Synoptic",NA,"T62","SW",NA,NA,"8.792","731.995670635251",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"160","LATT_GCW_T63","20.18","1680.12655066189",NA,"COMPASS: Synoptic",NA,"T63","SW",NA,NA,"5.764","479.893431021564",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"161","LATT_GCW_T64","20.32","1691.78253267838",NA,"COMPASS: Synoptic",NA,"T64","SW",NA,NA,"5.677","472.650070768462",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"162","LATT_GCW_T65","20.02","1666.80542835734",NA,"COMPASS: Synoptic",NA,"T65","SW",NA,NA,"5.672","472.233785696445",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"163","LATT_GCW_T66","20.37","1695.94538339855",NA,"COMPASS: Synoptic",NA,"T66","SW",NA,NA,"5.868","488.552160519524",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"164","LATT_GCW_T67","20.34","1693.44767296645",NA,"COMPASS: Synoptic",NA,"T67","SW",NA,NA,"5.917","492.631754225293",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"165","LATT_GCW_T68","21.13","1759.22071434518",NA,"COMPASS: Synoptic",NA,"T68","SW",NA,NA,"6.705","558.238281575223",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"166","LATT_GCW_T69","21.46","1786.69552909833",NA,"COMPASS: Synoptic",NA,"T69","SW",NA,NA,"7.591","632.003996336691",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"167","LATT_GCW_T7","24.7","2056.44825576555",NA,"COMPASS: Synoptic",NA,"T7","SW",NA,NA,"9.477","789.026725501624",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"168","LATT_GCW_T70","21.44","1785.03038881026",NA,"COMPASS: Synoptic",NA,"T70","SW",NA,NA,"8.263","687.952710015819",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"169","LATT_GCW_T71","23.35","1944.05128632087",NA,"COMPASS: Synoptic",NA,"T71","SW",NA,NA,"8.706","724.835567396553",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"170","LATT_GCW_T72","24.81","2065.60652734993",NA,"COMPASS: Synoptic",NA,"T72","SW",NA,NA,"9.196","765.63150445425",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"171","LATT_GCW_T73","25.96","2161.35209391391",NA,"COMPASS: Synoptic",NA,"T73","SW",NA,NA,"9.724","809.591208059279",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"172","LATT_GCW_T74","27.59","2297.06102739156",NA,"COMPASS: Synoptic",NA,"T74","SW",NA,NA,"10.41","866.705519940055",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"173","LATT_GCW_T75","25.31","2107.23503455166",NA,"COMPASS: Synoptic",NA,"T75","SW",NA,NA,"9.446","786.445758055116",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"174","LATT_GCW_T76","24.19","2013.98717841978",NA,"COMPASS: Synoptic",NA,"T76","SW",NA,NA,"10.03","835.067854466739",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"175","LATT_GCW_T77","25.28","2104.73732411956",NA,"COMPASS: Synoptic",NA,"T77","SW",NA,NA,"9.491","790.192323703272",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"176","LATT_GCW_T78","26.89","2238.78111730913",NA,"COMPASS: Synoptic",NA,"T78","SW",NA,NA,"10.09","840.063275330947",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"177","LATT_GCW_T79","25.9","2156.3566730497",NA,"COMPASS: Synoptic",NA,"T79","SW",NA,NA,"10.08","839.230705186912",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"178","LATT_GCW_T8",NA,NA,NA,"COMPASS: Synoptic",NA,"T8","SW",NA,NA,"10.33","860.044958787778",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"179","LATT_GCW_T80","31.79","2646.7404878861",NA,"COMPASS: Synoptic",NA,"T80","SW",NA,NA,"10.68","889.18491382899",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"180","LATT_GCW_T81","32.72","2724.16951128133",NA,"COMPASS: Synoptic",NA,"T81","SW",NA,NA,"10.68","889.18491382899",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"181","LATT_GCW_T82","37.05","3084.67238364832",NA,"COMPASS: Synoptic",NA,"T82","SW",NA,NA,"10.93","909.999167429856",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"182","LATT_GCW_T83","41.6","3463.49179918408",NA,"COMPASS: Synoptic",NA,"T83","SW",NA,NA,"11.24","935.80884189493",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"183","LATT_GCW_T84","42.06","3501.79002580967",NA,"COMPASS: Synoptic",NA,"T84","SW",NA,NA,"10.96","912.49687786196",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"184","LATT_GCW_T85","43.61","3630.83839813504",NA,"COMPASS: Synoptic",NA,"T85","SW",NA,NA,"11.06","920.822579302306",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"185","LATT_GCW_T86","41.33","3441.01240529515",NA,"COMPASS: Synoptic",NA,"T86","SW",NA,NA,"10.86","904.171176421614",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"186","LATT_GCW_T87","26.81","2232.12055615686",NA,"COMPASS: Synoptic",NA,"T87","SW",NA,NA,"8.077","672.466905336775",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"187","LATT_GCW_T88","24.97","2078.92764965448",NA,"COMPASS: Synoptic",NA,"T88","SW",NA,NA,"7.605","633.16959453834",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"188","LATT_GCW_T89","23.19","1930.73016401632",NA,"COMPASS: Synoptic",NA,"T89","SW",NA,NA,"6.829","568.562151361252",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"189","LATT_GCW_T9","28.94","2409.45799683623",NA,"COMPASS: Synoptic",NA,"T9","SW",NA,NA,"10.74","894.180334693198",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"190","LATT_GCW_T90","22.04","1834.98459745234",NA,"COMPASS: Synoptic",NA,"T90","SW",NA,NA,"6.476","539.17242527683",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"191","LATT_GCW_T91","22.42","1866.62226292565",NA,"COMPASS: Synoptic",NA,"T91","SW",NA,NA,"6.675","555.740571143119",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"192","LATT_GCW_T92","22.03","1834.1520273083",NA,"COMPASS: Synoptic",NA,"T92","SW",NA,NA,"6.714","558.987594704854",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"193","LATT_GCW_T93","23.06","1919.90675214387",NA,"COMPASS: Synoptic",NA,"T93","SW",NA,NA,"7.173","597.202564316044",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"194","LATT_GCW_T94","24.01","1999.00091582716",NA,"COMPASS: Synoptic",NA,"T94","SW",NA,NA,"7.535","627.341603530097",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"195","LATT_GCW_TR1_20240715_1530",NA,NA,NA,"COMPASS: Synoptic",NA,"TR1","Endmember",2024-07-15,"15:30","17.27","1437.84863874781",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"196","LATT_GCW_TR2_20240717_1130",NA,NA,NA,"COMPASS: Synoptic",NA,"TR2","Endmember",2024-07-17,"11:30","14.45","1203.06385813005",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"197","LATT_GCW_UP1-FW1_20240715_1500","10.57","880.026642244609",NA,"COMPASS: Synoptic",NA,"UP1-FW1","Endmember",2024-07-15,"15:00","1.968","163.849804346016",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range"
-"198","LATT_GCW_UP2-FW1_20240715_1515","14.03","1168.09591208059",NA,"COMPASS: Synoptic",NA,"UP2-FW1","Endmember",2024-07-15,"15:15","1.318","109.732744983765","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range"
-"199","LATT_GCW_WC1_20240715_1600","117.4","9774.37349096662",NA,"COMPASS: Synoptic",NA,"WC1","Endmember",2024-07-15,"16:00","12.43","1034.88468903505",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"200","LATT_GCW_WC2_20240715_1630","124.2","10340.5211889102",NA,"COMPASS: Synoptic",NA,"WC2","Endmember",2024-07-15,"16:30","13.44","1118.97427358255",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value"
-"201","LATT_GCW_WE1_20240715_1650","82.53","6871.20139871784",NA,"COMPASS: Synoptic",NA,"WE1-GW2","Endmember",2024-07-15,"16:50","8.946","744.817250853384",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"202","LATT_GCW_WE2_20240715_1730","83.74","6971.94238614603",NA,"COMPASS: Synoptic",NA,"WE2-GW2","Endmember",2024-07-15,"17:30","8.934","743.818166680543",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"203","LATT_GCW_WE3_20240718_0730","42.7","3555.07451502789",NA,"COMPASS: Synoptic",NA,"WE3-GW3","Endmember",2024-07-18,"07:30","7.249","603.530097410707",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
-"204","LATT_GCW_WE4_20240718_0745","56.79","4728.16584797269",NA,"COMPASS: Synoptic",NA,"WE4-GW4","Endmember",2024-07-18,"07:45","6.964","579.80184830572",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve"
+"Sample_ID","Sample_Type","Date","Time_Local","Time_EST","npoc_mgL","npoc_uM","npoc_flag","tdn_mgL","tdn_uM","tdn_flag","ic_mgL","ic_uM","ic_flag"
+"FLUME_20230807_GW_1","GW",2023-08-07,"8:15","7:15","75.47","6283.40687702939",NA,"6.759","482.554777356551","value above cal curve","71.98","5992.8398967613",NA
+"FLUME_20230807_GW_2","GW",2023-08-07,"8:50","7:50","38.19","3179.58538006827",NA,"0.892","63.6838084630927",NA,"48.1","4004.66239280659",NA
+"FLUME_20230807_GW_3","GW",2023-08-07,"9:20","8:20","27.07","2253.76737990176",NA,"0.5365","38.3030978031942",NA,"25.95","2160.51952376988",NA
+"FLUME_20230807_GW_4","GW",2023-08-07,"9:45","8:45","51.1","4254.43343601699",NA,"1.306","93.2410917632276",NA,"62.51","5204.3959703605",NA
+"FLUME_20230807_GW_5","GW",2023-08-07,"10:30","9:30","36.48","3037.21588543835",NA,"0.9222","65.8399194671122",NA,"30.03","2500.20814253601",NA
+"FLUME_20230807_GW_6","GW",2023-08-07,"11:10","10:10","27.97","2328.69869286487",NA,"0.5904","42.1512561845403",NA,"25.54","2126.38414786446",NA
+"FLUME_20230808_SW_0530","SW",2023-08-08,"5:30","4:30","23.36","1944.88385646491",NA,"0.5607","40.0308423825741",NA,"18.03","1501.12396969445",NA
+"FLUME_20230808_SW_0630","SW",2023-08-08,"6:30","5:30","23.57","1962.36782948963",NA,"0.5764","41.1517345270478",NA,"18.3","1523.60336358338",NA
+"FLUME_20230808_SW_0730","SW",2023-08-08,"7:30","6:30","19.03","1584.38098409791",NA,"0.516","36.8395125190088",NA,"13.14","1093.99716926151",NA
+"FLUME_20230808_SW_0830","SW",2023-08-08,"8:30","7:30","19.31","1607.69294813088",NA,"0.5036","35.9542219080869",NA,"13.33","1109.81600199817",NA
+"FLUME_20230808_SW_0930","SW",2023-08-08,"9:30","8:30","23.84","1984.84722337857",NA,"0.5866","41.8799574489352",NA,"17.65","1469.48630422113",NA
+"FLUME_20230808_SW_1030","SW",2023-08-08,"10:30","9:30","24.67","2053.95054533344",NA,"0.5468","39.0384601654922",NA,"19.14","1593.53925568229",NA
+"FLUME_20230808_SW_1130","SW",2023-08-08,"11:30","10:30","25.41","2115.56073599201",NA,"0.5719","40.830459708568",NA,"17.83","1484.47256681375",NA
+"FLUME_20230808_SW_1230","SW",2023-08-08,"12:30","11:30","27.63","2300.3913079677",NA,"0.6207","44.3145066289704",NA,"22.43","1867.45483306969",NA
+"FLUME_20230808_SW_1330","SW",2023-08-08,"13:30","12:30","28.9","2406.12771626009",NA,"0.6798","48.5339159116708",NA,"24.18","2013.15460827575",NA
+"FLUME_20230808_SW_1430","SW",2023-08-08,"14:30","13:30","31.03","2583.46515693947",NA,"0.7958","56.8156667880371",NA,"26.03","2167.18008492215",NA
+"FLUME_20230808_SW_1530","SW",2023-08-08,"15:30","14:30","31.34","2609.27483140455",NA,"0.8621","61.5491157803051",NA,"26.77","2228.79027558072",NA
+"FLUME_20230808_SW_1630","SW",2023-08-08,"16:30","15:30","31.27","2603.4468403963",NA,"0.8793","62.7770995309388",NA,"27.02","2249.60452918158",NA
+"FLUME_20230808_SW_1730","SW",2023-08-08,"17:30","16:30","31.26","2602.61427025227",NA,"0.8758","62.5272191165657",NA,"26.62","2216.3017234202",NA
+"FLUME_20230815_GW_1","GW",2023-08-15,"11:30","10:30","95.66","7964.36599783532",NA,"7.927","565.943441353067","value above cal curve","93.88","7816.16851219715",NA
+"FLUME_20230815_GW_2","GW",2023-08-15,"11:10","10:10","50.75","4225.29348097577",NA,"1.469","104.878379632604",NA,"71.06","5916.24344351012",NA
+"FLUME_20230815_GW_3","GW",2023-08-15,"10:50","9:50","27.55","2293.73074681542",NA,"0.6269","44.7571519344314",NA,"30.17","2511.86412455249",NA
+"FLUME_20230815_GW_4","GW",2023-08-15,"10:30","9:30","53.2","4429.27316626426",NA,"1.308","93.3838805714408",NA,"66.76","5558.23828157522",NA
+"FLUME_20230815_GW_5","GW",2023-08-15,"10:11","9:11","73.39","6110.23228707019",NA,"3.08","219.894764648347","value above cal curve","61.92","5155.27433186246",NA
+"FLUME_20230815_GW_6","GW",2023-08-15,"9:44","8:44","49.62","4131.21305469986",NA,"1.043","74.4643634831902",NA,"61.06","5083.67329947548",NA
+"FLUME_20230816_GW_T1_NW5","GW",2023-08-16,"11:00","10:00","5.562","463.075514112064",NA,"0.2516","17.9628320732221",NA,"27.92","2324.5358421447",NA
+"FLUME_20230816_GW_T2_NW1","GW",2023-08-16,"12:00","11:00","1.19","99.0758471401216",NA,"0.09205","6.57185489801309",NA,"17.43","1451.16976105237",NA
+"FLUME_20230816_SW_0530","SW",2023-08-16,"5:30","4:30","22.63","1884.10623595038",NA,"0.4809","34.3335689348669",NA,"18.09","1506.11939055865",NA
+"FLUME_20230816_SW_0630","SW",2023-08-16,"6:30","5:30","22.83","1900.75763883107",NA,"0.4976","35.5258554834472",NA,"18.46","1536.92448588794",NA
+"FLUME_20230816_SW_0730","SW",2023-08-16,"7:30","6:30","24.57","2045.6248438931",NA,"0.584","41.694331998258",NA,"20.41","1699.27566397469",NA
+"FLUME_20230816_SW_0830","SW",2023-08-16,"8:30","7:30","27.13","2258.76280076596",NA,"0.6335","45.228355001535",NA,"21.96","1828.32403630006",NA
+"FLUME_20230816_SW_0930","SW",2023-08-16,"9:30","8:30","29.7","2472.73332778287",NA,"0.6723","47.9984578808713",NA,"24.27","2020.64773957206",NA
+"FLUME_20230816_SW_1030","SW",2023-08-16,"10:30","9:30","32.44","2700.85754724836",NA,"0.7255","51.7966401793427",NA,"27.51","2290.40046623928",NA
+"FLUME_20230816_SW_1130","SW",2023-08-16,"11:30","10:30","34.81","2898.17667138456",NA,"0.7991","57.051268321589",NA,"30.44","2534.34351844143",NA
+"FLUME_20230816_SW_1230","SW",2023-08-16,"12:30","11:30","35.86","2985.5965365082",NA,"0.8427","60.164064340637",NA,"31.12","2590.95828823578",NA
+"FLUME_20230816_SW_1330","SW",2023-08-16,"13:30","12:30","35.49","2954.79144117892",NA,"0.7829","55.8946789750619",NA,"31.94","2659.22904004662",NA
+"FLUME_20230816_SW_1430","SW",2023-08-16,"14:30","13:30","33.29","2771.6260094913",NA,"0.7155","51.0826961382767",NA,"27.24","2267.92107235035",NA
+"FLUME_20230816_SW_1530","SW",2023-08-16,"15:30","14:30","32.73","2725.00208142536",NA,"0.7281","51.9822656300199",NA,"26.71","2223.79485471651",NA
+"FLUME_20230816_SW_1630","SW",2023-08-16,"16:30","15:30","31.86","2652.56847889435",NA,"0.6897","49.2407205123262",NA,"25.83","2150.52868204146",NA
+"FLUME_20230816_SW_1730","SW",2023-08-16,"17:30","16:30","29.01","2415.28598784448",NA,"0.6464","46.1493428145102",NA,"23.7","1973.19124136208",NA
+"FLUME_20240208_GW_1","GW",2024-02-08,"12:45","13:45","5.504","458.246607276663",NA,"3.794","270.870369180464","value above cal curve","43.66","3635.00124885522",NA
+"FLUME_20240208_GW_2","GW",2024-02-08,"13:45","14:45","5.464","454.916326700525",NA,"1.62","115.658934652702",NA,"57","4745.64982099742",NA
+"FLUME_20240208_GW_3","GW",2024-02-08,"14:45","15:45","3.243","270.002497710432",NA,"0.5481","39.1312728908308",NA,"14","1165.59820164849",NA
+"FLUME_20240208_GW_4","GW",2024-02-08,"15:45","16:45","3.654","304.221130630256",NA,"0.7795","55.6519380010995",NA,"25.24","2101.40704354342",NA
+"FLUME_20240208_GW_5","GW",2024-02-08,"16:45","17:45","3.471","288.985096994422",NA,"0.4599","32.8342864486282",NA,"13.28","1105.653151278",NA
+"FLUME_20240208_SW_0900","SW",2024-02-08,"9:00","9:00","3.596","299.392223794855",NA,"0.2855","20.383102372436",NA,"10","832.570144034635",NA
+"FLUME_20240208_SW_1000","SW",2024-02-08,"10:00","10:00","3.624","301.723420198152",NA,"0.2462","17.5773022910464",NA,"9.717","809.008408958455",NA
+"FLUME_20240208_SW_1000","SW",2024-02-08,"10:00","10:00","3.935","327.616351677629",NA,"0.3286","23.4602011894308",NA,"9.717","809.008408958455",NA
+"FLUME_20240208_SW_1100","SW",2024-02-08,"11:00","11:00","4.066","338.523020564483",NA,"0.4917","35.1046284992182",NA,"6.938","577.63716593123",NA
+"FLUME_20240208_SW_1100","SW",2024-02-08,"11:00","11:00","3.077","256.181833319457",NA,"0.4761","33.9908757951552",NA,"6.938","577.63716593123",NA
+"FLUME_20240208_SW_1200","SW",2024-02-08,"12:00","12:00","3.716","309.38306552327",NA,"0.6109","43.6148414687257",NA,"9.502","791.10815086171",NA
+"FLUME_20240208_SW_1200","SW",2024-02-08,"12:00","12:00","3.406","283.573391058197",NA,"0.4947","35.318811711538",NA,"9.502","791.10815086171",NA
+"FLUME_20240208_SW_1300","SW",2024-02-08,"13:00","13:00","3.353","279.160769294813",NA,"0.5275","37.6605481662347",NA,"9.457","787.361585213554",NA
+"FLUME_20240208_SW_1300","SW",2024-02-08,"13:00","13:00","3.495","290.983265340105",NA,"0.5984","42.7224114173931",NA,"9.457","787.361585213554",NA
+"FLUME_20240208_SW_1400","SW",2024-02-08,"14:00","14:00","3.227","268.670385479977",NA,"0.5434","38.7957191915298",NA,"9.902","824.410956623096",NA
+"FLUME_20240208_SW_1500","SW",2024-02-08,"15:00","15:00","3.088","257.097660477895",NA,"0.637","45.4782354159081",NA,"10.02","834.235284322704",NA
+"FLUME_20240208_SW_1600","SW",2024-02-08,"16:00","16:00","3.241","269.835983681625",NA,"0.6197","44.2431122248638",NA,"9.893","823.661643493464",NA
+"FLUME_20240208_SW_1700","SW",2024-02-08,"17:00","17:00","3.16","263.092165514945",NA,"0.5741","40.9875273976026",NA,"9.954","828.740321372076",NA
+"FLUME_20240208_SW_1800","SW",2024-02-08,"18:00","18:00","3.406","283.573391058197",NA,"0.5348","38.181727316213",NA,"9.828","818.249937557239",NA
+"FLUME_20240208_SW_1900","SW",2024-02-08,"19:00","19:00","3.654","304.221130630256",NA,"0.5042","35.9970585505508",NA,"9.957","828.990092415286",NA
+"FLUME_20240208_SW_2000","SW",2024-02-08,"20:00","20:00","3.769","313.795687286654",NA,"0.4557","32.5344299513804",NA,"9.66","804.262759137457",NA
+"FLUME_20240208_SW_2100","SW",2024-02-08,"21:00","21:00","3.73","310.548663724919",NA,"0.3587","25.6091727530396",NA,"9.828","818.249937557239",NA
+"FLUME_20240208_SW_2200","SW",2024-02-08,"22:00","22:00","3.628","302.056448255766",NA,"0.2617","18.6839155546988",NA,NA,NA,NA
+"FLUME_20240208_SW_2300","SW",2024-02-08,"23:00","23:00","3.637","302.805761385397",NA,"0.2701","19.2836285491943",NA,NA,NA,NA
+"FLUME_20240208_SW_2400","SW",2024-02-09,"0:00","0:00","3.45","287.236699691949",NA,"0.4552","32.4987327493271",NA,NA,NA,NA
+"FLUME_20240209_FW_1","FW",2024-02-09,"12:15","13:15","1.136","94.5799683623345",NA,"0.1189","8.48879464827547",NA,"23.25","1935.72558488053",NA
+"FLUME_20240209_FW_2","FW",2024-02-09,"11:45","12:45","1.31","109.066688868537",NA,"0.02417","1.72560274725667",NA,"25.13","2092.24877195904",NA
+"FLUME_20240209_SW_0000","SW",2024-02-09,"1:00","1:00","3.327","276.996086920323",NA,"0.5977","42.6724353345185",NA,NA,NA,NA
+"FLUME_20240209_SW_0100","SW",2024-02-09,"2:00","2:00","3.386","281.908250770127",NA,"0.5869","41.9013757701671",NA,NA,NA,NA
+"FLUME_20240209_SW_0200","SW",2024-02-09,"3:00","3:00","3.196","266.089418033469",NA,"0.6095","43.5148893029764",NA,NA,NA,NA
+"FLUME_20240209_SW_0300","SW",2024-02-09,"4:00","4:00","3.32","276.413287819499",NA,"0.586","41.8371208064712",NA,NA,NA,NA
+"FLUME_20240209_SW_0400","SW",2024-02-09,"5:00","5:00","3.456","287.73624177837",NA,"0.6074","43.3649610543526",NA,NA,NA,NA
+"FLUME_20240209_SW_0500","SW",2024-02-09,NA,NA,"3.623","301.640163183748",NA,"0.4884","34.8690269656664",NA,NA,NA,NA
+"FLUME_20240209_SW_0600","SW",2024-02-09,NA,NA,"3.605","300.141536924486",NA,"0.4213","30.0784624501132",NA,NA,NA,NA
+"FLUME_20240209_SW_0700","SW",2024-02-09,NA,NA,"3.622","301.556906169345",NA,"0.3559","25.4092684215411",NA,NA,NA,NA
+"FLUME_20240215_FS_1","FS",2024-02-15,"10:15","10:15","1.239","103.155440845891",NA,"0.4104","29.3002634453512",NA,"31.96","2660.89418033469",NA
+"FLUME_20240215_FW_1","FW",2024-02-15,NA,NA,NA,NA,NA,NA,NA,NA,"23.81","1982.34951294647",NA
+"FLUME_20240215_FW_2","FW",2024-02-15,"10:00","10:00","4.02","334.693197901923",NA,"1.009","72.0369537435656",NA,"26.13","2175.5057863625",NA
+"FLUME_20240215_GW_1","GW",2024-02-15,"8:45","8:45","5.85","487.053534260261",NA,"3.688","263.302562345163","value above cal curve","44.6","3713.26284239447",NA
+"FLUME_20240215_GW_2","GW",2024-02-15,"9:45","9:45","7.849","653.484306052785",NA,"2.644","188.766804457867",NA,"76.46","6365.83132128882",NA
+"FLUME_20240215_GW_4","GW",2024-02-15,"10:45","10:45","4.075","339.272333694114",NA,"1.123","80.1759158117187",NA,"28.64","2384.48089251519",NA
+"FLUME_20240215_GW_6","GW",2024-02-15,"11:45","11:45","3.985","331.779202397802",NA,"0.7072","50.4901225841919",NA,"25.82","2149.69611189743",NA
+"FLUME_20240215_SW_0800","SW",2024-02-15,"8:00","8:00","3.788","315.37757056032",NA,"0.4757","33.9623180335125",NA,"8.984","747.981017400716",NA
+"FLUME_20240215_SW_0900","SW",2024-02-15,"9:00","9:00","3.526","293.564232786612",NA,"0.3969","28.336438989912",NA,"9.004","749.646157688785",NA
+"FLUME_20240215_SW_1000","SW",2024-02-15,"10:00","10:00","3.774","314.211972358671",NA,"0.4384","31.2993067603361",NA,"8.24","686.037798684539",NA
+"FLUME_20240215_SW_1100","SW",2024-02-15,"11:00","11:00","3.757","312.796603113812",NA,"0.4805","34.3050111732242",NA,"9.883","822.82907334943",NA
+"FLUME_20240215_SW_1200","SW",2024-02-15,"12:00","12:00","3.819","317.958538006827",NA,"0.4395","31.3778406048534",NA,"10.07","838.398135042877",NA
+"FLUME_20240215_SW_1300","SW",2024-02-15,"13:00","13:00","4.056","337.690450420448",NA,"0.4104","29.3002634453512",NA,"9.667","804.845558238282",NA
+"FLUME_20240215_SW_1400","SW",2024-02-15,"14:00","14:00","4.166","346.848722004829",NA,"0.4292","30.6424782425553",NA,"9.553","795.354258596287",NA
+"FLUME_20240215_SW_1500","SW",2024-02-15,NA,NA,NA,NA,NA,NA,NA,NA,"9.681","806.01115643993",NA
+"FLUME_20240215_SW_1600","SW",2024-02-15,"16:00","16:00","3.966","330.197319124136",NA,"0.7234","51.6467119307189",NA,"9.831","818.49970860045",NA
+"FLUME_20240215_SW_1700","SW",2024-02-15,"17:00","17:00","3.877","322.787444842228",NA,"0.8576","61.2278409618254",NA,"10.02","834.235284322704",NA
+"FLUME_20240215_SW_1800","SW",2024-02-15,"18:00","18:00","3.297","274.498376488219",NA,"0.9914","70.7804122312893",NA,"10.49","873.366081092332",NA
+"FLUME_20240215_SW_1900","SW",2024-02-15,"19:00","19:00","3.105","258.513029722754",NA,"0.9366","66.8679988862473",NA,"10.67","888.352343684955",NA
+"FLUME_20240216_FW_1","FW",2024-02-16,"8:45","8:45","0.9676","80.5594871367913",NA,"0.324","23.1317869305404",NA,NA,NA,NA
+"LATT_GCW_EST_20240718_1046","Endmember",2024-07-18,"10:46",NA,"4.444","369.994172008992",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","17.68","1471.98401465323",NA
+"LATT_GCW_EST_20240718_1521","Endmember",2024-07-18,"15:21",NA,"4.494","374.157022729165",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","17.61","1466.15602364499",NA
+"LATT_GCW_EST1_20240715_1730","Endmember",2024-07-15,"17:30",NA,"4.66","387.97768712014",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","17.55","1461.16060278078",NA
+"LATT_GCW_EST2_20240715_1730","Endmember",2024-07-15,"17:30",NA,"4.634","385.81300474565",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","17.23","1434.51835817168",NA
+"LATT_GCW_EST3_20240715_1730","Endmember",2024-07-15,"17:30",NA,"4.443","369.910914994588",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","17.21","1432.85321788361",NA
+"LATT_GCW_T1","SW",2024-07-15,"11:00",NA,"6.998","582.632586795438",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.35","1694.28024311048",NA
+"LATT_GCW_T10","SW",NA,NA,NA,"10.96","912.49687786196",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","28.17","2345.35009574557",NA
+"LATT_GCW_T11","SW",NA,NA,NA,"9.172","763.633336108567",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","23.69","1972.35867121805",NA
+"LATT_GCW_T12","SW",NA,NA,NA,"8.497","707.434851386229",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","23.04","1918.2416118558",NA
+"LATT_GCW_T13","SW",NA,NA,NA,"6.521","542.918990924985",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.38","1696.77795354259",NA
+"LATT_GCW_T14","SW",NA,NA,NA,"6.145","511.614353509283",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.17","1679.29398051786",NA
+"LATT_GCW_T15","SW",NA,NA,NA,"5.951","495.462492715011",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","19.84","1651.81916576472",NA
+"LATT_GCW_T16","SW",NA,NA,NA,"6.049","503.621680126551",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","19.6","1631.83748230788",NA
+"LATT_GCW_T17","SW",NA,NA,NA,"6.228","518.524685704771",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.27","1687.61968195821",NA
+"LATT_GCW_T18","SW",NA,NA,NA,"6.505","541.58687869453",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.12","1758.38814420115",NA
+"LATT_GCW_T19","SW",NA,NA,NA,"7.12","592.78994255266",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","21.28","1771.7092665057",NA
+"LATT_GCW_T2","SW",2024-07-15,"12:00",NA,"8.731","726.91699275664",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.15","1760.88585463325",NA
+"LATT_GCW_T20","SW",NA,NA,NA,"7.578","630.921655149446",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.64","1801.68179169095",NA
+"LATT_GCW_T21","SW",NA,NA,NA,"7.542","627.924402630922",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.29","1772.54183664974",NA
+"LATT_GCW_T22","SW",NA,NA,NA,"8.075","672.300391307968",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.25","1852.46857047706",NA
+"LATT_GCW_T23","SW",NA,NA,NA,"7.658","637.582216301724",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.71","1724.25276829573",NA
+"LATT_GCW_T24","SW",NA,NA,NA,"6.644","553.159603696611",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.48","1705.10365498293",NA
+"LATT_GCW_T25","SW",NA,NA,NA,"6.662","554.658229955874",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.43","1700.94080426276",NA
+"LATT_GCW_T26","SW",NA,NA,NA,"6.429","535.259345599867",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","19.65","1636.00033302806",NA
+"LATT_GCW_T27","SW",NA,NA,NA,"6.602","549.662809091666",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.27","1687.61968195821",NA
+"LATT_GCW_T28","SW",NA,NA,NA,"7.14","594.455082840729",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","19.54","1626.84206144368",NA
+"LATT_GCW_T29","SW",NA,NA,NA,"8.063","671.301307135126",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.42","1783.36524852219",NA
+"LATT_GCW_T3","SW",NA,NA,NA,"0.09314","7.75455832153859","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.81","1815.83548413954",NA
+"LATT_GCW_T30","SW",NA,NA,NA,"8.587","714.927982682541",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.31","1774.20697693781",NA
+"LATT_GCW_T31","SW",NA,NA,NA,"8.915","742.236283406877",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.55","1877.4456747981",NA
+"LATT_GCW_T32","SW",NA,NA,NA,"9.247","769.877612188827",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","24.32","2024.81059029223",NA
+"LATT_GCW_T33","SW",NA,NA,NA,"9.56","795.937057697111",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","25.89","2155.52410290567",NA
+"LATT_GCW_T34","SW",NA,NA,NA,"10.02","834.235284322704",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","27.11","2257.0976604779",NA
+"LATT_GCW_T35","SW",NA,NA,NA,"8.754","728.831904087919",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","24.36","2028.14087086837",NA
+"LATT_GCW_T36","SW",NA,NA,NA,"7.501","624.51086504038",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.29","1855.7988510532",NA
+"LATT_GCW_T37","SW",NA,NA,NA,"6.383","531.429522937308",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.34","1693.44767296645",NA
+"LATT_GCW_T38","SW",NA,NA,NA,"6.167","513.446007826159",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.1","1673.46598950962",NA
+"LATT_GCW_T39","SW",NA,NA,NA,"6.043","503.12213804013",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.14","1676.79627008575",NA
+"LATT_GCW_T4","SW",NA,NA,NA,"0.1118","9.30813421030722","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.28","1854.96628090917",NA
+"LATT_GCW_T40","SW",NA,NA,NA,"6.085","506.618932645075",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.3","1690.11739239031",NA
+"LATT_GCW_T41","SW",NA,NA,NA,"6.012","500.541170593623",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.24","1685.1219715261",NA
+"LATT_GCW_T42","SW",NA,NA,NA,"6.515","542.419448838565",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.16","1761.71842477729",NA
+"LATT_GCW_T43","SW",NA,NA,NA,"6.763","563.067188410624",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","21.55","1794.18866039464",NA
+"LATT_GCW_T44","SW",NA,NA,NA,"7.317","609.191574390142",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.89","1822.49604529182",NA
+"LATT_GCW_T45","SW",NA,NA,NA,"7.542","627.924402630922",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.39","1864.12455249355",NA
+"LATT_GCW_T46","SW",NA,NA,NA,"7.827","651.652651735909",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.67","1887.43651652652",NA
+"LATT_GCW_T47","SW",NA,NA,NA,"8.28","689.368079260678",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.12","1841.64515860461",NA
+"LATT_GCW_T48","SW",NA,NA,NA,"8.369","696.777953542586",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","23.03","1917.40904171176",NA
+"LATT_GCW_T49","SW",NA,NA,NA,"7.765","646.490716842894",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.37","1862.45941220548",NA
+"LATT_GCW_T5","SW",NA,NA,NA,"0.101","8.40895845474981","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.83","1900.75763883107",NA
+"LATT_GCW_T50","SW",NA,NA,NA,"6.422","534.676546499043",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.83","1734.24361002414",NA
+"LATT_GCW_T51","SW",NA,NA,NA,"6.619","551.078178336525",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.01","1749.22987261677",NA
+"LATT_GCW_T52","SW",NA,NA,NA,"7.687","639.996669719424",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.81","1732.57846973608",NA
+"LATT_GCW_T53","SW",NA,NA,NA,"7.89","656.897843643327",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.27","1687.61968195821",NA
+"LATT_GCW_T54","SW",NA,NA,NA,"8.479","705.936225126967",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","18.96","1578.55299308967",NA
+"LATT_GCW_T55","SW",NA,NA,NA,"8.786","731.49612854883",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","19.48","1621.84664057947",NA
+"LATT_GCW_T56","SW",NA,NA,NA,"9.338","777.454000499542",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","21.23","1767.54641578553",NA
+"LATT_GCW_T57","SW",NA,NA,NA,"9.521","792.690034135376",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","24.59","2047.28998418117",NA
+"LATT_GCW_T58","SW",NA,NA,NA,"10.34","860.877528931813",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","25.19","2097.24419282325",NA
+"LATT_GCW_T59","SW",NA,NA,NA,"10.4","865.87294979602",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","27.08","2254.59995004579",NA
+"LATT_GCW_T6","SW",NA,NA,NA,"0.1496","12.4552493547581","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","24.01","1999.00091582716",NA
+"LATT_GCW_T60","SW",NA,NA,NA,"10.74","894.180334693198",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","25.72","2141.37041045708",NA
+"LATT_GCW_T61","SW",NA,NA,NA,"6.74","561.152277079344",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","13.01","1083.17375738906",NA
+"LATT_GCW_T62","SW",NA,NA,NA,"8.792","731.995670635251",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","23.64","1968.19582049788",NA
+"LATT_GCW_T63","SW",NA,NA,NA,"5.764","479.893431021564",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.18","1680.12655066189",NA
+"LATT_GCW_T64","SW",NA,NA,NA,"5.677","472.650070768462",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.32","1691.78253267838",NA
+"LATT_GCW_T65","SW",NA,NA,NA,"5.672","472.233785696445",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.02","1666.80542835734",NA
+"LATT_GCW_T66","SW",NA,NA,NA,"5.868","488.552160519524",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","20.37","1695.94538339855",NA
+"LATT_GCW_T67","SW",NA,NA,NA,"5.917","492.631754225293",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","20.34","1693.44767296645",NA
+"LATT_GCW_T68","SW",NA,NA,NA,"6.705","558.238281575223",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","21.13","1759.22071434518",NA
+"LATT_GCW_T69","SW",NA,NA,NA,"7.591","632.003996336691",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","21.46","1786.69552909833",NA
+"LATT_GCW_T7","SW",NA,NA,NA,"9.477","789.026725501624",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","24.7","2056.44825576555",NA
+"LATT_GCW_T70","SW",NA,NA,NA,"8.263","687.952710015819",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","21.44","1785.03038881026",NA
+"LATT_GCW_T71","SW",NA,NA,NA,"8.706","724.835567396553",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","23.35","1944.05128632087",NA
+"LATT_GCW_T72","SW",NA,NA,NA,"9.196","765.63150445425",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","24.81","2065.60652734993",NA
+"LATT_GCW_T73","SW",NA,NA,NA,"9.724","809.591208059279",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","25.96","2161.35209391391",NA
+"LATT_GCW_T74","SW",NA,NA,NA,"10.41","866.705519940055",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","27.59","2297.06102739156",NA
+"LATT_GCW_T75","SW",NA,NA,NA,"9.446","786.445758055116",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","25.31","2107.23503455166",NA
+"LATT_GCW_T76","SW",NA,NA,NA,"10.03","835.067854466739",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","24.19","2013.98717841978",NA
+"LATT_GCW_T77","SW",NA,NA,NA,"9.491","790.192323703272",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","25.28","2104.73732411956",NA
+"LATT_GCW_T78","SW",NA,NA,NA,"10.09","840.063275330947",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","26.89","2238.78111730913",NA
+"LATT_GCW_T79","SW",NA,NA,NA,"10.08","839.230705186912",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","25.9","2156.3566730497",NA
+"LATT_GCW_T8","SW",NA,NA,NA,"10.33","860.044958787778",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA,NA,NA
+"LATT_GCW_T80","SW",NA,NA,NA,"10.68","889.18491382899",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","31.79","2646.7404878861",NA
+"LATT_GCW_T81","SW",NA,NA,NA,"10.68","889.18491382899",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","32.72","2724.16951128133",NA
+"LATT_GCW_T82","SW",NA,NA,NA,"10.93","909.999167429856",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","37.05","3084.67238364832",NA
+"LATT_GCW_T83","SW",NA,NA,NA,"11.24","935.80884189493",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","41.6","3463.49179918408",NA
+"LATT_GCW_T84","SW",NA,NA,NA,"10.96","912.49687786196",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","42.06","3501.79002580967",NA
+"LATT_GCW_T85","SW",NA,NA,NA,"11.06","920.822579302306",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","43.61","3630.83839813504",NA
+"LATT_GCW_T86","SW",NA,NA,NA,"10.86","904.171176421614",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","41.33","3441.01240529515",NA
+"LATT_GCW_T87","SW",NA,NA,NA,"8.077","672.466905336775",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","26.81","2232.12055615686",NA
+"LATT_GCW_T88","SW",NA,NA,NA,"7.605","633.16959453834",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","24.97","2078.92764965448",NA
+"LATT_GCW_T89","SW",NA,NA,NA,"6.829","568.562151361252",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","23.19","1930.73016401632",NA
+"LATT_GCW_T9","SW",NA,NA,NA,"10.74","894.180334693198",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","28.94","2409.45799683623",NA
+"LATT_GCW_T90","SW",NA,NA,NA,"6.476","539.17242527683",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.04","1834.98459745234",NA
+"LATT_GCW_T91","SW",NA,NA,NA,"6.675","555.740571143119",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","22.42","1866.62226292565",NA
+"LATT_GCW_T92","SW",NA,NA,NA,"6.714","558.987594704854",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","22.03","1834.1520273083",NA
+"LATT_GCW_T93","SW",NA,NA,NA,"7.173","597.202564316044",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","23.06","1919.90675214387",NA
+"LATT_GCW_T94","SW",NA,NA,NA,"7.535","627.341603530097",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","24.01","1999.00091582716",NA
+"LATT_GCW_TR1_20240715_1530","Endmember",2024-07-15,"15:30",NA,"17.27","1437.84863874781",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA,NA,NA
+"LATT_GCW_TR2_20240717_1130","Endmember",2024-07-17,"11:30",NA,"14.45","1203.06385813005",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA,NA,NA
+"LATT_GCW_UP1-FW1_20240715_1500","Endmember",2024-07-15,"15:00",NA,"1.968","163.849804346016",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range","10.57","880.026642244609",NA
+"LATT_GCW_UP2-FW1_20240715_1515","Endmember",2024-07-15,"15:15",NA,"1.318","109.732744983765","blank is> 25% of sample value",NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range","14.03","1168.09591208059",NA
+"LATT_GCW_WC1_20240715_1600","Endmember",2024-07-15,"16:00",NA,"12.43","1034.88468903505",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","117.4","9774.37349096662",NA
+"LATT_GCW_WC2_20240715_1630","Endmember",2024-07-15,"16:30",NA,"13.44","1118.97427358255",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","124.2","10340.5211889102",NA
+"LATT_GCW_WE1_20240715_1650","Endmember",2024-07-15,"16:50",NA,"8.946","744.817250853384",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","82.53","6871.20139871784",NA
+"LATT_GCW_WE2_20240715_1730","Endmember",2024-07-15,"17:30",NA,"8.934","743.818166680543",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","83.74","6971.94238614603",NA
+"LATT_GCW_WE3_20240718_0730","Endmember",2024-07-18,"07:30",NA,"7.249","603.530097410707",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","42.7","3555.07451502789",NA
+"LATT_GCW_WE4_20240718_0745","Endmember",2024-07-18,"07:45",NA,"6.964","579.80184830572",NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","56.79","4728.16584797269",NA
