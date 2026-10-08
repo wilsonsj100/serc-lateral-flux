@@ -62,7 +62,7 @@ DOC_data1 <- DOC_data %>%
   mutate(Sample_ID = gsub("LatT_GCW_WE2-GW2_20240715_1730", "LatT_GCW_WE2_20240715_1730", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("LatT_GCW_WE3-GW3_20240718_0730", "LatT_GCW_WE3_20240718_0730", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("LatT_GCW_WE4-GW4_20240718_0745", "LatT_GCW_WE4_20240718_0745", Sample_ID)) %>% 
-  select(Sample_ID, Project, Site, Replicate, Sample_Type, Date, Time_Local, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag) ##Select necessary columns
+  select(Sample_ID, Sample_Type, Date, Time_Local, Time_EST, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag) ##Select necessary columns
 
 ```
 
@@ -143,16 +143,30 @@ if (all_present) {
   print(missing_ids)
 }
 
-DIC_DOC <- merge(DIC_data1, DOC_data1, by = "Sample_ID", all = TRUE)
+##Merge DIC and DOC data
+DIC_DOC <- merge(DOC_data1, DIC_data1, by = "Sample_ID", all = TRUE)
+
+##Add missing metadata
+DIC_DOC <- DIC_DOC %>% 
+  mutate(Date = case_when(
+    str_detect(Sample_ID, "20240209") ~ as.Date("2024-02-09"), 
+    str_detect(Sample_ID, "20240215") ~ as.Date("2024-02-15"), 
+    TRUE ~ Date)) %>% 
+  mutate(Sample_Type = case_when(
+    str_detect(Sample_ID, "FLUME_20240215_SW_1500") ~ "SW", 
+    str_detect(Sample_ID, "FLUME_20240215_FW_1") ~ "FW", 
+    TRUE ~ Sample_Type)) %>% 
+  mutate(Sample_ID = gsub("LATT_GCW_T1_20240715_1100", "LATT_GCW_T1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("LATT_GCW_T2_20240715_1200", "LATT_GCW_T2", Sample_ID))
 
 #write out all the DIC and DOC sample data 
-write.csv(DIC_DOC, "TidalSurvey_DOC_DIC.csv")
+write.csv(DIC_DOC, "TidalSurvey_DOC_DIC.csv", row.names = FALSE)
 
 ```
 
 
 #Read in and collate all the files in the TA Processed Data folder 
-```{r}
+```{#r}
 
 files <- list.files(path = "Processed_Data", pattern = "TA.*\\.csv$", full.names = TRUE, recursive = TRUE)
 files
@@ -190,7 +204,7 @@ TA_data1 <- TA_data %>%
 ```
 
 ##Combine dataframes
-```{r combine bottle data}
+```{#r combine bottle data}
 
 DIC_DOC <- merge(DIC_data1, DOC_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
 DIC_DOC_TA <- merge(DIC_DOC, TA_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
@@ -219,10 +233,10 @@ all_data <- DIC_DOC_TA %>%
 
 
 ## Write the 2023 file out to the folder 
-```{r, echo=FALSE}
+```{#r, echo=FALSE}
 
 #write out all the lysimeter sample data 
-write.csv(all_data, "FATE_DOC_DIC_TA.csv")
+write.csv(all_data, "FATE_DOC_DIC_TA.csv", row.names = FALSE)
 
 ```
 
