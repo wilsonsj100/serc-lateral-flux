@@ -1,0 +1,117 @@
+---
+title: "NEON Data Collation"
+author: "Zoe Read"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+If Released data are used, include:
+Precip: 
+NEON (National Ecological Observatory Network). Precipitation - throughfall (DP1.00046.001), RELEASE-2026. https://doi.org/10.48443/43q7-9670. Dataset accessed from https://data.neonscience.org/data-products/DP1.00046.001/RELEASE-2026 on October 8, 2026.
+
+RH: 
+NEON (National Ecological Observatory Network). Relative humidity (DP1.00098.001), RELEASE-2026. https://doi.org/10.48443/kjyf-eq90. Dataset accessed from https://data.neonscience.org/data-products/DP1.00098.001/RELEASE-2026 on October 8, 2026.
+
+```{r setup, include=FALSE}
+##Requried packages
+library(dplyr)
+```
+
+#Process the precip data
+```{r}
+
+##Zip file downloaded from NEON website
+zip_file <- "NEON_precip-tipping.zip"
+
+# List files inside ZIP
+files <- unzip(zip_file, list = TRUE)$Name
+
+# Filter for the CSV files you want
+files <- files[grepl("TIPPRE_1min.*\\.csv$", files)]
+
+# Read each CSV directly from ZIP
+data_list <- lapply(files, function(f) {
+  df <- read.csv(
+    unz(zip_file, f),
+    stringsAsFactors = FALSE
+  )
+  return(df)
+})
+
+# Combine all files
+precip_data <- bind_rows(data_list)
+
+##Filter out data flagged in QAQC
+precip_QC <- precip_data %>%
+    filter(finalQF != 1) #%>% 
+#   filter(validCalQF != -1) %>% 
+#   filter(suspectCalQF != -1) %>% 
+#   filter(extremePrecipQF != -1) %>% 
+#   filter(finalQFSciRvw != -1)
+
+##Select required timestamps and columns
+precip_data1 <- precip_QC %>% 
+  rename(precipBulk_mm = precipBulk) %>%  
+  mutate(startDateTime =  with_tz(ymd_hms(startDateTime), 
+                            tzone = "America/New_York")) %>% #2023-07-29T21:09:00Z
+  filter(startDateTime >= "2023-01-01 00:00:00") %>% 
+  filter(startDateTime <= "2025-12-31 23:23:59") %>% 
+  select(startDateTime, endDateTime, precipBulk_mm)
+
+##Plot all precip data - some gaps
+plot(precipBulk_mm ~ startDateTime, data = precip_data1)
+
+#write out all the precip data 
+write.csv(precip_data1, "NEON_precip.csv", row.names = FALSE)
+
+```
+
+
+#Process the rh data
+```{r}
+
+zip_file <- "NEON_rel-humidity.zip"
+
+# List files inside ZIP
+files <- unzip(zip_file, list = TRUE)$Name
+
+# Filter for the CSV files you want
+files <- files[grepl("RH_1min.*\\.csv$", files)]
+
+# Read each CSV directly from ZIP
+data_list <- lapply(files, function(f) {
+  df <- read.csv(
+    unz(zip_file, f),
+    stringsAsFactors = FALSE
+  )
+  return(df)
+})
+
+# Combine all files
+rh_data <- bind_rows(data_list)
+
+##Filter out data flagged in QAQC
+rh_QC <- rh_data %>%
+    filter(RHFinalQF != 1) #%>% 
+#   filter(validCalQF != -1) %>% 
+#   filter(suspectCalQF != -1) %>% 
+#   filter(extremePrecipQF != -1) %>% 
+#   filter(finalQFSciRvw != -1)
+
+##Select required timestamps and columns
+rh_data1 <- rh_QC %>% 
+  mutate(startDateTime =  with_tz(ymd_hms(startDateTime), 
+                            tzone = "America/New_York")) %>% #2023-07-29T21:09:00Z
+  filter(startDateTime >= "2023-01-01 00:00:00") %>% 
+  filter(startDateTime <= "2025-12-31 23:23:59") %>% 
+  select(startDateTime, endDateTime, RHMean) %>% 
+  distinct()
+
+##Plot all RH data - what do about data over 100? 
+plot(RHMean ~ startDateTime, data = rh_data1)
+
+#write out all the rh data 
+write.csv(rh_data1, "NEON_rh.csv", row.names = FALSE)
+
+```
+##END
+
