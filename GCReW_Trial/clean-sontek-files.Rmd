@@ -10,7 +10,7 @@ output: html_document
 # Load necessary packages 
 require(pacman)
 p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
-       cowplot,ggpubr, plotrix, here, dplyr)
+       cowplot,ggpubr, plotrix, here, dplyr, purrr)
 
 ## Set a common timezone, so even if your computer switches timezones, everything is static
 common_tz = "Etc/GMT+5"
@@ -31,9 +31,9 @@ sontek_files <- dir(pattern = "Sontek.*\\.dat$", path = path, full.names = TRUE,
 
 ##Read in Sontek files
 combined_data <- sontek_files %>%
-  map(~ read.table(.x, header = TRUE, stringsAsFactors = FALSE, skip = 1, sep = ",")) %>%
-  rename_with(~ gsub("velocity_x_zx_l", "velocity_x_zxl", .x)) %>% 
-  rename_with(~ gsub("velocity_x_zx_r", "velocity_x_zxr", .x)) %>% 
+  map(~ read.table(.x, header = TRUE, stringsAsFactors = FALSE, skip = 1, sep = ",") %>%
+        rename_with(~ gsub("velocity_x_zx_l", "velocity_x_zxl", .x)) %>% 
+        rename_with(~ gsub("velocity_x_zx_r", "velocity_x_zxr", .x))) %>% 
   bind_rows(.id = "file_id") # .id tracks which row came from which file index
 
 ##Process Sontek files to remove rows with units, clean up column names, and set column types
@@ -97,26 +97,28 @@ sontek_subset <- sontek %>%
   ##2040 timestamps? - remove any timestamps before current time 
   filter(timestamp < now()) %>% 
   ##Select necessary columns
-  select(c(timestamp, flowrate, stage, mean_velocity, total_volume, water_depth, index_velocity, cross_area, water_temperature, system_status, velocity_x_zxc, velocity_x_zzc, velocity_x_zxl, velocity_x_zxr, batt_vol_sontek, pitch_angle, roll_angle, perc_submergance, range_water_surface, adj_water_depth, tot_vo_lpos, tot_vo_lneg, ecell, snr1, snr2, snr3, snr4, timestamp_sontek, record_sontek, sontek_id, sample_number, ice_score, datetime_raw))
-
-
-colnames(sontek_clean)
-
-##Extremely high data in 2024? 
-sontek_clean <- sontek %>% 
-  filter(timestamp < now())
-
-
-head(sontek)
-
-sontek_lite <- sontek %>%
-  select(c(timestamp, water_depth, flowrate)) 
-
-sontek_lite$flag <-  ifelse(sontek_lite$water_depth >= 2, 'OOR', 'NA')
-
-head(sontek_lite)
-
-write.csv(sontek_lite, "derived-data/sontek.csv")
-
+  select(c(timestamp, flowrate, stage, mean_velocity, total_volume, water_depth, index_velocity, cross_area, water_temperature, system_status, velocity_x_zxc, velocity_x_zzc, velocity_x_zxl, velocity_x_zxr, batt_vol_sontek, pitch_angle, roll_angle, perc_submergance, range_water_surface, adj_water_depth, tot_vo_lpos, tot_vo_lneg, ecell, snr1, snr2, snr3, snr4, record_sontek, sontek_id, sample_number, ice_score, datetime_raw))
 
 ```
+
+
+
+## Flag data that is out of instrument range
+```{r}
+
+sontek_qc <- sontek_subset %>%
+  mutate(flag = case_when(
+    water_depth >= 2 ~ "OOR", 
+    TRUE ~ NA_character_
+  ))
+
+```
+
+
+##Output QAQC'd data
+```{r}
+
+write.csv(sontek_qc, "derived-data/sontek.csv")
+
+```
+
