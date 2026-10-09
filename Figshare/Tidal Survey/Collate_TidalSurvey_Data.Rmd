@@ -56,15 +56,37 @@ DOC_data <- bind_rows(data1, data2, data3_formatted)
 
 ##Clean data
 DOC_data1 <- DOC_data %>% 
+  ##Use non-isco samples if available but if not, use isco samples
+  ##Make a column for "isco"
+  ##If n > 1 then remove the isco sample 
+  mutate(ISCO = ifelse(str_detect(Sample_ID, "isco"), "isco", NA)) %>% 
+  mutate(Sample_ID = ifelse(str_detect(Sample_ID, "isco"), gsub("_isco", "", Sample_ID), Sample_ID)) %>% 
+  group_by(Sample_ID) %>% 
+  mutate(n = n()) %>% 
+  filter(!(ISCO %in% "isco" & n == 2)) %>% 
+  summarise( 
+    npoc_mgL_sd = sd(as.numeric(npoc_mgL), na.rm = TRUE),
+    npoc_uM_sd = sd(as.numeric(npoc_uM), na.rm = TRUE),
+    npoc_mgL = mean(as.numeric(npoc_mgL), na.rm = TRUE),
+    npoc_uM = mean(as.numeric(npoc_uM), na.rm = TRUE),
+    tdn_mgL_sd = sd(as.numeric(tdn_mgL), na.rm = TRUE),
+    tdn_uM_sd = sd(as.numeric(tdn_uM), na.rm = TRUE),
+    tdn_mgL = mean(as.numeric(tdn_mgL), na.rm = TRUE),
+    tdn_uM = mean(as.numeric(tdn_uM), na.rm = TRUE),
+    
+    # Take the first value of all OTHER columns not mentioned above
+    across(-c(npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd), first),
+    
+    .groups = "drop"
+  ) %>% 
   filter(!str_detect(Sample_ID, "Pair")) %>% ##Remove paired test samples
-  filter(!str_detect(Sample_ID, "isco")) %>% ##Remove isco test samples
   filter(!str_detect(Sample_ID, "INCUB")) %>% ##Remove incubation samples
   mutate(Sample_ID = gsub("ESTUARY", "EST", Sample_ID)) %>% ##Standardize sample ids
   mutate(Sample_ID = gsub("LatT_GCW_WE1-GW2_20240715_1650", "LatT_GCW_WE1_20240715_1650", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("LatT_GCW_WE2-GW2_20240715_1730", "LatT_GCW_WE2_20240715_1730", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("LatT_GCW_WE3-GW3_20240718_0730", "LatT_GCW_WE3_20240718_0730", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("LatT_GCW_WE4-GW4_20240718_0745", "LatT_GCW_WE4_20240718_0745", Sample_ID)) %>% 
-  select(Sample_ID, Sample_Type, Date, Time_Local, Time_EST, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag) ##Select necessary columns
+  select(Sample_ID, Sample_Type, Date, Time_Local, Time_EST, npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, npoc_flag, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd, tdn_flag) ##Select necessary columns
 
 ```
 
@@ -104,8 +126,26 @@ DIC_data <- bind_rows(data1, data2, data3_formatted)
 
 ##Clean data
 DIC_data1 <- DIC_data %>% 
+  ##Use non-isco samples if available but if not, use isco samples
+  ##Make a column for "isco"
+  ##If n > 1 then remove the isco sample 
+  mutate(ISCO = ifelse(str_detect(Sample_ID, "isco"), "isco", NA)) %>% 
+  mutate(Sample_ID = ifelse(str_detect(Sample_ID, "isco"), gsub("_isco", "", Sample_ID), Sample_ID)) %>% 
+  group_by(Sample_ID) %>% 
+  mutate(n = n()) %>% 
+  filter(!(ISCO %in% "isco" & n == 2)) %>% 
+  # summarise( 
+  #   ic_mgL_sd = sd(as.numeric(ic_mgL), na.rm = TRUE),
+  #   ic_uM_sd = sd(as.numeric(ic_uM), na.rm = TRUE),
+  #   ic_mgL = mean(as.numeric(ic_mgL), na.rm = TRUE),
+  #   ic_uM = mean(as.numeric(ic_uM), na.rm = TRUE),
+  #   
+  #   # Take the first value of all OTHER columns not mentioned above
+  #   across(-c(ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd), first),
+  #   
+  #   .groups = "drop"
+  # ) %>% 
   filter(!str_detect(Sample_ID, "Pair")) %>% ##Remove paired test samples
-  filter(!str_detect(Sample_ID, "isco")) %>% ##Remove isco test samples
   filter(!str_detect(Sample_ID, "INCUB")) %>% #Remove incubation samples
   mutate(Sample_ID = gsub("20232015", "20240215", Sample_ID)) %>% ##Fix incorrectly-entered dates
   mutate(Sample_ID = gsub("20230215", "20240215", Sample_ID)) %>% 
@@ -159,16 +199,30 @@ DIC_DOC <- DIC_DOC %>%
     str_detect(Sample_ID, "FLUME_20240215_FW_1") ~ "FW", 
     TRUE ~ Sample_Type)) %>% 
   mutate(Sample_ID = gsub("LATT_GCW_T1_20240715_1100", "LATT_GCW_T1", Sample_ID)) %>% 
-  mutate(Sample_ID = gsub("LATT_GCW_T2_20240715_1200", "LATT_GCW_T2", Sample_ID))
-
-# #write out all the DIC and DOC sample data 
-# write.csv(DIC_DOC, "TidalSurvey_DOC_DIC.csv", row.names = FALSE)
+  mutate(Sample_ID = gsub("LATT_GCW_T2_20240715_1200", "LATT_GCW_T2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("EST1_20240715_1730", "EST1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("EST2_20240715_1730", "EST2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("EST3_20240715_1730", "EST3", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("EST_20240718_1046", "EST4", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("EST_20240718_1521", "EST5", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("TR1_20240715_1530", "TR1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("TR2_20240717_1130", "TR2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("UP1-FW1_20240715_1500", "UP1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("UP2-FW1_20240715_1515", "UP2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WC1_20240715_1600", "WC1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WC2_20240715_1630", "WC2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WE1_20240715_1650", "WE1", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WE2_20240715_1730", "WE2", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WE3_20240718_0730", "WE3", Sample_ID)) %>% 
+  mutate(Sample_ID = gsub("WE4_20240718_0745", "WE4", Sample_ID)) %>% 
+  	
+  mutate(Sample_ID = gsub("LATT_GCW_", "", Sample_ID))
 
 ```
 
 
 #Read in and collate all the files in the TA Processed Data folder 
-```{r}
+```{#r}
 
 files <- list.files(path = "../../Tidal_Surveys/Processed_Data", pattern = "TA.*\\.csv$", full.names = TRUE, recursive = TRUE)
 files
@@ -201,7 +255,7 @@ TA_data1 <- TA_data %>%
 ```
 
 ##Combine dataframes
-```{r combine bottle data}
+```{#r combine bottle data}
 
 DIC_DOC_TA <- merge(DIC_DOC, TA_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
 
@@ -210,23 +264,80 @@ DIC_DOC_TA <- DIC_DOC_TA %>%
 
 ```
 
-##Merge with metadata?
+##Pull in metadata
 ```{r metadata}
 
-# meta_2025 <- read.csv("../Metadata/FATE_Monitoring_Metadata_2025.csv", colClasses = "character")
-# meta_2026 <- read.csv("../Metadata/FATE_Monitoring_Metadata_2026.csv", colClasses = "character")
-# 
-# meta <- bind_rows(meta_2025, meta_2026)
-# 
-# meta1 <- meta %>% 
-#   mutate(Date = mdy(Date)) %>% 
-#   select(-c(DIC_24ml, DIC_ex_1ml, SO4.H2S_5ml, Nutr_10ml, DOC_20ml, TA_250ml))
-# 
-# all_data <- DIC_DOC_TA %>% 
-#   left_join(meta1, by = c("Date", "Time_Local", "Sample_Location"))
+files <- list.files(path = "../../Tidal_Surveys/Raw_Data", pattern = "Metadata.*\\.csv$", full.names = TRUE, recursive = TRUE)
+files
 
-final_data <- DIC_DOC_TA %>% 
-  select(Project, Date, Time_Local, Sample_Location, sample_id, ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, ic_flag, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag, TA_mmolL)
+data1 <- read_csv(files[1], col_types = cols(.default = col_character()))
+colnames(data1)
+data1_formatted <- data1 %>% 
+  mutate(Date = mdy(Date), 
+         Sample_Location = Site) %>% 
+  select(Sample_Location, Date, Time_Local, Time_EST, Sample_Type, Sample_ID, Notes)
+
+data2 <- read_csv(files[2], col_types = cols(.default = col_character()))
+colnames(data2)
+data2_formatted <- data2 %>% 
+  mutate(Date = mdy(Date), 
+         Sample_Location = Site) %>% 
+  select(Sample_Location, Date, Time_Local, Time_EST, Sample_Type, Sample_ID, Notes)
+
+data3 <- read_csv(files[3], col_types = cols(.default = col_character()))
+colnames(data3)
+data3_formatted <- data3 %>% 
+  rename(Site = site, 
+         Sample_Type = sample_type, 
+         Sample_ID= sample_id, 
+         Time_Local = time_sampled_edt, 
+         Time_EST = time_sampled_est) %>% 
+  mutate(Date = mdy(date), 
+         Sample_Location = Site) %>% 
+  select(Sample_Location, Date, Time_Local, Time_EST, Sample_Type, Sample_ID, Notes)
+
+data4 <- read_csv(files[4], col_types = cols(.default = col_character()))
+colnames(data4)
+data4_formatted <- data4 %>% 
+  rename(Time_Local = Time_collected_local, 
+         Time_EST = Time_collected_EST) %>% 
+  mutate(Date = mdy(Date_collected), 
+         Sample_Location = Site) %>% 
+  select(Sample_Location, Date, Time_Local, Time_EST, Sample_Type, Sample_ID, Notes)
+
+meta <- bind_rows(data1_formatted, data2_formatted, data3_formatted, data4_formatted)
+
+meta1 <- meta %>% 
+  filter(!str_detect(Sample_ID, "PAIR")) %>% 
+  filter(!str_detect(Sample_ID, "DOCK")) %>% 
+  filter(!str_detect(Sample_ID, "Pair")) %>% 
+  filter(!str_detect(Sample_ID, "Dock")) %>% 
+  filter(year(Date) < 2026) %>% 
+  mutate(Sample_ID = gsub("-", "", Sample_ID))
+
+```
+
+##Check if samples are in metadata
+```{r}
+
+DIC_DOC$Sample_ID <- toupper(DIC_DOC$Sample_ID)
+meta1$Sample_ID <- toupper(meta1$Sample_ID)
+
+all_present <- all(DIC_DOC$Sample_ID %in% meta1$Sample_ID)
+
+if (all_present) {
+  message("All sample IDs are present in metadata.")
+} else {
+  message("Some sample IDs are missing from metadata.")
+  
+  # Optional: Which ones are missing?
+  missing_ids <- setdiff(DIC_DOC$Sample_ID, meta1$Sample_ID)
+  print(missing_ids)
+}
+
+##Merge data
+all_data <- DIC_DOC %>%
+  left_join(meta1, by = c("Sample_ID", "Sample_Type", "Date", "Time_Local", "Time_EST"))
 
 ```
 
@@ -234,14 +345,19 @@ final_data <- DIC_DOC_TA %>%
 ## Subset data and write out collated files
 ```{r, echo=FALSE}
 
+final_data <- all_data %>% 
+  separate(Sample_ID, into = c("Loc", "DateID", "Type", "Replicate"), sep = "_", extra = "merge") %>% 
+  mutate(Replicate = ifelse(is.na(Replicate), Loc, Replicate)) %>% 
+  mutate(Sample_Location = "Flume") %>% 
+  select(Sample_Location, Sample_Type, Replicate, Date, Time_Local, Time_EST, ic_mgL, ic_uM, ic_flag, npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, npoc_flag, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd, tdn_flag, Notes)
+
+
 final_data_2023 <- subset(final_data, year(Date) == 2023)
 final_data_2024 <- subset(final_data, year(Date) == 2024)
-final_data_2025 <- subset(final_data, year(Date) == 2025)
 
 ##Write out annual data files
-write.csv(final_data_2023, "FATE_Monitoring_DIC_DOC_2023.csv", row.names = FALSE)
-write.csv(final_data_2024, "FATE_Monitoring_DIC_DOC_2024.csv", row.names = FALSE)
-write.csv(final_data_2025, "FATE_Monitoring_DIC_DOC_2025.csv", row.names = FALSE)
+write.csv(final_data_2023, "Tidal_Survey_DIC_DOC_2023.csv", row.names = FALSE)
+write.csv(final_data_2024, "Tidal_Survey_DIC_DOC_2024.csv", row.names = FALSE)
 
 ```
 
