@@ -40,7 +40,7 @@ DOC_data1 <- DOC_data %>%
 
 ```
 
-#Read in and collate all the files in the DIC Processed Data folder - some data with no timestamps? 
+#Read in and collate all the files in the DIC Processed Data folder
 ```{r}
 
 files <- list.files(path = "../../FATE Monitoring/DIC_data/Processed Data", pattern = "\\.csv$", full.names = TRUE)
@@ -82,82 +82,47 @@ DIC_data1 <- DIC_data %>%
 
 ```
 
-#Read in and collate all the files in the TA Processed Data folder 
-```{r}
-
-files <- list.files(path = "../../FATE Monitoring/TA_data", pattern = "processed.*\\.csv$", full.names = TRUE)
-
-data_list <- lapply(files, function(f) {
-  df <- read.csv(f, stringsAsFactors = FALSE)  # avoids factors
-  # df$Site <- as.character(df$Site)             # ensures character
-  return(df)
-})
-
-# Combine all files
-TA_data <- bind_rows(data_list)
-
-colnames(TA_data)
-
-##Match DIC/DOC columns names
-TA_data1 <- TA_data %>% 
-  mutate(Project = "FATE", 
-         Date = as.Date(sample_datetime), 
-         Time = substr(sample_datetime, 12, 16), 
-         location = gsub("serc_gcrew_flume", "Flume", location)) %>% 
-  rename(Sample_Location = location) %>% 
-  select(Project, Date, Time, Sample_Location, alk_umol_kgsw_avg, alk_umol_kgsw_sd, alk_mmol_l_avg, alk_mmol_l_sd, sal_ppt, h2o_temp_c, sample_datetime_utc)
-
-```
-
 ##Combine dataframes
 ```{r combine bottle data}
 
 DIC_DOC <- merge(DIC_data1, DOC_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
 DIC_DOC <- DIC_DOC %>% 
-  filter(Sample_Location != "Dock")
-
-
-DIC_DOC_TA <- merge(DIC_DOC, TA_data1, by = c("Project", "Date", "Time", "Sample_Location"), all = TRUE)
-DIC_DOC_TA <- DIC_DOC_TA %>% 
-  rename(Time_Local = Time)
-
-
-##Mismatch between DIC/DOC and TA times on 2025-08-13
-
+  filter(Sample_Location != "Dock") %>% 
+  rename(Time_Local = Time) %>% 
+  mutate(lat = 38.874861, 
+         long = -76.546472)
 
 ```
 
 ##Merge with metadata
 ```{r metadata}
-
+##Read in metadata files
 meta_2025 <- read.csv("../../FATE Monitoring/Metadata/FATE_Monitoring_Metadata_2025.csv", colClasses = "character")
 meta_2026 <- read.csv("../../FATE Monitoring/Metadata/FATE_Monitoring_Metadata_2026.csv", colClasses = "character")
 
 meta <- bind_rows(meta_2025, meta_2026)
 
+##Remove unnecessary metadata
 meta1 <- meta %>% 
   mutate(Date = mdy(Date)) %>% 
   select(-c(DIC_24ml, DIC_ex_1ml, SO4.H2S_5ml, Nutr_10ml, DOC_20ml, TA_250ml))
 
-all_data <- DIC_DOC_TA %>% 
+##Merge with metadata
+all_data <- DIC_DOC %>% 
   left_join(meta1, by = c("Date", "Time_Local", "Sample_Location"))
 
+##Select columns in order for final data output
 final_data <- all_data %>% 
-  select(Project, Date, Time_Local, Sample_Location, ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, ic_flag, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag, alk_umol_kgsw_avg, alk_umol_kgsw_sd, alk_mmol_l_avg, alk_mmol_l_sd, sal_ppt, h2o_temp_c, sample_datetime_utc)
+  select(Project, Date, Time_Local, Sample_Location, lat, long, ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, ic_flag, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag)
 
 ```
-
 
 ## Subset data and write out collated files
 ```{r, echo=FALSE}
 
-final_data_2023 <- subset(final_data, year(Date) == 2023)
-final_data_2024 <- subset(final_data, year(Date) == 2024)
 final_data_2025 <- subset(final_data, year(Date) == 2025)
 
 ##Write out annual data files
-write.csv(final_data_2023, "FATE_Monitoring_DIC_DOC_2023.csv", row.names = FALSE)
-write.csv(final_data_2024, "FATE_Monitoring_DIC_DOC_2024.csv", row.names = FALSE)
 write.csv(final_data_2025, "FATE_Monitoring_DIC_DOC_2025.csv", row.names = FALSE)
 
 ```
@@ -182,8 +147,9 @@ dd$Method_ifapplicable <- ""
 dd$Definition <-       c("Project name", 
                          "Date sample was collected (YYYY-MM-DD)", 
                          "Local time when sample was collected (HH:MM)", 
-                         "Sampling Location (Flume or Dock)", 
-                         "Sample ID", 
+                         "Sampling Location (Flume)", 
+                         "Latitude of sampling location", 
+                         "Longitude of sampling location", 
                          "Inorganic Carbon concentration mean of replicates (mg/L)", 
                          "Inorganic Carbon concentration standard deviation of replicates (mg/L)", 
                          "Inorganic Carbon concentration mean of replicates (umol/L)", 
@@ -194,20 +160,14 @@ dd$Definition <-       c("Project name",
                          "Non-Purgeable Organic Carbon flag (adl = above detection limit, bdl = below detection limit)", 
                          "Total Dissolved Nitrogen concentration (mg/L)", 
                          "Total Dissolved Nitrogen concentration (umol/L)", 
-                         "Total Dissolved Nitrogen flag (adl = above detection limit, bdl = below detection limit)", 
-                         "alk_umol_kgsw_avg", 
-                         "alk_umol_kgsw_sd", 
-                         "alk_mmol_l_avg", 
-                         "alk_mmol_l_sd", 
-                         "sal_ppt", 
-                         "h2o_temp_c", 
-                         "sample_datetime_utc")
+                         "Total Dissolved Nitrogen flag (adl = above detection limit, bdl = below detection limit)")
 
 dd$Unit <-             c("NA", 
                          "NA", 
                          "NA", 
                          "NA", 
                          "NA", 
+                         "NA", 
                          "mg/L", 
                          "mg/L", 
                          "umol/L", 
@@ -218,44 +178,32 @@ dd$Unit <-             c("NA",
                          "NA", 
                          "mg/L", 
                          "umol/L", 
-                         "NA", 
-                         "alk_umol_kgsw_avg", 
-                         "alk_umol_kgsw_sd", 
-                         "alk_mmol_l_avg", 
-                         "alk_mmol_l_sd", 
-                         "sal_ppt", 
-                         "h2o_temp_c", 
-                         "sample_datetime_utc")
+                         "NA")
 
 dd$data_type <-        c("text", 
                          "text", 
                          "text", 
                          "text", 
-                         "text", 
                          "numeric", 
                          "numeric", 
                          "numeric", 
                          "numeric", 
-                         "text", 
-                         "numeric", 
-                         "numeric", 
-                         "text", 
                          "numeric", 
                          "numeric", 
                          "text", 
-                         "alk_umol_kgsw_avg", 
-                         "alk_umol_kgsw_sd", 
-                         "alk_mmol_l_avg", 
-                         "alk_mmol_l_sd", 
-                         "sal_ppt", 
-                         "h2o_temp_c", 
-                         "sample_datetime_utc")
+                         "numeric", 
+                         "numeric", 
+                         "text", 
+                         "numeric", 
+                         "numeric", 
+                         "text")
 
 dd$Instrument_ifapplicable <-   c("NA", 
                          "NA", 
                          "NA", 
                          "NA", 
                          "NA", 
+                         "NA", 
                          "Shimadzu TOC", 
                          "Shimadzu TOC", 
                          "Shimadzu TOC", 
@@ -266,14 +214,7 @@ dd$Instrument_ifapplicable <-   c("NA",
                          "Shimadzu TOC", 
                          "Shimadzu TOC", 
                          "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "alk_umol_kgsw_avg", 
-                         "alk_umol_kgsw_sd", 
-                         "alk_mmol_l_avg", 
-                         "alk_mmol_l_sd", 
-                         "sal_ppt", 
-                         "h2o_temp_c", 
-                         "NA")
+                         "Shimadzu TOC")
 
 
 dd$Method_ifapplicable <- c("NA", 
@@ -292,12 +233,6 @@ dd$Method_ifapplicable <- c("NA",
                          "NA", 
                          "NA", 
                          "NA", 
-                         "alk_umol_kgsw_avg", 
-                         "alk_umol_kgsw_sd", 
-                         "alk_mmol_l_avg", 
-                         "alk_mmol_l_sd", 
-                         "sal_ppt", 
-                         "h2o_temp_c", 
                          "NA")
 
 

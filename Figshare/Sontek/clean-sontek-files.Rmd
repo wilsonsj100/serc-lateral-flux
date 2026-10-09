@@ -110,9 +110,12 @@ colnames(sontek_subset)
 final_data <- sontek_subset %>%
   mutate(flag = case_when(
     water_depth > 5 | water_depth < 0.05 ~ "OOR", 
-    mean_velocity > 5 | mean_velocity < -5 ~ "OOR", 
+    index_velocity > 5 | index_velocity < -5 ~ "OOR", 
     TRUE ~ NA_character_
   ))
+
+##How many are OOR?
+##Don't use water temperature from here
 
 ```
 
