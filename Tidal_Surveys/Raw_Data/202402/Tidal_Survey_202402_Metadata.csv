@@ -21,17 +21,19 @@ Tidal Survey,Flume,2/8/2024,21:00,21:00,SW,Flume_20240208_SW_2100_isco,NA,NA,NA,
 Tidal Survey,Flume,2/8/2024,22:00,22:00,SW,Flume_20240208_SW_2200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/8/2024,23:00,23:00,SW,Flume_20240208_SW_2300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/9/2024,0:00,0:00,SW,Flume_20240208_SW_2400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,1:00,1:00,SW,Flume_20240209_SW_0000,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,2:00,2:00,SW,Flume_20240209_SW_0100,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,3:00,3:00,SW,Flume_20240209_SW_0200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,4:00,4:00,SW,Flume_20240209_SW_0300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,5:00,5:00,SW,Flume_20240209_SW_0400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,0:00,0:00,SW,Flume_20240209_SW_0000,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,1:00,1:00,SW,Flume_20240209_SW_0100,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,2:00,2:00,SW,Flume_20240209_SW_0200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,3:00,3:00,SW,Flume_20240209_SW_0300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,4:00,4:00,SW,Flume_20240209_SW_0400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,5:00,5:00,SW,Flume_20240209_SW_0500,,,,,,,,,,,,,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,6:00,6:00,SW,Flume_20240209_SW_0600,,,,,,,,,,,,,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,7:00,7:00,SW,Flume_20240209_SW_0700,,,,,,,,,,,,,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/8/2024,12:45,13:45,GW,Flume_20240208_GW_1,23:24,7.54,21:36,9.5,x,x,x,x,x,x,x,1.65,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,13:45,14:45,GW,Flume_20240208_GW_2,4.09,6.76,8.6,8.8,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,14:45,15:45,GW,Flume_20240208_GW_3,NA,7.32,5.1,8.7,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,15:45,16:45,GW,Flume_20240208_GW_4,2.865,7.07,8,7.1,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,16:45,17:45,GW,Flume_20240208_GW_5,NA,NA,4.7,7,x,x,x,x,x,x,x,3.5,February: Neap Tide 
-Tidal Survey,Flume,2/8/2024,NA,NA,GW,Flume_20240208_GW_6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,February: Neap Tide 
 Tidal Survey,Flume,2/9/2024,11:45,12:45,FW,Flume_20240209_FW_2,8.269,5.93,0,11.87,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/9/2024,12:15,13:15,FW,Flume_20240209_FW_1,11.521,4.79,0,13.4,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/15/2024,8:00,8:00,SW,Flume_20240215_SW_0800,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
@@ -48,7 +50,6 @@ Tidal Survey,Flume,2/15/2024,18:00,18:00,SW,Flume_20240215_SW_1800,NA,NA,NA,NA,x
 Tidal Survey,Flume,2/15/2024,19:00,19:00,SW,Flume_20240215_SW_1900,NA,NA,NA,NA,x,x,x,x,x,x,x,22.5,February: Spring Tide 
 Tidal Survey,Flume,2/15/2024,8:45,8:45,GW,Flume_20240215_GW_1,1.535,6.76,6,8.6,x,x,x,x,x,x,x,1.225,February: Spring Tide 
 Tidal Survey,Flume,2/15/2024,9:45,9:45,GW,Flume_20240215_GW_2,0.554,6.89,10.2,7.3,x,x,x,x,x,x,x,3.7,February: Spring Tide 
-Tidal Survey,Flume,2/15/2024,NA,NA,GW,Flume_20240215_GW_3,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,February: Spring Tide 
 Tidal Survey,Flume,2/15/2024,10:45,10:45,GW,Flume_20240215_GW_4,5:42,7.01,7.7,6.9,x,x,x,x,x,x,x,3.7,February: Spring Tide 
 Tidal Survey,Flume,2/15/2024,11:45,11:45,GW,Flume_20240215_GW_6,3:25,7.14,5.4,7.3,x,x,x,x,x,x,x,3.7,February: Spring Tide 
 Tidal Survey,Flume,2/16/2024,8:45,8:45,FW,Flume_20240216_FW_1,4.001,6.43,0,11.1,x,x,x,x,x,x,x,3.7,February: Spring Tide 

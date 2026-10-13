@@ -1,69 +1,160 @@
-"Sample_Location","Sample_Type","Replicate","Date","Time_Local","Time_EST","ic_mgL","ic_uM","ic_flag","npoc_mgL","npoc_mgL_sd","npoc_uM","npoc_uM_sd","npoc_flag","tdn_mgL","tdn_mgL_sd","tdn_uM","tdn_uM_sd","tdn_flag","Notes"
-"Flume","GW","1",2024-02-08,"12:45","13:45","43.66","3635.00124885522",NA,5.504,NA,458.246607276663,NA,NA,3.794,NA,270.870369180464,NA,"value above cal curve","February: Neap Tide"
-"Flume","GW","2",2024-02-08,"13:45","14:45","57","4745.64982099742",NA,5.464,NA,454.916326700525,NA,NA,1.62,NA,115.658934652702,NA,NA,"February: Neap Tide"
-"Flume","GW","3",2024-02-08,"14:45","15:45","14","1165.59820164849",NA,3.243,NA,270.002497710432,NA,NA,0.5481,NA,39.1312728908308,NA,NA,"February: Neap Tide"
-"Flume","GW","4",2024-02-08,"15:45","16:45","25.24","2101.40704354342",NA,3.654,NA,304.221130630256,NA,NA,0.7795,NA,55.6519380010995,NA,NA,"February: Neap Tide"
-"Flume","GW","5",2024-02-08,"16:45","17:45","13.28","1105.653151278",NA,3.471,NA,288.985096994422,NA,NA,0.4599,NA,32.8342864486282,NA,NA,"February: Neap Tide"
-"Flume","SW","0900",2024-02-08,"9:00","9:00","10","832.570144034635",NA,3.596,NA,299.392223794855,NA,NA,0.2855,NA,20.383102372436,NA,NA,"February: Neap Tide"
-"Flume","SW","1000",2024-02-08,"10:00","10:00","9.717","809.008408958455",NA,3.7795,0.219910208949016,314.669885937891,18.3090674339368,NA,0.2874,0.0582655987697715,20.5187517402386,4.15983770408248,NA,"February: Neap Tide"
-"Flume","SW","1100",2024-02-08,"11:00","11:00","6.938","577.63716593123",NA,3.5715,0.699328606593495,297.35242694197,58.2240118719091,NA,0.4839,0.0110308657865101,34.5477521471867,0.787542089607804,NA,"February: Neap Tide"
-"Flume","SW","1200",2024-02-08,"12:00","12:00","9.502","791.10815086171",NA,3.561,0.21920310216783,296.478228290733,18.2501958344704,NA,0.5528,0.0821658079738768,39.4668265901318,5.86617889823281,NA,"February: Neap Tide"
-"Flume","SW","1300",2024-02-08,"13:00","13:00","9.457","787.361585213554",NA,3.424,0.10040916292849,285.072017317459,8.3597671241771,NA,0.56295,0.0501338707861263,40.1914797918139,3.57927783033309,NA,"February: Neap Tide"
-"Flume","SW","1400",2024-02-08,"14:00","14:00","9.902","824.410956623096",NA,3.227,NA,268.670385479977,NA,NA,0.5434,NA,38.7957191915298,NA,NA,"February: Neap Tide"
-"Flume","SW","1500",2024-02-08,"15:00","15:00","10.02","834.235284322704",NA,3.088,NA,257.097660477895,NA,NA,0.637,NA,45.4782354159081,NA,NA,"February: Neap Tide"
-"Flume","SW","1600",2024-02-08,"16:00","16:00","9.893","823.661643493464",NA,3.241,NA,269.835983681625,NA,NA,0.6197,NA,44.2431122248638,NA,NA,"February: Neap Tide"
-"Flume","SW","1700",2024-02-08,"17:00","17:00","9.954","828.740321372076",NA,3.16,NA,263.092165514945,NA,NA,0.5741,NA,40.9875273976026,NA,NA,"February: Neap Tide"
-"Flume","SW","1800",2024-02-08,"18:00","18:00","9.828","818.249937557239",NA,3.406,NA,283.573391058197,NA,NA,0.5348,NA,38.181727316213,NA,NA,"February: Neap Tide"
-"Flume","SW","1900",2024-02-08,"19:00","19:00","9.957","828.990092415286",NA,3.654,NA,304.221130630256,NA,NA,0.5042,NA,35.9970585505508,NA,NA,"February: Neap Tide"
-"Flume","SW","2000",2024-02-08,"20:00","20:00","9.66","804.262759137457",NA,3.769,NA,313.795687286654,NA,NA,0.4557,NA,32.5344299513804,NA,NA,"February: Neap Tide"
-"Flume","SW","2100",2024-02-08,"21:00","21:00","9.828","818.249937557239",NA,3.73,NA,310.548663724919,NA,NA,0.3587,NA,25.6091727530396,NA,NA,"February: Neap Tide"
-"Flume","SW","2200",2024-02-08,"22:00","22:00","9.896","823.911414536675",NA,3.628,NA,302.056448255766,NA,NA,0.2617,NA,18.6839155546988,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","2300",2024-02-08,"23:00","23:00","9.898","824.077928565482",NA,3.637,NA,302.805761385397,NA,NA,0.2701,NA,19.2836285491943,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","2400",2024-02-09,"0:00","0:00","10.43","868.370660228124",NA,3.45,NA,287.236699691949,NA,NA,0.4552,NA,32.4987327493271,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","FW","1",2024-02-09,"12:15","13:15","23.25","1935.72558488053",NA,1.136,NA,94.5799683623345,NA,NA,0.1189,NA,8.48879464827547,NA,NA,"February: Neap Tide"
-"Flume","FW","2",2024-02-09,"11:45","12:45","25.13","2092.24877195904",NA,1.31,NA,109.066688868537,NA,NA,0.02417,NA,1.72560274725667,NA,NA,"February: Neap Tide"
-"Flume","SW","0000",2024-02-09,"1:00","1:00","10.53","876.696361668471",NA,3.327,NA,276.996086920323,NA,NA,0.5977,NA,42.6724353345185,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","0100",2024-02-09,"2:00","2:00","10.82","900.840895845475",NA,3.386,NA,281.908250770127,NA,NA,0.5869,NA,41.9013757701671,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","0200",2024-02-09,"3:00","3:00","10.73","893.347764549163",NA,3.196,NA,266.089418033469,NA,NA,0.6095,NA,43.5148893029764,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","0300",2024-02-09,"4:00","4:00","10.86","904.171176421614",NA,3.32,NA,276.413287819499,NA,NA,0.586,NA,41.8371208064712,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","0400",2024-02-09,"5:00","5:00","11","915.827158438098",NA,3.456,NA,287.73624177837,NA,NA,0.6074,NA,43.3649610543526,NA,NA,"February: Neap Tide; ISCO sample"
-"Flume","SW","0500",2024-02-09,NA,NA,NA,NA,NA,3.623,NA,301.640163183748,NA,NA,0.4884,NA,34.8690269656664,NA,NA,NA
-"Flume","SW","0600",2024-02-09,NA,NA,NA,NA,NA,3.605,NA,300.141536924486,NA,NA,0.4213,NA,30.0784624501132,NA,NA,NA
-"Flume","SW","0700",2024-02-09,NA,NA,NA,NA,NA,3.622,NA,301.556906169345,NA,NA,0.3559,NA,25.4092684215411,NA,NA,NA
-"Flume","FS","1",2024-02-15,"10:15","10:15","31.96","2660.89418033469",NA,1.239,NA,103.155440845891,NA,NA,0.4104,NA,29.3002634453512,NA,NA,NA
-"Flume","FW","1",2024-02-15,NA,NA,"23.81","1982.34951294647",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"Flume","FW","2",2024-02-15,"10:00","10:00","26.13","2175.5057863625",NA,4.02,NA,334.693197901923,NA,NA,1.009,NA,72.0369537435656,NA,NA,NA
-"Flume","GW","1",2024-02-15,"8:45","8:45","44.6","3713.26284239447",NA,5.85,NA,487.053534260261,NA,NA,3.688,NA,263.302562345163,NA,"value above cal curve","February: Spring Tide"
-"Flume","GW","2",2024-02-15,"9:45","9:45","76.46","6365.83132128882",NA,7.849,NA,653.484306052785,NA,NA,2.644,NA,188.766804457867,NA,NA,"February: Spring Tide"
-"Flume","GW","4",2024-02-15,"10:45","10:45","28.64","2384.48089251519",NA,4.075,NA,339.272333694114,NA,NA,1.123,NA,80.1759158117187,NA,NA,"February: Spring Tide"
-"Flume","GW","6",2024-02-15,"11:45","11:45","25.82","2149.69611189743",NA,3.985,NA,331.779202397802,NA,NA,0.7072,NA,50.4901225841919,NA,NA,"February: Spring Tide"
-"Flume","SW","0800",2024-02-15,"8:00","8:00","8.984","747.981017400716",NA,3.788,NA,315.37757056032,NA,NA,0.4757,NA,33.9623180335125,NA,NA,"February: Spring Tide"
-"Flume","SW","0900",2024-02-15,"9:00","9:00","9.004","749.646157688785",NA,3.526,NA,293.564232786612,NA,NA,0.3969,NA,28.336438989912,NA,NA,"February: Spring Tide"
-"Flume","SW","1000",2024-02-15,"10:00","10:00","8.24","686.037798684539",NA,3.774,NA,314.211972358671,NA,NA,0.4384,NA,31.2993067603361,NA,NA,"February: Spring Tide"
-"Flume","SW","1100",2024-02-15,"11:00","11:00","9.883","822.82907334943",NA,3.757,NA,312.796603113812,NA,NA,0.4805,NA,34.3050111732242,NA,NA,"February: Spring Tide"
-"Flume","SW","1200",2024-02-15,"12:00","12:00","10.07","838.398135042877",NA,3.819,NA,317.958538006827,NA,NA,0.4395,NA,31.3778406048534,NA,NA,"February: Spring Tide"
-"Flume","SW","1300",2024-02-15,"13:00","13:00","9.667","804.845558238282",NA,4.056,NA,337.690450420448,NA,NA,0.4104,NA,29.3002634453512,NA,NA,"February: Spring Tide"
-"Flume","SW","1400",2024-02-15,"14:00","14:00","9.553","795.354258596287",NA,4.166,NA,346.848722004829,NA,NA,0.4292,NA,30.6424782425553,NA,NA,"February: Spring Tide"
-"Flume","SW","1500",2024-02-15,NA,NA,"9.681","806.01115643993",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"Flume","SW","1600",2024-02-15,"16:00","16:00","9.831","818.49970860045",NA,3.966,NA,330.197319124136,NA,NA,0.7234,NA,51.6467119307189,NA,NA,"February: Spring Tide"
-"Flume","SW","1700",2024-02-15,"17:00","17:00","10.02","834.235284322704",NA,3.877,NA,322.787444842228,NA,NA,0.8576,NA,61.2278409618254,NA,NA,"February: Spring Tide"
-"Flume","SW","1800",2024-02-15,"18:00","18:00","10.49","873.366081092332",NA,3.297,NA,274.498376488219,NA,NA,0.9914,NA,70.7804122312893,NA,NA,"February: Spring Tide"
-"Flume","SW","1900",2024-02-15,"19:00","19:00","10.67","888.352343684955",NA,3.105,NA,258.513029722754,NA,NA,0.9366,NA,66.8679988862473,NA,NA,"February: Spring Tide"
-"Flume","FW","1",2024-02-16,"8:45","8:45",NA,NA,NA,0.9676,NA,80.5594871367913,NA,NA,0.324,NA,23.1317869305404,NA,NA,"February: Spring Tide"
-"Flume","Endmember","EST4",2024-07-18,"10:46",NA,"17.68","1471.98401465323",NA,4.444,NA,369.994172008992,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","EST5",2024-07-18,"15:21",NA,"17.61","1466.15602364499",NA,4.494,NA,374.157022729165,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","EST1",2024-07-15,"17:30",NA,"17.55","1461.16060278078",NA,4.66,NA,387.97768712014,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","EST2",2024-07-15,"17:30",NA,"17.23","1434.51835817168",NA,4.634,NA,385.81300474565,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","EST3",2024-07-15,"17:30",NA,"17.21","1432.85321788361",NA,4.443,NA,369.910914994588,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","SW","T1",2024-07-15,"11:00",NA,"20.35","1694.28024311048",NA,6.998,NA,582.632586795438,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","SW","T2",2024-07-15,"12:00",NA,"21.15","1760.88585463325",NA,8.731,NA,726.91699275664,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","TR1",2024-07-15,"15:30",NA,NA,NA,NA,17.27,NA,1437.84863874781,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","TR2",2024-07-17,"11:30",NA,NA,NA,NA,14.45,NA,1203.06385813005,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","UP1",2024-07-15,"15:00",NA,"10.57","880.026642244609",NA,1.968,NA,163.849804346016,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range",NA
-"Flume","Endmember","UP2",2024-07-15,"15:15",NA,"14.03","1168.09591208059",NA,1.318,NA,109.732744983765,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range",NA
-"Flume","Endmember","WC1",2024-07-15,"16:00",NA,"117.4","9774.37349096662",NA,12.43,NA,1034.88468903505,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","WC2",2024-07-15,"16:30",NA,"124.2","10340.5211889102",NA,13.44,NA,1118.97427358255,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
-"Flume","Endmember","WE1",2024-07-15,"16:50",NA,"82.53","6871.20139871784",NA,8.946,NA,744.817250853384,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","WE2",2024-07-15,"17:30",NA,"83.74","6971.94238614603",NA,8.934,NA,743.818166680543,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","WE3",2024-07-18,"07:30",NA,"42.7","3555.07451502789",NA,7.249,NA,603.530097410707,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
-"Flume","Endmember","WE4",2024-07-18,"07:45",NA,"56.79","4728.16584797269",NA,6.964,NA,579.80184830572,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Project","Date","Time_Local","Time_EST","Sample_Location","Sample_Type","Replicate","ic_mgL","ic_uM","ic_flag","npoc_mgL","npoc_mgL_sd","npoc_uM","npoc_uM_sd","npoc_flag","tdn_mgL","tdn_mgL_sd","tdn_uM","tdn_uM_sd","tdn_flag","Notes"
+"Tiday Survey",2024-02-08,"12:45","13:45","GCW","GW","1","43.66","3635.00124885522",NA,5.504,NA,458.246607276663,NA,NA,3.794,NA,270.870369180464,NA,"value above cal curve","February: Neap Tide"
+"Tiday Survey",2024-02-08,"13:45","14:45","GCW","GW","2","57","4745.64982099742",NA,5.464,NA,454.916326700525,NA,NA,1.62,NA,115.658934652702,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"14:45","15:45","GCW","GW","3","14","1165.59820164849",NA,3.243,NA,270.002497710432,NA,NA,0.5481,NA,39.1312728908308,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"15:45","16:45","GCW","GW","4","25.24","2101.40704354342",NA,3.654,NA,304.221130630256,NA,NA,0.7795,NA,55.6519380010995,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"16:45","17:45","GCW","GW","5","13.28","1105.653151278",NA,3.471,NA,288.985096994422,NA,NA,0.4599,NA,32.8342864486282,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"9:00","9:00","GCW","SW","0900","10","832.570144034635",NA,3.596,NA,299.392223794855,NA,NA,0.2855,NA,20.383102372436,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"10:00","10:00","GCW","SW","1000","9.717","809.008408958455",NA,3.7795,0.219910208949016,314.669885937891,18.3090674339368,NA,0.2874,0.0582655987697715,20.5187517402386,4.15983770408248,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"11:00","11:00","GCW","SW","1100","6.938","577.63716593123",NA,3.5715,0.699328606593495,297.35242694197,58.2240118719091,NA,0.4839,0.0110308657865101,34.5477521471867,0.787542089607804,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"12:00","12:00","GCW","SW","1200","9.502","791.10815086171",NA,3.561,0.21920310216783,296.478228290733,18.2501958344704,NA,0.5528,0.0821658079738768,39.4668265901318,5.86617889823281,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"13:00","13:00","GCW","SW","1300","9.457","787.361585213554",NA,3.424,0.10040916292849,285.072017317459,8.3597671241771,NA,0.56295,0.0501338707861263,40.1914797918139,3.57927783033309,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"14:00","14:00","GCW","SW","1400","9.902","824.410956623096",NA,3.227,NA,268.670385479977,NA,NA,0.5434,NA,38.7957191915298,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"15:00","15:00","GCW","SW","1500","10.02","834.235284322704",NA,3.088,NA,257.097660477895,NA,NA,0.637,NA,45.4782354159081,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"16:00","16:00","GCW","SW","1600","9.893","823.661643493464",NA,3.241,NA,269.835983681625,NA,NA,0.6197,NA,44.2431122248638,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"17:00","17:00","GCW","SW","1700","9.954","828.740321372076",NA,3.16,NA,263.092165514945,NA,NA,0.5741,NA,40.9875273976026,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"18:00","18:00","GCW","SW","1800","9.828","818.249937557239",NA,3.406,NA,283.573391058197,NA,NA,0.5348,NA,38.181727316213,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"19:00","19:00","GCW","SW","1900","9.957","828.990092415286",NA,3.654,NA,304.221130630256,NA,NA,0.5042,NA,35.9970585505508,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"20:00","20:00","GCW","SW","2000","9.66","804.262759137457",NA,3.769,NA,313.795687286654,NA,NA,0.4557,NA,32.5344299513804,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"21:00","21:00","GCW","SW","2100","9.828","818.249937557239",NA,3.73,NA,310.548663724919,NA,NA,0.3587,NA,25.6091727530396,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-08,"22:00","22:00","GCW","SW","2200","9.896","823.911414536675",NA,3.628,NA,302.056448255766,NA,NA,0.2617,NA,18.6839155546988,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-08,"23:00","23:00","GCW","SW","2300","9.898","824.077928565482",NA,3.637,NA,302.805761385397,NA,NA,0.2701,NA,19.2836285491943,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"0:00","0:00","GCW","SW","2400","10.43","868.370660228124",NA,3.45,NA,287.236699691949,NA,NA,0.4552,NA,32.4987327493271,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"12:15","13:15","GCW","FW","1","23.25","1935.72558488053",NA,1.136,NA,94.5799683623345,NA,NA,0.1189,NA,8.48879464827547,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-09,"11:45","12:45","GCW","FW","2","25.13","2092.24877195904",NA,1.31,NA,109.066688868537,NA,NA,0.02417,NA,1.72560274725667,NA,NA,"February: Neap Tide"
+"Tiday Survey",2024-02-09,"0:00","0:00","GCW","SW","0000","10.53","876.696361668471",NA,3.327,NA,276.996086920323,NA,NA,0.5977,NA,42.6724353345185,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"1:00","1:00","GCW","SW","0100","10.82","900.840895845475",NA,3.386,NA,281.908250770127,NA,NA,0.5869,NA,41.9013757701671,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"2:00","2:00","GCW","SW","0200","10.73","893.347764549163",NA,3.196,NA,266.089418033469,NA,NA,0.6095,NA,43.5148893029764,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"3:00","3:00","GCW","SW","0300","10.86","904.171176421614",NA,3.32,NA,276.413287819499,NA,NA,0.586,NA,41.8371208064712,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"4:00","4:00","GCW","SW","0400","11","915.827158438098",NA,3.456,NA,287.73624177837,NA,NA,0.6074,NA,43.3649610543526,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"5:00","5:00","GCW","SW","0500",NA,NA,NA,3.623,NA,301.640163183748,NA,NA,0.4884,NA,34.8690269656664,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"6:00","6:00","GCW","SW","0600",NA,NA,NA,3.605,NA,300.141536924486,NA,NA,0.4213,NA,30.0784624501132,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-09,"7:00","7:00","GCW","SW","0700",NA,NA,NA,3.622,NA,301.556906169345,NA,NA,0.3559,NA,25.4092684215411,NA,NA,"February: Neap Tide; ISCO sample"
+"Tiday Survey",2024-02-16,"10:15","10:15","GCW","FW","1","31.96","2660.89418033469",NA,1.239,NA,103.155440845891,NA,NA,0.4104,NA,29.3002634453512,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-16,"10:00","10:00","GCW","FW","2","26.13","2175.5057863625",NA,4.02,NA,334.693197901923,NA,NA,1.009,NA,72.0369537435656,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"8:45","8:45","GCW","GW","1","44.6","3713.26284239447",NA,5.85,NA,487.053534260261,NA,NA,3.688,NA,263.302562345163,NA,"value above cal curve","February: Spring Tide"
+"Tiday Survey",2024-02-15,"9:45","9:45","GCW","GW","2","76.46","6365.83132128882",NA,7.849,NA,653.484306052785,NA,NA,2.644,NA,188.766804457867,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"10:45","10:45","GCW","GW","4","28.64","2384.48089251519",NA,4.075,NA,339.272333694114,NA,NA,1.123,NA,80.1759158117187,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"11:45","11:45","GCW","GW","6","25.82","2149.69611189743",NA,3.985,NA,331.779202397802,NA,NA,0.7072,NA,50.4901225841919,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"8:00","8:00","GCW","SW","0800","8.984","747.981017400716",NA,3.788,NA,315.37757056032,NA,NA,0.4757,NA,33.9623180335125,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"9:00","9:00","GCW","SW","0900","9.004","749.646157688785",NA,3.526,NA,293.564232786612,NA,NA,0.3969,NA,28.336438989912,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"10:00","10:00","GCW","SW","1000","8.24","686.037798684539",NA,3.774,NA,314.211972358671,NA,NA,0.4384,NA,31.2993067603361,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"11:00","11:00","GCW","SW","1100","9.883","822.82907334943",NA,3.757,NA,312.796603113812,NA,NA,0.4805,NA,34.3050111732242,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"12:00","12:00","GCW","SW","1200","10.07","838.398135042877",NA,3.819,NA,317.958538006827,NA,NA,0.4395,NA,31.3778406048534,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"13:00","13:00","GCW","SW","1300","9.667","804.845558238282",NA,4.056,NA,337.690450420448,NA,NA,0.4104,NA,29.3002634453512,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"14:00","14:00","GCW","SW","1400","9.553","795.354258596287",NA,4.166,NA,346.848722004829,NA,NA,0.4292,NA,30.6424782425553,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"15:00","15:00","GCW","SW","1500","9.681","806.01115643993",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"16:00","16:00","GCW","SW","1600","9.831","818.49970860045",NA,3.966,NA,330.197319124136,NA,NA,0.7234,NA,51.6467119307189,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"17:00","17:00","GCW","SW","1700","10.02","834.235284322704",NA,3.877,NA,322.787444842228,NA,NA,0.8576,NA,61.2278409618254,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"18:00","18:00","GCW","SW","1800","10.49","873.366081092332",NA,3.297,NA,274.498376488219,NA,NA,0.9914,NA,70.7804122312893,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-15,"19:00","19:00","GCW","SW","1900","10.67","888.352343684955",NA,3.105,NA,258.513029722754,NA,NA,0.9366,NA,66.8679988862473,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-02-16,"8:45","8:45","GCW","FW","1","23.81","1982.34951294647",NA,0.9676,NA,80.5594871367913,NA,NA,0.324,NA,23.1317869305404,NA,NA,"February: Spring Tide"
+"Tiday Survey",2024-07-18,"10:46","9:46","GCW","EST","EST4","17.68","1471.98401465323",NA,4.444,NA,369.994172008992,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","Amanda's sample"
+"Tiday Survey",2024-07-18,"15:21","14:21","GCW","EST","EST5","17.61","1466.15602364499",NA,4.494,NA,374.157022729165,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","Amanda's sample"
+"Tiday Survey",2024-07-15,"17:30","16:30","GCW","EST","EST1","17.55","1461.16060278078",NA,4.66,NA,387.97768712014,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","SERC Dock"
+"Tiday Survey",2024-07-15,"17:30","16:30","GCW","EST","EST2","17.23","1434.51835817168",NA,4.634,NA,385.81300474565,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","SERC Dock"
+"Tiday Survey",2024-07-15,"17:30","16:30","GCW","EST","EST3","17.21","1432.85321788361",NA,4.443,NA,369.910914994588,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","SERC Dock"
+"Tiday Survey",2024-07-15,"11:00","10:00","GCW","SW","T1","20.35","1694.28024311048",NA,6.998,NA,582.632586795438,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-15,"20:00","19:00","GCW","SW","T10","28.17","2345.35009574557",NA,10.96,NA,912.49687786196,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"21:00","20:00","GCW","SW","T11","23.69","1972.35867121805",NA,9.172,NA,763.633336108567,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"22:00","21:00","GCW","SW","T12","23.04","1918.2416118558",NA,8.497,NA,707.434851386229,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"23:00","22:00","GCW","SW","T13","20.38","1696.77795354259",NA,6.521,NA,542.918990924985,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-15,"0:00","23:00","GCW","SW","T14","20.17","1679.29398051786",NA,6.145,NA,511.614353509283,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"1:00","0:00","GCW","SW","T15","19.84","1651.81916576472",NA,5.951,NA,495.462492715011,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"2:00","1:00","GCW","SW","T16","19.6","1631.83748230788",NA,6.049,NA,503.621680126551,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"3:00","2:00","GCW","SW","T17","20.27","1687.61968195821",NA,6.228,NA,518.524685704771,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"4:00","3:00","GCW","SW","T18","21.12","1758.38814420115",NA,6.505,NA,541.58687869453,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"5:00","4:00","GCW","SW","T19","21.28","1771.7092665057",NA,7.12,NA,592.78994255266,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-15,"12:00","11:00","GCW","SW","T2","21.15","1760.88585463325",NA,8.731,NA,726.91699275664,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"6:00","5:00","GCW","SW","T20","21.64","1801.68179169095",NA,7.578,NA,630.921655149446,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"7:00","6:00","GCW","SW","T21","21.29","1772.54183664974",NA,7.542,NA,627.924402630922,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"8:00","7:00","GCW","SW","T22","22.25","1852.46857047706",NA,8.075,NA,672.300391307968,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"9:00","8:00","GCW","SW","T23","20.71","1724.25276829573",NA,7.658,NA,637.582216301724,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"10:00","9:00","GCW","SW","T24","20.48","1705.10365498293",NA,6.644,NA,553.159603696611,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"11:00","10:00","GCW","SW","T25","20.43","1700.94080426276",NA,6.662,NA,554.658229955874,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"12:00","11:00","GCW","SW","T26","19.65","1636.00033302806",NA,6.429,NA,535.259345599867,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"13:00","12:00","GCW","SW","T27","20.27","1687.61968195821",NA,6.602,NA,549.662809091666,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"14:00","13:00","GCW","SW","T28","19.54","1626.84206144368",NA,7.14,NA,594.455082840729,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","low vol in ISCO"
+"Tiday Survey",2024-07-16,"15:00","14:00","GCW","SW","T29","21.42","1783.36524852219",NA,8.063,NA,671.301307135126,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"13:00","12:00","GCW","SW","T3","21.81","1815.83548413954",NA,0.09314,NA,7.75455832153859,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"16:00","15:00","GCW","SW","T30","21.31","1774.20697693781",NA,8.587,NA,714.927982682541,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"17:00","16:00","GCW","SW","T31","22.55","1877.4456747981",NA,8.915,NA,742.236283406877,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"18:00","17:00","GCW","SW","T32","24.32","2024.81059029223",NA,9.247,NA,769.877612188827,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"19:00","18:00","GCW","SW","T33","25.89","2155.52410290567",NA,9.56,NA,795.937057697111,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"20:00","19:00","GCW","SW","T34","27.11","2257.0976604779",NA,10.02,NA,834.235284322704,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"21:00","20:00","GCW","SW","T35","24.36","2028.14087086837",NA,8.754,NA,728.831904087919,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"22:00","21:00","GCW","SW","T36","22.29","1855.7988510532",NA,7.501,NA,624.51086504038,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"23:00","22:00","GCW","SW","T37","20.34","1693.44767296645",NA,6.383,NA,531.429522937308,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-16,"0:00","23:00","GCW","SW","T38","20.1","1673.46598950962",NA,6.167,NA,513.446007826159,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-16,"1:00","0:00","GCW","SW","T39","20.14","1676.79627008575",NA,6.043,NA,503.12213804013,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"14:00","13:00","GCW","SW","T4","22.28","1854.96628090917",NA,0.1118,NA,9.30813421030722,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"2:00","1:00","GCW","SW","T40","20.3","1690.11739239031",NA,6.085,NA,506.618932645075,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"3:00","2:00","GCW","SW","T41","20.24","1685.1219715261",NA,6.012,NA,500.541170593623,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"4:00","3:00","GCW","SW","T42","21.16","1761.71842477729",NA,6.515,NA,542.419448838565,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"5:00","4:00","GCW","SW","T43","21.55","1794.18866039464",NA,6.763,NA,563.067188410624,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"6:00","5:00","GCW","SW","T44","21.89","1822.49604529182",NA,7.317,NA,609.191574390142,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"7:00","6:00","GCW","SW","T45","22.39","1864.12455249355",NA,7.542,NA,627.924402630922,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"8:00","7:00","GCW","SW","T46","22.67","1887.43651652652",NA,7.827,NA,651.652651735909,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"9:00","8:00","GCW","SW","T47","22.12","1841.64515860461",NA,8.28,NA,689.368079260678,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"10:00","9:00","GCW","SW","T48","23.03","1917.40904171176",NA,8.369,NA,696.777953542586,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"11:00","10:00","GCW","SW","T49","22.37","1862.45941220548",NA,7.765,NA,646.490716842894,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"15:00","14:00","GCW","SW","T5","22.83","1900.75763883107",NA,0.101,NA,8.40895845474981,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"12:00","11:00","GCW","SW","T50","20.83","1734.24361002414",NA,6.422,NA,534.676546499043,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"13:00","12:00","GCW","SW","T51","21.01","1749.22987261677",NA,6.619,NA,551.078178336525,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"14:00","13:00","GCW","SW","T52","20.81","1732.57846973608",NA,7.687,NA,639.996669719424,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"15:00","14:00","GCW","SW","T53","20.27","1687.61968195821",NA,7.89,NA,656.897843643327,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"16:00","15:00","GCW","SW","T54","18.96","1578.55299308967",NA,8.479,NA,705.936225126967,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"17:00","16:00","GCW","SW","T55","19.48","1621.84664057947",NA,8.786,NA,731.49612854883,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"18:00","17:00","GCW","SW","T56","21.23","1767.54641578553",NA,9.338,NA,777.454000499542,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"19:00","18:00","GCW","SW","T57","24.59","2047.28998418117",NA,9.521,NA,792.690034135376,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"20:00","19:00","GCW","SW","T58","25.19","2097.24419282325",NA,10.34,NA,860.877528931813,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"21:00","20:00","GCW","SW","T59","27.08","2254.59995004579",NA,10.4,NA,865.87294979602,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"16:00","15:00","GCW","SW","T6","24.01","1999.00091582716",NA,0.1496,NA,12.4552493547581,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"22:00","21:00","GCW","SW","T60","25.72","2141.37041045708",NA,10.74,NA,894.180334693198,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"23:00","22:00","GCW","SW","T61","13.01","1083.17375738906",NA,6.74,NA,561.152277079344,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-17,"0:00","23:00","GCW","SW","T62","23.64","1968.19582049788",NA,8.792,NA,731.995670635251,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-17,"1:00","0:00","GCW","SW","T63","20.18","1680.12655066189",NA,5.764,NA,479.893431021564,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"2:00","1:00","GCW","SW","T64","20.32","1691.78253267838",NA,5.677,NA,472.650070768462,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"3:00","2:00","GCW","SW","T65","20.02","1666.80542835734",NA,5.672,NA,472.233785696445,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"4:00","3:00","GCW","SW","T66","20.37","1695.94538339855",NA,5.868,NA,488.552160519524,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"5:00","4:00","GCW","SW","T67","20.34","1693.44767296645",NA,5.917,NA,492.631754225293,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"6:00","5:00","GCW","SW","T68","21.13","1759.22071434518",NA,6.705,NA,558.238281575223,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"7:00","6:00","GCW","SW","T69","21.46","1786.69552909833",NA,7.591,NA,632.003996336691,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-15,"17:00","16:00","GCW","SW","T7","24.7","2056.44825576555",NA,9.477,NA,789.026725501624,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"8:00","7:00","GCW","SW","T70","21.44","1785.03038881026",NA,8.263,NA,687.952710015819,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","low vol in ISCO"
+"Tiday Survey",2024-07-18,"9:00","8:00","GCW","SW","T71","23.35","1944.05128632087",NA,8.706,NA,724.835567396553,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"10:00","9:00","GCW","SW","T72","24.81","2065.60652734993",NA,9.196,NA,765.63150445425,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"11:00","10:00","GCW","SW","T73","25.96","2161.35209391391",NA,9.724,NA,809.591208059279,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"12:00","11:00","GCW","SW","T74","27.59","2297.06102739156",NA,10.41,NA,866.705519940055,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"13:00","12:00","GCW","SW","T75","25.31","2107.23503455166",NA,9.446,NA,786.445758055116,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"14:00","13:00","GCW","SW","T76","24.19","2013.98717841978",NA,10.03,NA,835.067854466739,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"15:00","14:00","GCW","SW","T77","25.28","2104.73732411956",NA,9.491,NA,790.192323703272,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"16:00","15:00","GCW","SW","T78","26.89","2238.78111730913",NA,10.09,NA,840.063275330947,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"17:00","16:00","GCW","SW","T79","25.9","2156.3566730497",NA,10.08,NA,839.230705186912,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"18:00","17:00","GCW","SW","T8",NA,NA,NA,10.33,NA,860.044958787778,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"18:00","17:00","GCW","SW","T80","31.79","2646.7404878861",NA,10.68,NA,889.18491382899,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"19:00","18:00","GCW","SW","T81","32.72","2724.16951128133",NA,10.68,NA,889.18491382899,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-18,"20:00","19:00","GCW","SW","T82","37.05","3084.67238364832",NA,10.93,NA,909.999167429856,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"21:00","20:00","GCW","SW","T83","41.6","3463.49179918408",NA,11.24,NA,935.80884189493,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"22:00","21:00","GCW","SW","T84","42.06","3501.79002580967",NA,10.96,NA,912.49687786196,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"23:00","22:00","GCW","SW","T85","43.61","3630.83839813504",NA,11.06,NA,920.822579302306,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"0:00","23:00","GCW","SW","T86","41.33","3441.01240529515",NA,10.86,NA,904.171176421614,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-18,"1:00","0:00","GCW","SW","T87","26.81","2232.12055615686",NA,8.077,NA,672.466905336775,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-19,"2:00","1:00","GCW","SW","T88","24.97","2078.92764965448",NA,7.605,NA,633.16959453834,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-19,"3:00","2:00","GCW","SW","T89","23.19","1930.73016401632",NA,6.829,NA,568.562151361252,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"19:00","18:00","GCW","SW","T9","28.94","2409.45799683623",NA,10.74,NA,894.180334693198,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-19,"4:00","3:00","GCW","SW","T90","22.04","1834.98459745234",NA,6.476,NA,539.17242527683,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-19,"5:00","4:00","GCW","SW","T91","22.42","1866.62226292565",NA,6.675,NA,555.740571143119,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-19,"6:00","5:00","GCW","SW","T92","22.03","1834.1520273083",NA,6.714,NA,558.987594704854,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-19,"7:00","6:00","GCW","SW","T93","23.06","1919.90675214387",NA,7.173,NA,597.202564316044,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-19,"8:00","7:00","GCW","SW","T94","24.01","1999.00091582716",NA,7.535,NA,627.341603530097,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value",NA
+"Tiday Survey",2024-07-15,"15:30","14:30","GCW","GW","TR1",NA,NA,NA,17.27,NA,1437.84863874781,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","C"
+"Tiday Survey",2024-07-17,"11:30","10:30","GCW","GW","TR2",NA,NA,NA,14.45,NA,1203.06385813005,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve",NA
+"Tiday Survey",2024-07-15,"15:00","14:00","GCW","GW","UP1","10.57","880.026642244609",NA,1.968,NA,163.849804346016,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range","FW-1"
+"Tiday Survey",2024-07-15,"15:00","14:00","GCW","GW","UP2","14.03","1168.09591208059",NA,1.318,NA,109.732744983765,NA,"blank is> 25% of sample value",NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range","FW-1 B"
+"Tiday Survey",2024-07-15,"16:00","15:00","GCW","GW","WC1","117.4","9774.37349096662",NA,12.43,NA,1034.88468903505,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","CBSYN Well"
+"Tiday Survey",2024-07-15,"16:30","15:30","GCW","GW","WC2","124.2","10340.5211889102",NA,13.44,NA,1118.97427358255,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; blank is > 25% of sample value","CBSYN Well"
+"Tiday Survey",2024-07-15,"16:50","15:50","GCW","GW","WE1","82.53","6871.20139871784",NA,8.946,NA,744.817250853384,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","GW2"
+"Tiday Survey",2024-07-15,"17:30","16:30","GCW","GW","WE2","83.74","6971.94238614603",NA,8.934,NA,743.818166680543,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","GW2"
+"Tiday Survey",2024-07-18,"7:30","6:30","GCW","GW","WE3","42.7","3555.07451502789",NA,7.249,NA,603.530097410707,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","GW3"
+"Tiday Survey",2024-07-18,"7:45","6:45","GCW","GW","WE4","56.79","4728.16584797269",NA,6.964,NA,579.80184830572,NA,NA,NA,NA,NA,NA,"TN r2 low; TN blanks out of range; TN dups out of range; value above cal curve","GW4"
