@@ -270,6 +270,7 @@ DIC_DOC_TA <- DIC_DOC_TA %>%
 
 files <- list.files(path = "../../Tidal_Surveys/Raw_Data", pattern = "Metadata.*\\.csv$", full.names = TRUE, recursive = TRUE)
 files
+files <- files [files != "../../Tidal_Surveys/Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv"]
 
 data1 <- read_csv(files[1], col_types = cols(.default = col_character()))
 colnames(data1)
@@ -336,6 +337,19 @@ if (all_present) {
   print(missing_ids)
 }
 
+
+all_present <- all(meta1$Sample_ID %in% DIC_DOC$Sample_ID)
+
+if (all_present) {
+  message("All sample IDs are present in sample data")
+} else {
+  message("Some sample IDs are missing from sample data")
+  
+  # Optional: Which ones are missing?
+  missing_ids <- setdiff(meta1$Sample_ID, DIC_DOC$Sample_ID)
+  print(missing_ids)
+}
+
 ##Merge data
 all_data <- DIC_DOC %>%
   left_join(meta1, by = c("Sample_ID"))
@@ -345,16 +359,22 @@ all_data <- DIC_DOC %>%
 
 ## Subset data and write out collated files
 ```{r, echo=FALSE}
-
+colnames(all_data)
 final_data <- all_data %>% 
-  separate(Sample_ID, into = c("Loc", "DateID", "Type", "Replicate"), sep = "_", extra = "merge", fill = "right") %>% 
-  mutate(Replicate = ifelse(is.na(Replicate), Type, Replicate)) %>% 
-  mutate(Sample_Location = "GCW", 
-         Project = "Tiday Survey") %>% 
-  select(Project, Date, Time_Local, Time_EST, Sample_Location, Sample_Type, Replicate, ic_mgL, ic_uM, ic_flag, npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, npoc_flag, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd, tdn_flag, Notes)
+  rename_with(tolower, .cols = c(Date, Time_Local, Time_EST, Sample_Location, Sample_Type, Notes)) %>% 
+  separate(Sample_ID, into = c("loc", "dateid", "type", "replicate"), sep = "_", extra = "merge", fill = "right") %>% 
+  mutate(replicate = ifelse(is.na(replicate), type, replicate)) %>% 
+  mutate(npoc_flag = ifelse(npoc_flag == "blank is> 25% of sample value", "bdl", NA)) %>% 
+  mutate(tdn_flag = ifelse(tdn_flag == "value above cal curve", "adl", NA)) %>% 
+  mutate(sample_location = "Flume", 
+         project = "Tidal Survey", 
+         lat = 38.874861, 
+         long = -76.546472) %>% 
+  mutate(across(c(ic_mgL, ic_uM, npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd), ~ round (as.numeric(.x), digits = 2))) %>% 
+  select(project, date, time_local, time_est, sample_location, lat, long, sample_type, replicate, ic_mgL, ic_uM, ic_flag, npoc_mgL, npoc_mgL_sd, npoc_uM, npoc_uM_sd, npoc_flag, tdn_mgL, tdn_mgL_sd, tdn_uM, tdn_uM_sd, tdn_flag, notes)
 
-final_data_2023 <- subset(final_data, year(Date) == 2023)
-final_data_2024 <- subset(final_data, year(Date) == 2024)
+final_data_2023 <- subset(final_data, year(date) == 2023)
+final_data_2024 <- subset(final_data, year(date) == 2024)
 
 ##Write out annual data files
 write.csv(final_data_2023, "Tidal_Survey_DIC_DOC_2023.csv", row.names = FALSE)
@@ -382,7 +402,9 @@ dd$Definition <-       c("Project name",
                          "Date sample was collected (YYYY-MM-DD)", 
                          "Local time when sample was collected (HH:MM)", 
                          "Eastern Standard Time when sample was collected (HH:MM)", 
-                         "Sampling Location (GCW = Global Change Research Wetland)", 
+                         "Sampling Location (Flume)", 
+                         "Latitude of sampling location", 
+                         "Longitude of sampling location", 
                          "Sample Type (SW = Surface water, GW = Ground water, EST = Estuarine water, FW = Freshwater)", 
                          "Sample Replicate (Time or sample number)", 
                          "Inorganic Carbon concentration (mg/L)", 
@@ -401,6 +423,8 @@ dd$Definition <-       c("Project name",
                          "Notes")
 
 dd$Unit <-             c("NA", 
+                         "NA", 
+                         "NA", 
                          "NA", 
                          "NA", 
                          "NA", 
@@ -426,7 +450,9 @@ dd$data_type <-        c("text",
                          "text", 
                          "text", 
                          "text", 
-                         "text", 
+                         "text",
+                         "numeric", 
+                         "numeric", 
                          "text", 
                          "text", 
                          "numeric", 
@@ -445,6 +471,8 @@ dd$data_type <-        c("text",
                          "text")
 
 dd$Instrument_ifapplicable <-   c("NA", 
+                         "NA", 
+                         "NA", 
                          "NA", 
                          "NA", 
                          "NA", 

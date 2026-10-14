@@ -1,0 +1,70 @@
+---
+title: "July_2024_TidalSurvey_Metadata"
+author: "Zoe Read"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(stringr)
+library(readxl)
+library(tidyr)
+library(tibble)
+library(lubridate)
+library(hms)
+library(readr)
+library(here)
+```
+
+##Pull in metadata
+```{r metadata}
+
+meta <- read.csv("../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata.csv")
+colnames(meta)
+
+meta1 <- metameta1 <- meta %>% 
+  rename(sample_name = sample_id, 
+         notes = Notes, 
+         spc = gw_conductivity_mScm, 
+         sal_ppt = gw_salinity_ppt, 
+         h2o_temp_c = gw_temp_c) %>% 
+  mutate(sample_type = ifelse(sample_type == "EST" , "SW", sample_type)) %>% 
+  mutate(location = "Marsh_weir", 
+         date = mdy(date), 
+         datetime = paste0 (date, " ", time_sampled_edt), 
+         sample_datetime = ymd_hm(datetime, tz = "America/New_York"), 
+         sample_datetime = format(sample_datetime, "%Y-%m-%d %H:%M:%S"), 
+         sample_id = NA, 
+         old_sample_id = NA, 
+         pco2_datetime = NA, 
+         pco2_id = NA, 
+         xco2_ppm = NA, 
+         do_ysi_perc = NA, 
+         do_ysi_mg_l = NA, 
+         ph_ysi_nbs = NA, 
+         dic_taken = "1", 
+         alk_umol_kgsw_avg = NA, 
+         alk_umol_kgsw_sd = NA, 
+         alk_umol_kgsw_se = NA, 
+         alk_umol_kgsw_cv = NA, 
+         alk_mmol_l_avg = NA, 
+         alk_mmol_l_sd = NA, 
+         alk_mmol_l_se = NA, 
+         alk_mmol_l_cv = NA, 
+         alk_v_crm_umol_kgsw = NA, 
+         alk_umol_kgsw_percerr_crm = NA, 
+         lat = NA, 
+         lon = NA, 
+         created = NA, 
+         updated = NA
+) %>% 
+  select(sample_id, old_sample_id, location, sample_type, sample_name, sample_datetime, pco2_datetime, pco2_id, xco2_ppm, spc, sal_ppt, h2o_temp_c, do_ysi_perc, do_ysi_mg_l, ph_ysi_nbs, dic_taken, notes, alk_umol_kgsw_avg, alk_umol_kgsw_sd, alk_umol_kgsw_se, alk_umol_kgsw_cv, alk_mmol_l_avg, alk_mmol_l_sd, alk_mmol_l_se, alk_mmol_l_cv, alk_v_crm_umol_kgsw, alk_umol_kgsw_percerr_crm, lat, lon, created, updated)
+
+write.csv(meta1, "../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv", row.names = FALSE)
+
+```
+ 
+ ##END 
