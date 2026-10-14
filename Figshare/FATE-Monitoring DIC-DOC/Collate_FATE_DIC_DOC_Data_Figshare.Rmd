@@ -90,7 +90,10 @@ DIC_DOC <- DIC_DOC %>%
   filter(Sample_Location != "Dock") %>% 
   rename(Time_Local = Time) %>% 
   mutate(lat = 38.874861, 
-         long = -76.546472)
+         long = -76.546472, 
+         ic_uM = round(ic_uM, 2), 
+         npoc_uM = round(npoc_uM, 2), 
+         tdn_uM = round(tdn_uM, 2) )
 
 ```
 
@@ -111,16 +114,23 @@ meta1 <- meta %>%
 all_data <- DIC_DOC %>% 
   left_join(meta1, by = c("Date", "Time_Local", "Sample_Location"))
 
-##Select columns in order for final data output
-final_data <- all_data %>% 
-  select(Project, Date, Time_Local, Sample_Location, lat, long, ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, ic_flag, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag)
-
 ```
 
 ## Subset data and write out collated files
 ```{r, echo=FALSE}
 
-final_data_2025 <- subset(final_data, year(Date) == 2025)
+##Select columns in order for final data output
+final_data <- all_data %>% 
+  rename_with(tolower, .cols = c(Project, Date, Time_Local, Sample_Location)) %>% 
+  mutate(npoc_flag = ifelse(npoc_flag == "blank is> 25% of sample value", "bdl", NA)) %>% 
+  mutate(tdn_flag = ifelse(tdn_flag == "value above cal curve", "adl", NA)) %>% 
+  mutate(ic_flag = ifelse(ic_flag == "value above cal curve", "adl", NA)) %>% 
+  mutate(lat = 38.874861, 
+         long = -76.546472) %>% 
+  mutate(across(c(ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, npoc_mgL, npoc_uM, tdn_mgL, tdn_uM), ~ round (as.numeric(.x), digits = 2))) %>% 
+  select(project, date, time_local, sample_location, lat, long, ic_mgL, ic_mgL_sd, ic_uM, ic_uM_sd, ic_flag, npoc_mgL, npoc_uM, npoc_flag, tdn_mgL, tdn_uM, tdn_flag)
+
+final_data_2025 <- subset(final_data, year(date) == 2025)
 
 ##Write out annual data files
 write.csv(final_data_2025, "FATE_Monitoring_DIC_DOC_2025.csv", row.names = FALSE)
