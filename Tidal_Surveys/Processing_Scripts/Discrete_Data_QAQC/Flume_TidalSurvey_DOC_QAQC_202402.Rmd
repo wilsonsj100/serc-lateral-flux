@@ -143,7 +143,8 @@ dat_raw <- raw_file_name %>%
   mutate(
     sample_name = recode(
       sample_name,
-      "Flume_20240209_SW1200" = "Flume_20240208_SW1200",
+      "Flume_20240209_SW1200"  = "Flume_20240208_SW-1200",
+      "Flume_20240208_SW-1600isco" = "Flume_20240208_SW-1600_isco",
       "Flume_20240208_SW-0000" = "Flume_20240209_SW-0000",
       "Flume_20240208_SW-0100" = "Flume_20240209_SW-0100",
       "Flume_20240208_SW-0200" = "Flume_20240209_SW-0200",
@@ -151,7 +152,11 @@ dat_raw <- raw_file_name %>%
       "Flume_20240208_SW-0400" = "Flume_20240209_SW-0400",
       "Flume_20240208_SW-0500" = "Flume_20240209_SW-0500",
       "Flume_20240208_SW-0600" = "Flume_20240209_SW-0600",
-      "Flume_20240208_SW-0700" = "Flume_20240209_SW-0700"
+      "Flume_20240208_SW-0700" = "Flume_20240209_SW-0700",
+      "Flume_20240208_SW-1000" = "Flume_20240209_SW-1000",
+      "Flume_20240208_SW-1100" = "Flume_20240209_SW-1100",
+      "Flume_20240208_SW-1200" = "Flume_20240209_SW-1200",
+      "Flume_20240208_SW-1300" = "Flume_20240209_SW-1300",
     )
   )
 
@@ -515,21 +520,7 @@ cat("Visualize Data")
 
 dat_flagged <- dat_flagged %>%
   mutate(sample_name = str_replace_all(sample_name, "-", "_")) %>%
-  filter(!str_detect(sample_name, "_dup"))  %>%
-  mutate(
-    sample_name = str_replace(
-      sample_name,
-      "SW_1600isco",
-      "SW_1600_isco"
-    )
-  ) %>%
-  mutate(
-    sample_name = str_replace(
-      sample_name,
-      "SW1200",
-      "SW_1200"
-    )
-  )
+  filter(!str_detect(sample_name, "_dup"))
 
 dat_flagged <- dat_flagged %>%
   mutate(
