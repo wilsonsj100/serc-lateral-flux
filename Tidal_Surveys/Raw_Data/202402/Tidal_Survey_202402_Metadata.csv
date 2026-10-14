@@ -26,9 +26,13 @@ Tidal Survey,Flume,2/9/2024,2:00,2:00,SW,Flume_20240209_SW_0100,NA,NA,NA,NA,x,x,
 Tidal Survey,Flume,2/9/2024,3:00,3:00,SW,Flume_20240209_SW_0200,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/9/2024,4:00,4:00,SW,Flume_20240209_SW_0300,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/9/2024,5:00,5:00,SW,Flume_20240209_SW_0400,NA,NA,NA,NA,x,x,x,x,x,x,x,NA,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,6:00,6:00,SW,Flume_20240209_SW_0500,,,,,,,,,,,,,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,7:00,7:00,SW,Flume_20240209_SW_0600,,,,,,,,,,,,,February: Neap Tide; ISCO sample
-Tidal Survey,Flume,2/9/2024,8:00,8:00,SW,Flume_20240209_SW_0700,,,,,,,,,,,,,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,6:00,6:00,SW,Flume_20240209_SW_0500,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,7:00,7:00,SW,Flume_20240209_SW_0600,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,8:00,8:00,SW,Flume_20240209_SW_0700,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,11:00,11:00,SW,Flume_20240209_SW_1000,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,12:00,12:00,SW,Flume_20240209_SW_1100,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,13:00,13:00,SW,Flume_20240209_SW_1200,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
+Tidal Survey,Flume,2/9/2024,14:00,14:00,SW,Flume_20240209_SW_1300,NA,NA,NA,NA,NA,NA,x,x,x,NA,x,NA,February: Neap Tide; ISCO sample
 Tidal Survey,Flume,2/8/2024,12:45,13:45,GW,Flume_20240208_GW_1,23:24,7.54,21:36,9.5,x,x,x,x,x,x,x,1.65,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,13:45,14:45,GW,Flume_20240208_GW_2,4.09,6.76,8.6,8.8,x,x,x,x,x,x,x,3.5,February: Neap Tide 
 Tidal Survey,Flume,2/8/2024,14:45,15:45,GW,Flume_20240208_GW_3,NA,7.32,5.1,8.7,x,x,x,x,x,x,x,3.5,February: Neap Tide 
