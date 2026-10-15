@@ -2,3 +2,5 @@ tokenfile.RDS.base64
 tokenfile.RDS
 .httr-oauth
 .Rproj.user
+.RData
+.Rhistory
