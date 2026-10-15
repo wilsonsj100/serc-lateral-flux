@@ -22,21 +22,49 @@ library(here)
 ##Pull in metadata
 ```{r metadata}
 
+##Metadata
 meta <- read.csv("../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata.csv")
 colnames(meta)
 
-meta1 <- metameta1 <- meta %>% 
+##Sensor data
+sensor <- read.csv("../Raw_Data/202407/GCReW_SurfaceWater_1hr_Sensor_Data.csv")
+colnames(sensor)
+sensor1 <- sensor %>% 
+  select(datetime_1hr, Specific_Conductivity_uScm_mean, Salinity_PPT_mean, Temp_C_mean) %>% 
+  mutate(datetime_1hr = as_datetime(datetime_1hr, tz = "America/New_York"), 
+         datetime_1hr = format(datetime_1hr, "%Y-%m-%d %H:%M:%S")) 
+
+##Combine sensor data with metadata
+meta1 <- meta %>% 
+  mutate(date = mdy(date), 
+         date1 = case_when(
+           time_sampled_est == "23:00" & time_sampled_edt == "0:00" ~ date + days(1), 
+           time_sampled_est == "0:00" & time_sampled_edt == "1:00" ~ date + days(1), 
+           TRUE ~ date
+         )) %>% 
+  
+  mutate(
+         datetime = paste0 (date1, " ", time_sampled_edt),
+         datetime = ymd_hm(datetime, tz = "America/New_York"),
+         datetime_1hr = round_date(datetime, unit = "hour"),
+         datetime_1hr = format(datetime_1hr, "%Y-%m-%d %H:%M:%S")) 
+  
+
+dat <- left_join(meta1, sensor1, by = "datetime_1hr")
+
+
+dat1 <- dat %>% 
+  mutate(
+         spc = ifelse(is.na(gw_conductivity_mScm), Specific_Conductivity_uScm_mean, gw_conductivity_mScm*1000), 
+         sal_ppt = ifelse(is.na(gw_salinity_ppt), Salinity_PPT_mean, gw_salinity_ppt), 
+         h2o_temp_c = ifelse(is.na(gw_temp_c), Temp_C_mean, gw_temp_c)) %>% 
+  
   rename(sample_name = sample_id, 
          notes = Notes, 
-         spc = gw_conductivity_mScm, 
-         sal_ppt = gw_salinity_ppt, 
-         h2o_temp_c = gw_temp_c) %>% 
+         sample_datetime = datetime) %>% 
+  mutate(notes = ifelse(sample_type == "EST" , "Rhode River Estuary (SERC Dock)", notes)) %>% 
   mutate(sample_type = ifelse(sample_type == "EST" , "SW", sample_type)) %>% 
   mutate(location = "Marsh_weir", 
-         date = mdy(date), 
-         datetime = paste0 (date, " ", time_sampled_edt), 
-         sample_datetime = ymd_hm(datetime, tz = "America/New_York"), 
-         sample_datetime = format(sample_datetime, "%Y-%m-%d %H:%M:%S"), 
          sample_id = NA, 
          old_sample_id = NA, 
          pco2_datetime = NA, 
@@ -63,7 +91,7 @@ meta1 <- metameta1 <- meta %>%
 ) %>% 
   select(sample_id, old_sample_id, location, sample_type, sample_name, sample_datetime, pco2_datetime, pco2_id, xco2_ppm, spc, sal_ppt, h2o_temp_c, do_ysi_perc, do_ysi_mg_l, ph_ysi_nbs, dic_taken, notes, alk_umol_kgsw_avg, alk_umol_kgsw_sd, alk_umol_kgsw_se, alk_umol_kgsw_cv, alk_mmol_l_avg, alk_mmol_l_sd, alk_mmol_l_se, alk_mmol_l_cv, alk_v_crm_umol_kgsw, alk_umol_kgsw_percerr_crm, lat, lon, created, updated)
 
-write.csv(meta1, "../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv", row.names = FALSE)
+write.csv(dat1, "../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv", row.names = FALSE)
 
 ```
  
