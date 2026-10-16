@@ -24,41 +24,80 @@ library(here)
 
 ##Metadata
 meta <- read.csv("../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata.csv")
-colnames(meta)
 
-##Sensor data
-sensor <- read.csv("../Raw_Data/202407/GCReW_SurfaceWater_1hr_Sensor_Data.csv")
-colnames(sensor)
-sensor1 <- sensor %>% 
-  select(datetime_1hr, Specific_Conductivity_uScm_mean, Salinity_PPT_mean, Temp_C_mean) %>% 
-  mutate(datetime_1hr = as_datetime(datetime_1hr, tz = "America/New_York"), 
-         datetime_1hr = format(datetime_1hr, "%Y-%m-%d %H:%M:%S")) 
+##Ground water sensor data
+gw <- read.csv("../Raw_Data/202407/L2_gw_data.csv")
+gw1 <- gw %>% 
+  mutate(site = ifelse(Site == "TMP", "GCW", Site)) %>% 
+  rename(datetime_15min = TIMESTAMP_EST, 
+         gw.spec.cond_uScm = gw.spec.cond) %>% 
+  select(site, Plot, datetime_15min, gw.spec.cond_uScm, gw.salinity, gw.temperature) %>% 
+  mutate(datetime_15min = as_datetime(datetime_15min, tz = "America/New_York"), 
+         datetime_15min = format(datetime_15min, "%Y-%m-%d %H:%M:%S")) 
 
-##Combine sensor data with metadata
-meta1 <- meta %>% 
+
+##Combine gw sensor data with metadata
+meta1 <- meta %>%  
+  mutate(Plot = case_when(
+    str_detect(sample_id, "UP") ~ "F", 
+    str_detect(sample_id, "TR") ~ "TR", 
+    str_detect(sample_id, "WC") ~ "W", 
+    str_detect(sample_id, "WE") ~ "W", 
+    TRUE ~ NA_character_
+  )) %>% 
   mutate(date = mdy(date), 
          date1 = case_when(
            time_sampled_est == "23:00" & time_sampled_edt == "0:00" ~ date + days(1), 
            time_sampled_est == "0:00" & time_sampled_edt == "1:00" ~ date + days(1), 
            TRUE ~ date
          )) %>% 
-  
   mutate(
          datetime = paste0 (date1, " ", time_sampled_edt),
          datetime = ymd_hm(datetime, tz = "America/New_York"),
-         datetime_1hr = round_date(datetime, unit = "hour"),
+         datetime_15min = round_date(datetime, unit = "15 minutes"),
+         datetime_15min = format(datetime_15min, "%Y-%m-%d %H:%M:%S"),
+         datetime_1hr = round_date(datetime, unit = "1 hour"),
          datetime_1hr = format(datetime_1hr, "%Y-%m-%d %H:%M:%S")) 
   
+dat <- left_join(meta1, gw1, by = c("site", "Plot", "datetime_15min"))
 
-dat <- left_join(meta1, sensor1, by = "datetime_1hr")
+
+##Surface water sensor data
+sensor <- read.csv("../Raw_Data/202407/GCReW_SurfaceWater_1hr_Sensor_Data.csv")
+
+sensor1 <- sensor %>% 
+  select(datetime_1hr, Specific_Conductivity_uScm_mean, Salinity_PPT_mean, Temp_C_mean) %>% 
+  mutate(datetime_1hr = as_datetime(datetime_1hr, tz = "Etc/GMT+5"), 
+         datetime_1hr = with_tz(datetime_1hr, tzone = "America/New_York"), 
+         datetime_1hr = format(datetime_1hr, "%Y-%m-%d %H:%M:%S")) 
+
+dat1 <- left_join(dat, sensor1, by = "datetime_1hr")
 
 
-dat1 <- dat %>% 
+##Pull spc, sal, and temp data into columns from GW and SW data
+dat2 <- dat1 %>% 
   mutate(
-         spc = ifelse(is.na(gw_conductivity_mScm), Specific_Conductivity_uScm_mean, gw_conductivity_mScm*1000), 
-         sal_ppt = ifelse(is.na(gw_salinity_ppt), Salinity_PPT_mean, gw_salinity_ppt), 
-         h2o_temp_c = ifelse(is.na(gw_temp_c), Temp_C_mean, gw_temp_c)) %>% 
-  
+         spc = case_when(
+           sample_id == "T49" ~ mean(Specific_Conductivity_uScm_mean[sample_id %in% c("T48", "T50")], na.rm = TRUE), 
+           sample_type == "GW" & is.na(gw_conductivity_mScm) ~ gw.spec.cond_uScm, 
+           sample_type == "SW" & is.na(gw_conductivity_mScm) ~ Specific_Conductivity_uScm_mean, 
+           TRUE ~ gw_conductivity_mScm*1000), 
+
+         sal_ppt = case_when(
+           sample_id == "T49" ~ mean(Salinity_PPT_mean[sample_id %in% c("T48", "T50")], na.rm = TRUE), 
+           sample_type == "GW" & is.na(gw_salinity_ppt) ~ gw.salinity, 
+           sample_type == "SW" & is.na(gw_salinity_ppt) ~ Salinity_PPT_mean, 
+           TRUE ~ gw_salinity_ppt), 
+         
+         h2o_temp_c = case_when(
+           sample_id == "T49" ~ mean(Temp_C_mean[sample_id %in% c("T48", "T50")], na.rm = TRUE), 
+           sample_type == "GW" & is.na(gw_temp_c) ~ gw.temperature, 
+           sample_type == "SW" & is.na(gw_temp_c) ~ Temp_C_mean, 
+           TRUE ~ gw_temp_c)) 
+
+
+##Set column names
+dat3 <- dat2 %>% 
   rename(sample_name = sample_id, 
          notes = Notes, 
          sample_datetime = datetime) %>% 
@@ -91,7 +130,7 @@ dat1 <- dat %>%
 ) %>% 
   select(sample_id, old_sample_id, location, sample_type, sample_name, sample_datetime, pco2_datetime, pco2_id, xco2_ppm, spc, sal_ppt, h2o_temp_c, do_ysi_perc, do_ysi_mg_l, ph_ysi_nbs, dic_taken, notes, alk_umol_kgsw_avg, alk_umol_kgsw_sd, alk_umol_kgsw_se, alk_umol_kgsw_cv, alk_mmol_l_avg, alk_mmol_l_sd, alk_mmol_l_se, alk_mmol_l_cv, alk_v_crm_umol_kgsw, alk_umol_kgsw_percerr_crm, lat, lon, created, updated)
 
-write.csv(dat1, "../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv", row.names = FALSE)
+write.csv(dat3, "../Raw_Data/202407/COMPASS_SynopticCB_LatT_GCW_Discrete_Metadata_FORMATTED.csv", row.names = FALSE)
 
 ```
  
