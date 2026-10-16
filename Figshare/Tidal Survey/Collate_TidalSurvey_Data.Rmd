@@ -151,7 +151,7 @@ DIC_data1 <- DIC_data %>%
   mutate(Sample_ID = gsub("20230215", "20240215", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("20231215", "20240215", Sample_ID)) %>% 
   mutate(Sample_ID = gsub("Flume_20240215_FW_1", "Flume_20240216_FW_1", Sample_ID)) %>% 
-  select(Sample_ID, ic_mgL, ic_uM, ic_flag) ##Select necessary columns
+  select(Sample_ID, ic_mgL, ic_uM, ic_flag, ISCO) ##Select necessary columns
 
 ```
 
@@ -360,7 +360,17 @@ all_data <- DIC_DOC %>%
 ## Subset data and write out collated files
 ```{r, echo=FALSE}
 
+unique(all_data$Sample_Type)
+
 final_data <- all_data %>% 
+  ##Change Sample Type
+  mutate(case_when(
+    Sample_Type == "EST" ~ "SW", 
+    Sample_Type == "FW" ~ "GW", 
+    ISCO == "isco" ~ "ISCO", 
+    TRUE ~ Sample_Type
+  )) %>% 
+  
   ##Lowercase column names
   rename_with(tolower, .cols = c(Date, Time_Local, Time_EST, Sample_Location, Sample_Type, Notes)) %>% 
   
@@ -423,7 +433,7 @@ dd$Definition <-       c("Project name",
                          "Sampling Location (Flume)", 
                          "Latitude of sampling location", 
                          "Longitude of sampling location", 
-                         "Sample Type (SW = Surface water, GW = Ground water, EST = Estuarine water, FW = Freshwater)", 
+                         "Sample Type (SW = Surface Water (hand collected and filtered immediately), ISCO = Surface Water collected by ISCO and filtered later, GW = Upland Groundwater well sample (5m well, unconfined aquifer), PW = Marsh Porewater (1m fully screened well))", 
                          "Sample Replicate (Time or sample number)", 
                          "Inorganic Carbon concentration (mg/L)", 
                          "Inorganic Carbon concentration (umol/L)", 
