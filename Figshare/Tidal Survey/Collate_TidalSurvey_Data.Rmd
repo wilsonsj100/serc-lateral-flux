@@ -542,6 +542,30 @@ writeLines(datadescription, "SERC_LateralFlux_TidalSurvey_DataDescription.txt")
 
 ```
 
+
+## Key Words 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+keywords <- c("Lateral Flux", 
+              "Tidal Creek",
+              "Time Series Survey", 
+              "Carbon",
+              "GCReW", 
+              "Dissolved Inorganic Carbon",
+              "Dissolved Organic Carbon",
+              "Total Alkalinity",
+              "Coastal Wetland")
+
+
+#write to a text file 
+writeLines(keywords, "SERC_LateralFlux_TidalSurvey_KeyWords.txt")
+
+
+```
+
+
 ## Create Author List 
 ```{r create author list}
 

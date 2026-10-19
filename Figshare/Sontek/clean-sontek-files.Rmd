@@ -263,6 +263,28 @@ writeLines(datadescription, "SERC_GCReW_Flume_Sontek_DataDescription.txt")
 
 ```
 
+## Key Words 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+keywords <- c("Lateral Flux", 
+              "Tidal Creek",
+              "Water Depth", 
+              "Water Velocity",
+              "GCReW", 
+              "ADCP",
+              "Sontek",
+              "Coastal Wetland")
+
+
+#write to a text file 
+writeLines(keywords, "SERC_GCReW_Flume_Sontek_KeyWords.txt")
+
+
+```
+
+
 ## Create Author List 
 ```{r create author list}
 
