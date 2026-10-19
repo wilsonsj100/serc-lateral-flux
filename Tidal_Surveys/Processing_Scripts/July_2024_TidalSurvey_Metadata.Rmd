@@ -98,11 +98,15 @@ dat2 <- dat1 %>%
 
 ##Set column names
 dat3 <- dat2 %>% 
+  mutate(sample_type = case_when(
+    str_detect(sample_id, "EST") ~ "SW", 
+    str_detect(sample_id, "WC") ~ "PW", 
+    str_detect(sample_id, "WE") ~ "PW", 
+    TRUE ~ sample_type)) %>% 
   rename(sample_name = sample_id, 
          notes = Notes, 
          sample_datetime = datetime) %>% 
   mutate(notes = ifelse(sample_type == "EST" , "Rhode River Estuary (SERC Dock)", notes)) %>% 
-  mutate(sample_type = ifelse(sample_type == "EST" , "SW", sample_type)) %>% 
   mutate(location = "Marsh_weir", 
          sample_id = NA, 
          old_sample_id = NA, 
