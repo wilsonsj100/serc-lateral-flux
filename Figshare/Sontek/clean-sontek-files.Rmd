@@ -25,7 +25,8 @@ common_tz = "Etc/GMT+5"
 # dropbox_url <- "https://www.dropbox.com/scl/fo/g6t7g8mcq64wtv9fwqxvd/AMqe_jDI5xyMf0T0tyEsbfE?rlkey=q6pcb76vybzko19uahrc5kgsy&st=jfy0ig2e&dl=0"
 
 ##Change path to your dropbox 
-path <- "C:/Users/readz/Smithsonian Dropbox/Zoe Read/GCREW_LOGGERNET_DATA/archive_data"
+#path <- "C:/Users/readz/Smithsonian Dropbox/Zoe Read/GCREW_LOGGERNET_DATA/archive_data"
+path <- "C:/Users/wilsonsj/Smithsonian Dropbox/Stephanie Wilson/GCREW_LOGGERNET_DATA/archive_data"
 
 ##Create a list of all sontek files in the archive
 sontek_files <- dir(pattern = "Sontek.*\\.dat$", path = path, full.names = TRUE, recursive = TRUE)
@@ -245,5 +246,60 @@ dd$data_type <-        c("text",
 write.csv(dd, "dd.csv", row.names = FALSE,  fileEncoding = "UTF-8")
 
 ```
+
+
+
+## Data Description 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+datadescription <- "These data are measurements of water depth, velocity, and temperature made with a Sontek IQ series acoustic doupler current profiler (ADCP) at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Measurements were made at the GCReW Flume through which a tidal creek flows. The Sontek ADCP was affixed to a PVC pipe bolted to the center of the flume that extended to just above the sediment surface. Measurements were collected every six minutes and recorded by a Campbell Scientific CR1000x logger as described by Wilson et al. (in review). These are L1 data, where L0 would be raw data that is received from the instrument and L1 is that data with programmatic quality checks for data out of the instrument bounds (OOR) or out of the reasonable data range for this site (OOR), these QAQC standards are outlined and the code to produce these data from L0 are available on GitHub (link)."
+
+
+#write to a text file 
+writeLines(datadescription, "SERC_GCReW_Flume_Sontek_DataDescription.txt")
+
+
+```
+
+## Create Author List 
+```{r create author list}
+
+#Pull in the common synoptic authors list: 
+authors_common <- read.csv(here("Figshare/", "SERC_LateralFlux_common_author_list.csv"))
+
+
+#create a list of the last names you want to pull 
+names_we_want <- c("Wilson", "Miller", "Noyce", "Peresta","Read", "Reynolds", "Rich" , "Megonigal")
+order_of_authors <- c(1:length(names_we_want))
+
+authors <- data.frame(
+  order_of_authors = unlist(order_of_authors), 
+  last_name = unlist(names_we_want)
+)
+
+#Subset the common list for the names that we want 
+author_list <- authors %>% 
+  left_join(authors_common, by = "last_name")
+
+#if you need to add any other authors 
+others <- data.frame(
+  first_name = c("first_name1", "first_name2"), 
+  last_name = c("last_name1", "last_name2"), 
+  orcid = c("orcid_id1", "orcid_id2"), 
+  affiliation = c("affiliation1", "affiliation2"), 
+  email = c("email1", "email2"), 
+  order_of_authors = c((length(names_we_want)+1):(length(names_we_want)+2))
+)
+
+#add in the other authors 
+#author_list <- bind_rows(author_list, others)
+
+#write out the author list associated with the data:
+write.csv(author_list, "author_list.csv", row.names = FALSE)
+```
+
+
 
 ##END
