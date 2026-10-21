@@ -175,10 +175,10 @@ dd$Definition <-       c("Project name",
                          "Sampling Location (Flume)", 
                          "Latitude of sampling location", 
                          "Longitude of sampling location", 
-                         "Inorganic Carbon concentration mean of replicates (mg/L)", 
-                         "Inorganic Carbon concentration standard deviation of replicates (mg/L)", 
-                         "Inorganic Carbon concentration mean of replicates (umol/L)", 
-                         "Inorganic Carbon concentration standard deviation of replicates (umol/L)", 
+                         "Inorganic Carbon concentration mean of field replicates (mg/L)", 
+                         "Inorganic Carbon concentration standard deviation of field replicates (mg/L)", 
+                         "Inorganic Carbon concentration mean of field replicates (umol/L)", 
+                         "Inorganic Carbon concentration standard deviation of field replicates (umol/L)", 
                          "Inorganic Carbon concentration flag (adl = above detection limit, bdl = below detection limit)", 
                          "Non-Purgeable Organic Carbon concentration (mg/L)", 
                          "Non-Purgeable Organic Carbon concentration (umol/L)", 
@@ -271,11 +271,11 @@ write.csv(dd, "dd.csv", row.names = FALSE,  fileEncoding = "UTF-8")
 
 #Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
 
-datadescription <- "These data are measurements of dissolved inorganic carbon, dissolved organic carbon, and total dissolved nitrogen concentrations in samples collected from tidal creek surface waters at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Samples were collected roughly bi-weekly at random time points throuhout 2025. The surface waters were collected at the GCReW Flume through which a tidal creek flows, marsh porewaters were collected in 1m fully screen wells, and upland groundwater wells were up to 5m deep. Samples were collected by hand or with an ISCO automated water sampler. When collected by hand (surface, pore and groundwaters) were filtered immediately with 0.45 um syringe filters into combusted glass vials and kept on ice transport to fridge or freezer. Dissolved inorganic carbon samples were collected with no headspace in combusted 24mL vials and refridgerated until analyzed with a Shimadzu TOC using the IC method within one week of collection. Dissolved organic carbon and total nitrogen samples were collected in combuster, amber 40mL vials and frozen until analyzed with a Shimadzu TOC using the NPOC/TN method."
+datadescription <- "These data are measurements of dissolved inorganic carbon, dissolved organic carbon, and total dissolved nitrogen concentrations in samples collected from tidal creek surface waters as part of the FATE project conducted at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Samples were collected roughly bi-weekly throughout 2025. Surface waters of the GCReW tidal creek were collected at the GCReW Flume (38.87486, -76.5465). Samples were collected with a bucket and filtered immediately with 0.45 um syringe filters into combusted glass vials and kept on ice during transport to fridge or freezer. Dissolved inorganic carbon samples were collected with no headspace in combusted 24mL vials with septa caps and refridgerated until analysis. Dissolved inorganic carbon concentrations were determined with a Shimadzu TOC using the manufacturers IC method within one week of collection with a bicarbonate and carbonate standard curve and certified seawater reference material (CRM) from the Scripps Institution of Oceanography of the University of California, San Diego. Dissolved organic carbon and total nitrogen samples were collected in combusted, amber 40mL vials and frozen until analysis. Cocnentrations of non-purgeable organic carbon and total nitrogen were determined with a Shimadzu TOC using the manufacturers NPOC/TN methodolgy with potassium hydrogen phthalate (KHP) and potassium nitrate standard curves."
 
 
 #write to a text file 
-writeLines(datadescription, "SERC_LateralFlux_FATE-Monitoring_DIC_DOC_DataDescription.txt")
+writeLines(datadescription, "DataDescription.txt")
 
 
 ```
@@ -298,7 +298,7 @@ keywords <- c("Lateral Flux",
 
 
 #write to a text file 
-writeLines(keywords, "SERC_LateralFlux_FATE-Monitoring_DIC_DOC_KeyWords.txt")
+writeLines(keywords, "KeyWords.txt")
 
 
 ```
