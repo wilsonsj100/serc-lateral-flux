@@ -179,13 +179,13 @@ dd$Definition <-       c("Project name",
                          "Inorganic Carbon concentration standard deviation of field replicates (mg/L)", 
                          "Inorganic Carbon concentration mean of field replicates (umol/L)", 
                          "Inorganic Carbon concentration standard deviation of field replicates (umol/L)", 
-                         "Inorganic Carbon concentration flag (adl = above detection limit, bdl = below detection limit)", 
+                         "Inorganic Carbon concentration flag (adl = above detection limit, bdl = below detection limit, NA = no flag, within range)", 
                          "Non-Purgeable Organic Carbon concentration (mg/L)", 
                          "Non-Purgeable Organic Carbon concentration (umol/L)", 
-                         "Non-Purgeable Organic Carbon flag (adl = above detection limit, bdl = below detection limit)", 
+                         "Non-Purgeable Organic Carbon flag (adl = above detection limit, bdl = below detection limit, NA = no flag, within range)", 
                          "Total Dissolved Nitrogen concentration (mg/L)", 
                          "Total Dissolved Nitrogen concentration (umol/L)", 
-                         "Total Dissolved Nitrogen flag (adl = above detection limit, bdl = below detection limit)")
+                         "Total Dissolved Nitrogen flag (adl = above detection limit, bdl = below detection limit, NA = no flag, within range)")
 
 dd$Unit <-             c("NA", 
                          "NA", 
@@ -229,17 +229,17 @@ dd$Instrument_ifapplicable <-   c("NA",
                          "NA", 
                          "NA", 
                          "NA", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC", 
-                         "Shimadzu TOC")
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TOC-L", 
+                         "Shimadzu TNM-L", 
+                         "Shimadzu TNM-L", 
+                         "Shimadzu TNM-L")
 
 
 dd$Method_ifapplicable <- c("NA", 
@@ -248,21 +248,21 @@ dd$Method_ifapplicable <- c("NA",
                          "NA", 
                          "NA", 
                          "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA", 
-                         "NA")
+                         "Shimadzu IC: Acid Addition with 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu IC: Acid Addition with 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu IC: Acid Addition with 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu IC: Acid Addition with 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu NPOC: 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu NPOC: 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu NPOC: 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu NPOC: 680°C Combustion Catalytic Oxidation", 
+                         "Shimadzu TN: Thermal decomposition-chemiluminescence", 
+                         "Shimadzu TN: Thermal decomposition-chemiluminescence", 
+                         "Shimadzu TN: Thermal decomposition-chemiluminescence")
 
 
 #write out the data dictionary associated with the data:
-write.csv(dd, "dd.csv", row.names = FALSE,  fileEncoding = "UTF-8")
+write.csv(dd, "DataDictionary.csv", row.names = FALSE,  fileEncoding = "UTF-8")
 
 ```
 
@@ -271,7 +271,7 @@ write.csv(dd, "dd.csv", row.names = FALSE,  fileEncoding = "UTF-8")
 
 #Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
 
-datadescription <- "These data are measurements of dissolved inorganic carbon, dissolved organic carbon, and total dissolved nitrogen concentrations in samples collected from tidal creek surface waters as part of the FATE project conducted at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Samples were collected roughly bi-weekly throughout 2025. Surface waters of the GCReW tidal creek were collected at the GCReW Flume (38.87486, -76.5465). Samples were collected with a bucket and filtered immediately with 0.45 um syringe filters into combusted glass vials and kept on ice during transport to fridge or freezer. Dissolved inorganic carbon samples were collected with no headspace in combusted 24mL vials with septa caps and refridgerated until analysis. Dissolved inorganic carbon concentrations were determined with a Shimadzu TOC using the manufacturers IC method within one week of collection with a bicarbonate and carbonate standard curve and certified seawater reference material (CRM) from the Scripps Institution of Oceanography of the University of California, San Diego. Dissolved organic carbon and total nitrogen samples were collected in combusted, amber 40mL vials and frozen until analysis. Cocnentrations of non-purgeable organic carbon and total nitrogen were determined with a Shimadzu TOC using the manufacturers NPOC/TN methodolgy with potassium hydrogen phthalate (KHP) and potassium nitrate standard curves."
+datadescription <- "These data are measurements of dissolved inorganic carbon, dissolved organic carbon, and total dissolved nitrogen concentrations in samples collected from tidal creek surface waters as part of the FATE project conducted at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Samples were collected roughly bi-weekly throughout 2025. Surface waters of the GCReW tidal creek were collected at the GCReW Flume (38.87486, -76.5465). Samples were collected with a bucket and filtered immediately with 0.45 um syringe filters into combusted glass vials and kept on ice during transport to fridge or freezer. Dissolved inorganic carbon samples were collected with no headspace in combusted 24mL vials with septa caps and refrigerated until analysis. Dissolved inorganic carbon concentrations were determined with a Shimadzu TOC using the manufacturers IC method within one week of collection with a bicarbonate and carbonate standard curve and certified seawater reference material (CRM) from the Scripps Institution of Oceanography of the University of California, San Diego. Dissolved organic carbon and total nitrogen samples were collected in combusted, amber 40mL vials and frozen until analysis. Concentrations of non-purgeable organic carbon and total nitrogen were determined with a Shimadzu TOC using the manufacturers NPOC/TN methodology with potassium hydrogen phthalate (KHP) and potassium nitrate standard curves."
 
 
 #write to a text file 
@@ -287,13 +287,13 @@ writeLines(datadescription, "DataDescription.txt")
 #Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
 
 keywords <- c("Lateral Flux", 
-              "Tidal Creek",
+              "Tidal Creeks",
               "FATE", 
-              "Monitoring",
+              "Surface Water Monitoring",
               "Carbon",
               "GCReW", 
-              "Dissolved Inorganic Carbon",
-              "Dissolved Organic Carbon",
+              "Dissolved Inorganic Carbon (DIC)",
+              "Dissolved Organic Carbon (DOC)",
               "Coastal Wetland")
 
 
@@ -312,7 +312,7 @@ authors_common <- read.csv(here("Figshare/", "SERC_LateralFlux_common_author_lis
 
 
 #create a list of the last names you want to pull 
-names_we_want <- c("Wilson", "Miller","Muirhead","Read", "Reynolds", "Tamborski", "Megonigal")
+names_we_want <- c("Wilson", "Miller","Read", "Reynolds", "Tamborski", "Megonigal")
 order_of_authors <- c(1:length(names_we_want))
 
 authors <- data.frame(
@@ -338,8 +338,46 @@ others <- data.frame(
 #author_list <- bind_rows(author_list, others)
 
 #write out the author list associated with the data:
-write.csv(author_list, "author_list.csv", row.names = FALSE)
+write.csv(author_list, "AuthorList.csv", row.names = FALSE)
 ```
 
+
+## Read Me with File List  
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+readme <- c("Dataset: 2025 FATE Monitoring Tidal Creek Surface Water DIC and DOC Concentrations - Monitoring wetland lateral fluxes at the Global Change Research Wetland (GCReW) Flume",
+            
+            "",
+
+            "Dataset Contacts: Stephanie Wilson (wilsonsj@si.edu), Amanda Reynolds (reynoldsa@si.edu), Patrick Megonigal (megonigalp@si.edu)",
+            
+            "",
+
+            "Any use of this dataset must include a citation. Dataset DOI: 10.25573/serc.34701435",
+            
+            "",
+
+            "The contents of this data publication are as follows:",
+            
+            "",
+            
+            "DataDictionary.csv - Contains descriptive metadata for each column included in the data file. For each column units are clarified, variables are defined, data type is identified, and instrumentation and methodology used to determine the data are listed",
+                        
+            "",
+            
+            "FATE_Monitoring_DIC_DOC_2025.csv - Contains discrete sample monitoring of tidal creek surface water dissolved inorganic carbon, dissolved organic carbon, and total nitrogen concentrations at the Smithsonian Environmental Research Center GCReW Flume.",
+            
+            "",
+            
+            "AuthorList.csv - Contains the list of dataset authors along with their ORCIDs, affiliations and emails.")
+
+
+#write to a text file 
+writeLines(readme, "README.txt")
+
+
+```
 
 

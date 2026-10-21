@@ -1,9 +1,9 @@
 Lateral Flux
-Tidal Creek
+Tidal Creeks
 FATE
-Monitoring
+Surface Water Monitoring
 Carbon
 GCReW
-Dissolved Inorganic Carbon
-Dissolved Organic Carbon
+Dissolved Inorganic Carbon (DIC)
+Dissolved Organic Carbon (DOC)
 Coastal Wetland
