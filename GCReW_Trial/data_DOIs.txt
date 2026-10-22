@@ -1,0 +1,10 @@
+parameter, DOI
+Z*, https://doi.org/10.3354/meps13683
+GPP, 
+NEON RH, 
+NEON precip, 
+L2 data, 
+Sonde, 
+Sontek, 
+FATE Monitoring DIC/DOC, https://doi.org/10.25573/serc.34701435
+
