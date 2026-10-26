@@ -25,66 +25,66 @@ common_tz = "Etc/GMT+5"
 ## Combine all raw sontek files  
 ```{r}
 
-setwd("raw-sontek-data/")
-path <- "raw-sontek-data/"
-
-#list all the files in the directory
-#create a list of the files there 
-sontek_files <- dir(pattern = "dat$", path = path, full.names = TRUE)
-
-# 3. Function ---------
-
-## baby function
-get_colnames <- function(path){
-  read_delim(path[[1]], skip = 1) %>% 
-    slice(3:n()) %>% ## remove dead header rows
-    clean_names() %>% 
-    colnames()
-}
-
-get_colnames(sontek_files)
-
-## Function to read in sontek You can rinse and repeat w other instruments, just change cols
-read_sontek <- function(path) {
-  dat <- suppressWarnings(
-    readr::read_delim(
-      file = path,
-      skip = 1,
-      show_col_types = FALSE
-    )
-  ) %>%
-    janitor::clean_names() %>%
-    dplyr::slice(3:dplyr::n()) %>%
-    dplyr::mutate(
-      # Ensure consistent types for datetime columns
-      yyyy       = as.character(yyyy),
-      mm         = as.character(mm),
-      dd         = as.character(dd),
-      hh         = as.character(hh),
-      minute     = as.character(minute),
-      ss         = as.character(ss),
-      
-      # Also force sample_number and sontek_id to character
-      sample_number = as.character(sample_number),
-      sontek_id     = as.character(sontek_id),
-
-      # Parse timestamp safely (adjust if needed)
-      timestamp = parsedate::parse_date(timestamp),
-      datetime_raw = lubridate::force_tz(timestamp, tzone = common_tz),
-
-      # Convert some numeric columns explicitly
-      flowrate       = as.numeric(flowrate),
-      stage          = as.numeric(stage),
-      mean_velocity  = as.numeric(mean_velocity),
-      total_volume   = as.numeric(total_volume),
-      water_depth    = as.numeric(water_depth),
-      index_velocity = as.numeric(index_velocity),
-      cross_area     = as.numeric(cross_area),
-      water_temperature = as.numeric(water_temperature)
-    )
-
-  return(dat)
-}
+# setwd("raw-sontek-data/")
+# path <- "raw-sontek-data/"
+# 
+# #list all the files in the directory
+# #create a list of the files there 
+# sontek_files <- dir(pattern = "dat$", path = path, full.names = TRUE)
+# 
+# # 3. Function ---------
+# 
+# ## baby function
+# get_colnames <- function(path){
+#   read_delim(path[[1]], skip = 1) %>% 
+#     slice(3:n()) %>% ## remove dead header rows
+#     clean_names() %>% 
+#     colnames()
+# }
+# 
+# get_colnames(sontek_files)
+# 
+# ## Function to read in sontek You can rinse and repeat w other instruments, just change cols
+# read_sontek <- function(path) {
+#   dat <- suppressWarnings(
+#     readr::read_delim(
+#       file = path,
+#       skip = 1,
+#       show_col_types = FALSE
+#     )
+#   ) %>%
+#     janitor::clean_names() %>%
+#     dplyr::slice(3:dplyr::n()) %>%
+#     dplyr::mutate(
+#       # Ensure consistent types for datetime columns
+#       yyyy       = as.character(yyyy),
+#       mm         = as.character(mm),
+#       dd         = as.character(dd),
+#       hh         = as.character(hh),
+#       minute     = as.character(minute),
+#       ss         = as.character(ss),
+#       
+#       # Also force sample_number and sontek_id to character
+#       sample_number = as.character(sample_number),
+#       sontek_id     = as.character(sontek_id),
+# 
+#       # Parse timestamp safely (adjust if needed)
+#       timestamp = parsedate::parse_date(timestamp),
+#       datetime_raw = lubridate::force_tz(timestamp, tzone = common_tz),
+# 
+#       # Convert some numeric columns explicitly
+#       flowrate       = as.numeric(flowrate),
+#       stage          = as.numeric(stage),
+#       mean_velocity  = as.numeric(mean_velocity),
+#       total_volume   = as.numeric(total_volume),
+#       water_depth    = as.numeric(water_depth),
+#       index_velocity = as.numeric(index_velocity),
+#       cross_area     = as.numeric(cross_area),
+#       water_temperature = as.numeric(water_temperature)
+#     )
+# 
+#   return(dat)
+# }
 
 ## Function to read in sontek You can rinse and repeat w other instruments, just change cols
 ##read_sontek <- function(path){
@@ -111,19 +111,29 @@ read_sontek <- function(path) {
  # bind_rows()
 #test <- read_sontek("raw-sontek-data/GCREW_MARSH_OUTLET_SontekTable_20240807020028.dat")
 
-sontek <- sontek_files %>% 
-  purrr::map(read_sontek) %>% 
-  dplyr::bind_rows()
+# sontek <- sontek_files %>% 
+#   purrr::map(read_sontek) %>% 
+#   dplyr::bind_rows()
+# 
+# ## Check plot
+# sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+#                       geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+# sontek_chkplot_all
+# 
+# sontek_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
+#                       geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,5)
+# sontek_chkplot
 
-## Check plot
-sontek_chkplot_all <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
-                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
-sontek_chkplot_all
 
-sontek_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_depth))) + 
-                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,5)
-sontek_chkplot
+sontek_files <- list.files(path = "../Figshare/Sontek", pattern = "Sontek.*L1.csv", full.names = TRUE)
 
+sontek <- lapply(sontek_files, function(f) {read.csv(f, colClasses = "character")}) %>%
+  bind_rows()
+
+#need to clean up the timestamp so that we can join them 
+sontek <- sontek %>%
+  rename(timestamp_etc = timestamp) %>%
+  mutate(timestamp = force_tz(parsedate::parse_date(timestamp_etc), tzone = common_tz))
 
 ```
 
@@ -159,10 +169,11 @@ path <- "raw-exo-data/"
   #exo_files <- dir(pattern = "csv$", full.names = FALSE)
 
 ## Create a dataframe
-exo <- read.csv("2024_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
-exo1 <- read.csv("2023_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
+exo23 <- read.csv("2023_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
+exo24 <- read.csv("2024_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
+exo25 <- read.csv("2025_figshare_data_USA-MDA_water-quality_SERC-GCREW.csv")
 
-exo <- rbind(exo, exo1)
+exo <- rbind(exo23, exo24, exo25)
 
 ## Check plot
 exo_chkplot_all <- ggplot(exo, aes(as.POSIXct(timestamp_utc), as.numeric(salinity_ppt))) + 
@@ -172,7 +183,7 @@ exo_chkplot_all
 
 #need to clean up the timestamp so that we can join them 
 exo <- exo %>%
-  mutate(timestamp = force_tz(parsedate::parse_date(timestamp_utc), tzone = common_tz))
+  mutate(timestamp = with_tz(parsedate::parse_date(timestamp_utc), tzone = common_tz))
 
 ```
 
@@ -266,52 +277,83 @@ write.csv(dat, "combined-raw-data/sensor-data.csv")
 
 #pull in the chemical data files and combine if needed / pull out the columns we need 
 
+##Monitoring data
+mon_dic_doc <- read.csv("raw-chem-data/FATE_Monitoring_DIC_DOC_2025.csv")
+mon_dic_doc <- mon_dic_doc %>% 
+  mutate(sample_datetime_local = paste0(date, time_local), 
+         sample_datetime_local = ymd_hm(sample_datetime_local, tz = "America/New_York")) #%>% 
+  # select(sample_datetime, ic_mgL, npoc_mgL)
+
+mon_TA_23 <- read.csv("raw-chem-data/data_2023.csv")
+mon_TA_24 <- read.csv("raw-chem-data/data_2024.csv")
+mon_TA_25 <- read.csv("raw-chem-data/data_2025.csv")
+mon_TA <- bind_rows(mon_TA_23, mon_TA_24, mon_TA_25) %>% 
+  mutate(sample_datetime_utc = gsub("2025-08-13 12:18:00", "2025-08-13 11:03:00", sample_datetime_utc)) %>% 
+  mutate(sample_datetime_local = ymd_hms(sample_datetime_utc, tz = "America/New_York")) #%>% ##It looks like the utc is actually est
+  # select(sample_datetime, alk_umol_kgsw_avg)
+
+mon_data <- merge(mon_dic_doc, mon_TA, by = "sample_datetime_local", all = T) %>% 
+  mutate(sample_type = "sw")
+
+
+##Tidal survey data
+ts_23 <- read.csv("raw-chem-data/Tidal_Survey_DIC_DOC_2023.csv")
+ts_24 <- read.csv("raw-chem-data/Tidal_Survey_DIC_DOC_2024.csv")
+ts_data <- bind_rows(ts_23, ts_24) %>% 
+  mutate(sample_datetime_local = paste0(date, time_local), 
+         sample_datetime_local = ymd_hm(sample_datetime_local, tz = "America/New_York")) %>% 
+  filter(sample_type == "SW")
+
+
 ## Create a dataframe
-chem <- read.csv("raw-chem-data/LatT_GCW_AllData_forNASATrial.csv")
-head(chem)
+chem <- bind_rows(mon_data, ts_data) %>% 
+  select(sample_datetime_local, sample_type, ic_mgL, npoc_mgL, alk_umol_kgsw_avg)
+
+# chem <- read.csv("raw-chem-data/LatT_GCW_AllData_forNASATrial.csv")
+# head(chem)
 
 #Pull out only the columns that we need from the file 
 chem_lite <- chem %>%
-  filter(sample_type == 'SW') %>%
+  # filter(sample_type == 'SW') %>%
   #mutate(NPOC..mg.L. == 'SW') %>% #need to remove TBDs from TN data 
-  select(c(site, sample_type, date, time_sampled_est, DIC..mg.L., NPOC..mg.L., TA..mmol.L.)) %>%
-  mutate(DIC_umolL = ((DIC..mg.L. / 1000)/12.011)*1000000)%>%
-  mutate(DOC_umolL = ((as.numeric(NPOC..mg.L.) / 1000)/12.011)*1000000)%>%
-  mutate(TA_umolL = ifelse(TA..mmol.L. > 100, TA..mmol.L.,  TA..mmol.L. * 1000))
+  # select(c(site, sample_type, date, time_sampled_est, DIC..mg.L., NPOC..mg.L., TA..mmol.L.)) %>%
+  mutate(DIC_umolL = ((ic_mgL / 1000)/12.011)*1000000)%>%
+  mutate(DOC_umolL = ((as.numeric(npoc_mgL) / 1000)/12.011)*1000000)%>%
+  mutate(TA_umolL = alk_umol_kgsw_avg) #ifelse(TA..mmol.L. > 100, TA..mmol.L.,  TA..mmol.L. * 1000))
 
-# Need to add in new data: 
-dic_files <- list.files(
-  here("..", "FATE Monitoring", "DIC_data", "Processed Data"),
-  pattern = "\\.csv$",
-  full.names = TRUE)
-
-#read in the dic data and subset to just the flume data 
-chem_2025_dic <- dic_files %>%
-  map_dfr(read_csv) %>%
-  filter(Sample_Location == "Flume")
-
-
-#might want to summarize these by the day 
-chem_2025_dic <- chem_2025_dic %>%
-  group_by(Date, Sample_Location) %>%
-  summarize(IC_mgL_mean = mean(ic_mgL), 
-            IC_mgL_sd = sd(ic_mgL),
-            IC_uM_mean = mean(ic_uM), 
-            IC_uM_sd = sd(ic_uM), 
-            ic_flag = first(ic_flag), 
-            Sampler = first(Sampler)
-            
-  )
-
-#list the doc files and then read them in and subset to the flume 
-doc_files <- list.files(
-  here("..", "FATE Monitoring", "DOC_data", "Processed Data"),
-  pattern = "\\.csv$",
-  full.names = TRUE)
-
-chem_2025_doc <- doc_files %>%
-  map_dfr(read_csv) %>%
-  filter(Sample_Location == "Flume")
+# # Need to add in new data: 
+# dic_files <- list.files(
+#   here("..", "FATE Monitoring", "DIC_data", "Processed Data"),
+#   pattern = "\\.csv$",
+#   full.names = TRUE)
+# 
+# #read in the dic data and subset to just the flume data 
+# chem_2025_dic <- dic_files %>%
+#   map_dfr(read_csv) %>%
+#   filter(Sample_Location == "Flume")
+# 
+# 
+# #might want to summarize these by the day 
+# chem_2025_dic <- chem_2025_dic %>%
+#   group_by(Date, Sample_Location) %>%
+#   summarize(IC_mgL_mean = mean(ic_mgL), 
+#             IC_mgL_sd = sd(ic_mgL),
+#             IC_uM_mean = mean(ic_uM), 
+#             IC_uM_sd = sd(ic_uM), 
+#             ic_flag = first(ic_flag), 
+#             Sampler = first(Sampler)
+#             
+#   )
+# 
+# #list the doc files and then read them in and subset to the flume 
+# doc_files <- list.files(
+#   here("..", "FATE Monitoring", "DOC_data", "Processed Data"),
+#   pattern = "\\.csv$",
+#   full.names = TRUE)
+# 
+# chem_2025_doc <- doc_files %>%
+#   map_dfr(read_csv) %>%
+#   filter(Sample_Location == "Flume")
 
 
 #don't have TA data for 2025 just yet 
@@ -327,6 +369,8 @@ chem_2025_doc <- doc_files %>%
 
 #select the columns we need 
 chem_lite1 <- chem_lite %>%
+  mutate(date = as.Date(sample_datetime_local),
+         time_sampled_est = format(sample_datetime_local, "%H:%M:%S")) %>%
   select(c(date, time_sampled_est, DIC_umolL, DOC_umolL, TA_umolL))
 
 #write out the file for use 
