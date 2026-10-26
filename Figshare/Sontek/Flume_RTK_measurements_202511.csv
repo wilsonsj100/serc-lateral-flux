@@ -1,0 +1,10 @@
+﻿Name,Elevation,Category,Lat,Lon,Notes
+sontek,1.066,Flume,38.87485216N,76.54646191W,
+sonde-bar,0.838,Flume,38.87484673N,76.54646989W,
+sonde-top,0.022,Flume,38.87484628N,76.54646881W,
+side-a1,0.103,Flume,38.87487862N,76.54640710W,Side a is the far side of the flume
+side-a2,0.369,Flume,38.87489678N,76.54639753W,Side a is the far side of the flume
+side-a3,0.418,Flume,38.87489597N,76.54640775W,Side a is the far side of the flume
+side-b1,0.411,Flume,38.87486993N,76.54658051W,Side b is the closer side of the flume
+side-b2,0.272,Flume,38.87485139N,76.54658849W,Side b is the closer side of the flume
+side-b3,0.407,Flume,38.87484619N,76.54656622W,Side b is the closer side of the flume
