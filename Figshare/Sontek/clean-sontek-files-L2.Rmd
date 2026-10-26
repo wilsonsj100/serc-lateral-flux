@@ -1,0 +1,815 @@
+---
+title: "Untitled"
+author: "Stephanie J. Wilson"
+date: "2026-10-22"
+output: html_document
+---
+
+```{r Setup, include=FALSE}
+
+library(plotly)
+library(shiny)
+library(dplyr)
+library(lubridate)
+library(here)
+```
+
+
+## Read in L1 data 
+```{r Read in Data}
+
+year_qaing <- "YYYY" # ENTER THE YEAR YOU ARE GOING TO QA 
+
+output_dir = "L2_data/"
+
+#only read in years that you want to QA to L2 
+#dat_yyyy <- read.csv("L1_data/Sontek_2023_L1.csv")
+#dat_yyyy <- read.csv("L1_data/Sontek_2024_L1.csv")
+#dat_yyyy <- read.csv("L1_data/Sontek_2025_L2.csv")
+dat_yyyy <- read.csv("L1_data/Sontek_2026_L1.csv")
+
+
+#Parse the timestamps and make sure that each day's start has 00:00:00
+dat_yyyy <- dat_yyyy %>%
+  mutate(
+    timestamp = parse_date_time(
+      timestamp,
+      orders = c("ymd HMS", "ymd"),
+      tz = "EST",
+      quiet = TRUE
+    )
+  )
+
+```
+
+
+## Sontek QAQC for L2 Shiny
+```{r Run L2 QAQC App New}
+
+# --------------------------------------------------
+# 1. Prepare the FULL dataset once
+# --------------------------------------------------
+
+qa_data <- dat_yyyy %>%
+  mutate(
+    row_id = row_number(),
+    water_depth = as.numeric(water_depth),
+    index_velocity = as.numeric(index_velocity),
+    suspect_depth = FALSE,
+    suspect_velocity = FALSE,
+    month = floor_date(timestamp, "month")
+  ) %>%
+  arrange(timestamp)
+
+# Preserve existing manual flags if the previous app's
+# qa_data_flagged dataframe is still available.
+# Assumes the source rows are in the same order.
+if (exists("qa_data_flagged", envir = .GlobalEnv)) {
+
+  previous_data <- get("qa_data_flagged", envir = .GlobalEnv)
+
+  if (nrow(previous_data) == nrow(qa_data)) {
+
+    if ("suspect_depth" %in% names(previous_data)) {
+      qa_data$suspect_depth <- previous_data$suspect_depth
+    } else if ("suspect" %in% names(previous_data)) {
+      # Migrate the old single suspect column to depth flags
+      qa_data$suspect_depth <- previous_data$suspect
+    }
+
+    if ("suspect_velocity" %in% names(previous_data)) {
+      qa_data$suspect_velocity <- previous_data$suspect_velocity
+    }
+  }
+}
+
+available_months <- sort(unique(na.omit(qa_data$month)))
+
+# Persistent working dataframe in the current R session
+qa_data_flagged <- qa_data
+
+
+# --------------------------------------------------
+# 2. User interface
+# --------------------------------------------------
+
+ui <- fluidPage(
+  titlePanel("SonTek QA/QC"),
+
+  fluidRow(
+    column(
+      4,
+      selectInput(
+        "variable",
+        "Variable to review:",
+        choices = c(
+          "Water depth" = "water_depth",
+          "Index velocity" = "index_velocity"
+        ),
+        selected = "water_depth"
+      )
+    ),
+    column(
+      4,
+      actionButton("prev_month", "Previous month")
+    ),
+    column(
+      4,
+      actionButton("next_month", "Next month")
+    )
+  ),
+
+  uiOutput("month_label"),
+
+  br(),
+
+  plotlyOutput("depth_plot", height = "600px"),
+
+  br(),
+
+fluidRow(
+  column(
+    4,
+    actionButton("flag", "Mark selected: Out of reasonable range")
+  ),
+  column(
+    4,
+    actionButton("unflag", "Remove range flag")
+  ),
+  column(
+    4,
+    downloadButton("download", "Download all data")
+  )
+),
+
+  br(),
+
+  verbatimTextOutput("status")
+)
+
+
+# --------------------------------------------------
+# 3. Server
+# --------------------------------------------------
+
+server <- function(input, output, session) {
+
+  # Keep the full dataset in memory, including flags
+  data_r <- reactiveVal(qa_data)
+
+  month_index <- reactiveVal(1L)
+  selected_ids <- reactiveVal(integer(0))
+
+  # Choose the suspect column for the selected variable
+  current_suspect_col <- reactive({
+    if (input$variable == "water_depth") {
+      "suspect_depth"
+    } else {
+      "suspect_velocity"
+    }
+  })
+
+  current_month <- reactive({
+    req(length(available_months) > 0)
+    available_months[month_index()]
+  })
+
+  # Filter BEFORE plotting
+  monthly_data <- reactive({
+    req(length(available_months) > 0)
+
+    data_r() %>%
+      filter(month == current_month())
+  })
+
+  output$month_label <- renderUI({
+    tags$h4(format(current_month(), "%B %Y"))
+  })
+
+  # Reset selection when navigating between months
+  observeEvent(input$prev_month, {
+    month_index(max(1L, month_index() - 1L))
+    selected_ids(integer(0))
+  })
+
+  observeEvent(input$next_month, {
+    month_index(
+      min(length(available_months), month_index() + 1L)
+    )
+    selected_ids(integer(0))
+  })
+
+  # Reset selection when switching variables
+  observeEvent(input$variable, {
+    selected_ids(integer(0))
+  })
+
+
+
+# --------------------------------------------------
+# 4. Plot the selected variable
+# --------------------------------------------------
+
+output$depth_plot <- renderPlotly({
+
+  req(nrow(monthly_data()) > 0)
+
+  variable <- input$variable
+  suspect_col <- current_suspect_col()
+
+  # Select the correct original flag column
+  flag_col <- if (variable == "water_depth") {
+    "flag_depth"
+  } else {
+    "flag_velocity"
+  }
+
+  variable_label <- if (variable == "water_depth") {
+    "Water depth (m)"
+  } else {
+    "Index velocity"
+  }
+
+  # Prepare all plot and hover columns explicitly
+  plot_data <- monthly_data() %>%
+    arrange(timestamp) %>%
+    mutate(
+      hover_value = as.numeric(.data[[variable]]),
+      hover_flag = as.character(.data[[flag_col]]),
+      hover_suspect = .data[[suspect_col]],
+      flag_plot = if_else(
+        is.na(.data[[flag_col]]),
+        "NA (unflagged)",
+        as.character(.data[[flag_col]])
+      ),
+      point_color = if_else(
+        .data[[suspect_col]],
+        "Out of reasonable range",
+        flag_plot
+      )
+    )
+
+  # Generate colors for original flags
+  flag_levels <- unique(plot_data$flag_plot)
+  regular_levels <- flag_levels[
+    flag_levels != "NA (unflagged)"
+  ]
+
+  flag_colors <- setNames(
+    grDevices::hcl.colors(
+      max(1, length(regular_levels)),
+      palette = "Dark 3"
+    )[seq_along(regular_levels)],
+    regular_levels
+  )
+
+  flag_colors <- c(
+    flag_colors,
+    "NA (unflagged)" = "grey75",
+    "Out of reasonable range" = "red"
+  )
+
+  # Build hover text as a regular dataframe column
+  plot_data$hover_text <- paste0(
+    "Time: ", plot_data$timestamp,
+    "<br>", variable_label, ": ", plot_data$hover_value,
+    "<br>Original flag: ",
+    ifelse(
+      is.na(plot_data$hover_flag),
+      "NA",
+      plot_data$hover_flag
+    ),
+    "<br>Out of reasonable range: ",
+    plot_data$hover_suspect
+  )
+
+  plot_ly(
+    data = plot_data,
+    x = ~timestamp,
+    y = ~hover_value,
+    type = "scatter",
+    mode = "markers",
+    source = "sontek",
+    key = ~row_id,
+    color = ~point_color,
+    colors = flag_colors,
+    marker = list(size = 7),
+    text = ~hover_text,
+    hoverinfo = "text"
+  ) %>%
+    layout(
+      xaxis = list(title = "Timestamp"),
+      yaxis = list(title = variable_label),
+      dragmode = "select",
+      legend = list(
+        title = list(text = "Original flag / QA/QC")
+      )
+    ) %>%
+    config(
+      displaylogo = FALSE,
+      modeBarButtonsToAdd = c("select2d", "lasso2d")
+    )
+})
+
+
+
+  # --------------------------------------------------
+  # 5. Capture selected observations
+  # --------------------------------------------------
+
+  observeEvent(
+    event_data("plotly_selected", source = "sontek"),
+    {
+      selected <- event_data(
+        "plotly_selected",
+        source = "sontek"
+      )
+
+      if (is.null(selected) || nrow(selected) == 0) {
+        selected_ids(integer(0))
+      } else {
+        selected_ids(as.integer(selected$key))
+      }
+    },
+    ignoreNULL = FALSE
+  )
+
+
+  # --------------------------------------------------
+  # 6. Flag selected rows for the active variable
+  # --------------------------------------------------
+
+  observeEvent(input$flag, {
+
+    ids <- selected_ids()
+    if (length(ids) == 0) return()
+
+    col <- current_suspect_col()
+    updated <- data_r()
+
+    updated[[col]][updated$row_id %in% ids] <- TRUE
+
+    data_r(updated)
+    qa_data_flagged <<- updated
+
+    print(paste(
+      "Variable:", input$variable,
+      "| Total observations out of reasonable range:",
+      sum(updated[[col]], na.rm = TRUE)
+    ))
+  })
+
+
+  # --------------------------------------------------
+  # 7. Remove suspect flags for the active variable
+  # --------------------------------------------------
+
+  observeEvent(input$unflag, {
+
+    ids <- selected_ids()
+    if (length(ids) == 0) return()
+
+    col <- current_suspect_col()
+    updated <- data_r()
+
+    updated[[col]][updated$row_id %in% ids] <- FALSE
+
+    data_r(updated)
+    qa_data_flagged <<- updated
+
+    print(paste(
+      "Variable:", input$variable,
+      "| Total observations out of reasonable range:",
+      sum(updated[[col]], na.rm = TRUE)
+    ))
+  })
+
+
+  # --------------------------------------------------
+  # 8. Status summary
+  # --------------------------------------------------
+
+  output$status <- renderPrint({
+
+    col <- current_suspect_col()
+
+    cat("Variable:", input$variable, "\n")
+    cat("Month:", format(current_month(), "%B %Y"), "\n")
+    cat("Points in current month:", nrow(monthly_data()), "\n")
+    
+    cat("Observations out of reasonable range this month:",
+          sum(monthly_data()[[col]], na.rm = TRUE), "\n")
+
+    cat("Observations out of reasonable range across all months:",
+          sum(data_r()[[col]], na.rm = TRUE), "\n")
+    
+    cat("Depth observations out of reasonable range:",
+          sum(data_r()$suspect_depth, na.rm = TRUE), "\n")
+    
+    cat("Velocity observations out of reasonable range:",
+          sum(data_r()$suspect_velocity, na.rm = TRUE), "\n")
+  })
+
+
+  # --------------------------------------------------
+  # 9. Download ALL data
+  # --------------------------------------------------
+
+  output$download <- downloadHandler(
+
+    filename = function() {
+      paste0("SonTek_QAQC_", Sys.Date(), ".csv")
+    },
+
+    content = function(file) {
+      write.csv(
+        data_r() %>% select(-month, -row_id),
+        file,
+        row.names = FALSE
+      )
+    }
+  )
+}
+
+shinyApp(ui, server)
+
+
+
+
+```
+
+
+#If you need to stop mid QAQC or if the program closes: 
+```{r}
+# Save the flagged dataframe in your R session
+dat_yyyy <- qa_data_flagged
+
+# Save a checkpoint to disk
+ saveRDS(
+  qa_data_flagged,
+  file = file.path(output_dir, paste0("Sontek_QAQC_", year_qaing, "_checkpoint.rds"))
+)
+
+
+ #qa_data_flagged <- readRDS("L2_data/SonTek_QAQC_checkpoint.rds")
+
+
+
+```
+
+
+## Combine suspect flags with existing programmatic flags
+```{r}
+
+# Edit the flag column to include suspect data
+qa_data_flags <- qa_data_flagged %>%
+  mutate(
+    flag_depth = if_else(
+      suspect_depth,
+      if_else(
+        is.na(flag_depth) | flag_depth == "",
+        "ORR",
+        paste0(flag_depth, ", ORR")
+      ),
+      flag_depth
+    ),
+    flag_velocity = if_else(
+      suspect_velocity,
+      if_else(
+        is.na(flag_velocity) | flag_velocity == "",
+        "ORR",
+        paste0(flag_velocity, ", ORR")
+      ),
+      flag_velocity
+    )
+  ) %>%
+  select(-suspect_depth, -suspect_velocity, -row_id, -month)
+
+
+## Make any data that has OOB, ORR, or OSS flag into NA 
+qa_data_na <- qa_data_flags %>%
+  mutate(
+    water_depth = if_else(
+      grepl("OOB|ORR|OOS", coalesce(flag_depth, "")),
+      NA_real_, water_depth
+    ),
+    cross_area = if_else(
+      grepl("OOB|ORR|OOS", coalesce(flag_depth, "")),
+      NA_real_, cross_area
+    ),
+    index_velocity = if_else(
+      grepl("OOB|ORR|OOS", coalesce(flag_velocity, "")),
+      NA_real_, index_velocity
+    ),
+    flowrate = if_else(
+      grepl("OOB|ORR|OOS", coalesce(flag_velocity, "")),
+      NA_real_, flowrate
+    ),
+    mean_velocity = if_else(
+      grepl("OOB|ORR|OOS", coalesce(flag_velocity, "")),
+      NA_real_, mean_velocity
+    )
+  )
+
+qa_data_na <- qa_data_na %>%
+  mutate(
+    # Depth-related SSF flags
+    water_depth = if_else(
+      grepl("SSF", coalesce(flag_depth, "")) &
+        !(flag_depth == "SSF" & system_status %in% c(2, 3)),
+      NA_real_, water_depth
+    ),
+    cross_area = if_else(
+      grepl("SSF", coalesce(flag_depth, "")) &
+        !(flag_depth == "SSF" & system_status %in% c(2, 3)),
+      NA_real_, cross_area
+    ),
+
+    # Velocity-related SSF flags
+    index_velocity = if_else(
+      grepl("SSF", coalesce(flag_velocity, "")) &
+        !(flag_velocity == "SSF" & system_status %in% c(2, 3)),
+      NA_real_, index_velocity
+    ),
+    flowrate = if_else(
+      grepl("SSF", coalesce(flag_velocity, "")) &
+        !(flag_velocity == "SSF" & system_status %in% c(2, 3)),
+      NA_real_, flowrate
+    ),
+    mean_velocity = if_else(
+      grepl("SSF", coalesce(flag_velocity, "")) &
+        !(flag_velocity == "SSF" & system_status %in% c(2, 3)),
+      NA_real_, mean_velocity
+    )
+  )
+
+#Select only columns that we want to the final data frame 
+qa_data_na_selected <- qa_data_na %>%
+  select(timestamp, water_temperature, water_depth, water_elevation, 
+         index_velocity, velocity_x_zxc, velocity_x_zzc, velocity_x_zxl, velocity_x_zxr, mean_velocity, 
+         flowrate, stage, cross_area, 
+         snr1, snr2, snr3, snr4, 
+         pitch_angle, roll_angle, batt_vol_sontek,
+         perc_submergance, ice_score, 
+         system_status, flag_depth, flag_velocity)
+
+
+#quick sanity check plot the data 
+chk_plot <- ggplot(qa_data_na, aes(timestamp, as.numeric(water_depth), color=flag_depth)) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+
+chk_plot
+  
+
+```
+
+
+## Determine Q and Volume to add to the dataframe 
+```{r}
+
+qa_data_na <- read.csv("L2_data/Sontek_2025_L2.csv")
+#We can determine Q manually for this site using the cross sectional area and the velocity 
+
+#GCReW Flume Size info 
+channel_bottom_width = 1.8500000275671484 #meters - width of the bottom of the channel according to 2022 sontek config file
+channel_top_width = 1.8500000275671484 #meters - width of the top of the channel according to 2022 sontek config file
+channel_depth = 3.000000044703484 #meters - depth of the channel according to 2022 sontek config file 
+
+#add creek bathymetry to the sontek data frame 
+qa_data_na$channel_bottom_width <- channel_bottom_width
+qa_data_na$channel_depth <- channel_depth
+qa_data_na$channel_top_width <- channel_top_width 
+
+#Calculate the area at each time step based on the bathy and the depth of water 
+qa_data_na_cross_area <- qa_data_na %>%
+  mutate(
+    channel_cross_area = water_depth * channel_bottom_width
+  )
+
+#calculate the discharge and the volume at each time step 
+qa_data_na_discharge <- qa_data_na_cross_area %>%
+  mutate(
+    index_Q_discharge = channel_cross_area * index_velocity,
+    mean_Q_discharge = channel_cross_area * mean_velocity) 
+
+
+
+chk_Q_plot <- ggplot(qa_data_na_discharge, aes(timestamp, as.numeric(index_Q_discharge))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Q (m3/s)")
+
+chk_Q_plot
+  
+
+```
+
+## Write out the QAQC'd data as L2 to the L2 data folder 
+```{r}
+
+#Reorder the new columns we just added 
+final_data_na_selected <- qa_data_na_discharge %>%
+  select(timestamp, water_temperature, water_depth, water_elevation, 
+         index_velocity, velocity_x_zxc, velocity_x_zzc, velocity_x_zxl, velocity_x_zxr, mean_velocity, 
+         flowrate, stage, cross_area, 
+         #channel_cross_area, 
+         index_Q_discharge, mean_Q_discharge,
+         snr1, snr2, snr3, snr4, 
+         pitch_angle, roll_angle, batt_vol_sontek,
+         perc_submergance, ice_score, 
+         system_status, flag_depth, flag_velocity)
+
+#write out the data to the L2 folder making the name from the year set above 
+write.csv(
+  final_data_na_selected,
+  file = file.path(output_dir, paste0("Sontek_", year_qaing, "_L2.csv")),
+  row.names = FALSE
+)
+
+
+```
+
+## Create Data Dictionary file
+```{r make metadata, include = FALSE}
+
+colnames(final_data_na_selected)
+
+#pull the column names from the all_dat1 dataframe and create a new dataframe with them
+dd <- data.frame(Column_Names = c(colnames(final_data_na_selected)))
+dd
+
+dd$Unit <- ""
+dd$Definition <- ""
+dd$Column_Long_Name <- dd$Column_Names
+dd$data_type <- ""
+
+#add information about each line:
+dd$Definition <-       c("Date and time of measurement (Etc/GMT+5)", 
+                         "Water temperature", 
+                         "Water Depth (relative to the top of the instrument)", 
+                         "Water Elevation (relative to NAVD88)",
+                         "Downstream velocity in center of channel", 
+                         "Center X velocity (downstream velocity in center of channel)", 
+                         "Center Z velocity (vertical velocity in center of channel)", 
+                         "Left X velocity (downstream velocity along the left bank)", 
+                         "Right X velocity (downstream velocity along the right bank)", 
+                         "Mean velocity", 
+                         "Flow rate (using defined channel geometry)", 
+                         "Stage (water depth of the user-defined channel)", 
+                         "Cross-sectional area of user-defined channel in software", 
+                         #"Cross-sectional area of flume based on measured channel width and sontek water depth",
+                         "Water discharge rate as Q = index velocity * cross area",
+                         "Mean water discharge rate as Q = mean velocity * cross area",
+                         "SNR for beam 1 (acoustic signal strength in dB)", 
+                         "SNR for beam 2 (acoustic signal strength in dB)", 
+                         "SNR for beam 3 (acoustic signal strength in dB)", 
+                         "SNR for beam 4 (acoustic signal strength in dB)", 
+                         "Pitch angle in degrees", 
+                         "Roll angle in degrees", 
+                         "Battery voltage", 
+                         "Percentage of sample during which instrument was submerged (100% means it was submerged for entire sample)", 
+                         "Values greater than 100 indicate possible surface ice", 
+                         "System status",
+                         "Depth QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)",
+                         "Index Velocity QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)")
+                        
+
+dd$Unit <-             c("NA", 
+                         "degrees Celsius", 
+                         "m", 
+                         "m",
+                         "m/s", 
+                         "m/s", 
+                         "m/s", 
+                         "m/s",
+                         "m/s",
+                         "m/s",
+                         "m/s",
+                         "m",
+                         "m^2",
+                         #"m^2",
+                         "m^3/s",
+                         "m^3/s",
+                         "dB", 
+                         "dB", 
+                         "dB", 
+                         "dB",
+                         "angle in degrees", 
+                         "angle in degrees", 
+                         "V",
+                         "Percentage", 
+                         "NA",
+                         "NA",
+                         "NA",
+                         "NA")
+                    
+
+dd$data_type <-        c("text", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric",
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         #"numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "text",
+                         "text",
+                         "text")
+
+
+#write out the data dictionary associated with the data:
+write.csv(dd, "L2_data/DataDictionary.csv", row.names = FALSE,  fileEncoding = "UTF-8")
+
+```
+
+## Data Description 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+datadescription <- "These data are measurements of water temperature, depth, velocity, and discharge made at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Measurements were made  with a Sontek IQ series acoustic doupler current profiler (ADCP) at the GCReW Flume (38.87486, -76.5465) through which a tidal creek flows. The Sontek ADCP is affixed to a PVC pipe bolted to the center of the flume that extended to just above the sediment surface. Measurements were collected every six minutes and recorded by a Campbell Scientific CR1000x logger as described by Wilson et al. (in review). These are L2 data, where L0 would be raw data is received by the logger from the instrument, L1 has been processed with programmatic quality checks for data out of the instrument bounds (OOR), out of service when the instrument is down for cleaning or servicing (OOS), and flagged for internal system status codes (SSF). L2 data have been visualized and flagged manually to identify data that is out of reasonalbe range (ORR). Water depth and index velocity measurements were manually QAQC'd, then those data, along with any dependent data (cross sectional area, mean velocity, flowrate) were made to be NA. The only exception are SSF flags 2 and 3, which indicate a change in tilt values that were input into the sontek and flag the user so that the IQ mount can be checked. Discharge, Q (m3/s), was calculated as the cross sectional area * velocity using both index velocity and mean velocity measured by the Sontek IQ and is reported here. The QAQC procedures are outlined and the code to produce these data from L0 are available on GitHub (link)."
+
+
+#write to a text file 
+writeLines(datadescription, "L2_data/DataDescription.txt")
+
+
+```
+
+## Key Words 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+keywords <- c("Lateral Flux", 
+              "Tidal Creek",
+              "Water Depth", 
+              "Water Velocity",
+              "Discharge",
+              "GCReW", 
+              "ADCP",
+              "Sontek",
+              "Coastal Wetland")
+
+
+#write to a text file 
+writeLines(keywords, "L2_data/KeyWords.txt")
+
+
+```
+
+## Create Author List 
+```{r create author list}
+
+#Pull in the common synoptic authors list: 
+authors_common <- read.csv(here("Figshare/", "SERC_LateralFlux_common_author_list.csv"))
+
+
+#create a list of the last names you want to pull 
+names_we_want <- c("Wilson", "Miller", "Noyce", "Peresta","Read", "Reynolds", "Rich" , "Megonigal")
+order_of_authors <- c(1:length(names_we_want))
+
+authors <- data.frame(
+  order_of_authors = unlist(order_of_authors), 
+  last_name = unlist(names_we_want)
+)
+
+#Subset the common list for the names that we want 
+author_list <- authors %>% 
+  left_join(authors_common, by = "last_name")
+
+#if you need to add any other authors 
+others <- data.frame(
+  first_name = c("first_name1", "first_name2"), 
+  last_name = c("last_name1", "last_name2"), 
+  orcid = c("orcid_id1", "orcid_id2"), 
+  affiliation = c("affiliation1", "affiliation2"), 
+  email = c("email1", "email2"), 
+  order_of_authors = c((length(names_we_want)+1):(length(names_we_want)+2))
+)
+
+#add in the other authors 
+#author_list <- bind_rows(author_list, others)
+
+#write out the author list associated with the data:
+write.csv(author_list, "L2_data/AuthorList.csv", row.names = FALSE)
+```
+
+
+
+##END
