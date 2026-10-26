@@ -52,7 +52,7 @@ DIC_bottle_data <- read.csv("combined-raw-data/chem-sample-data.csv")
 datetime_str <- paste(DIC_bottle_data$date, DIC_bottle_data$time_sampled_est)
 
 # Parse with mdy_hm for month/day/year format and hours:minutes
-DIC_bottle_data$datetime <- mdy_hm(datetime_str)
+DIC_bottle_data$datetime <- ymd_hms(datetime_str)
 
 DIC_bottle_data <- DIC_bottle_data %>%
   #filter(method=='TS')%>% #remove groundwater samples
@@ -67,7 +67,7 @@ DOC_bottle_data <- read.csv("combined-raw-data/chem-sample-data.csv")
 datetime_str <- paste(DOC_bottle_data$date, DOC_bottle_data$time_sampled_est)
 
 # Parse with mdy_hm for month/day/year format and hours:minutes
-DOC_bottle_data$datetime <- mdy_hm(datetime_str)
+DOC_bottle_data$datetime <- ymd_hms(datetime_str)
 
 DOC_bottle_data <- DOC_bottle_data%>%
   select(datetime, DOC_umolL)%>%
@@ -87,6 +87,7 @@ DIC_bottle_data$datetime<- round_date(DIC_bottle_data$datetime, "5 minutes")
 DOC_bottle_data$datetime<- round_date(DOC_bottle_data$datetime, "5 minutes")
 
 sensor_data <- sensor_data %>%
+  mutate(datetime_sensor = datetime) %>% 
   mutate(
     datetime = parse_date_time(
       datetime,
@@ -94,7 +95,7 @@ sensor_data <- sensor_data %>%
       tz = "America/New_York"
     ),
     datetime = round_date(datetime, "5 minutes")
-  )
+  ) ##Makes some values NA because that is when DST started so there is no time between 2 and 3 am on March 10, 2025? 
 
 #extract sensor data at discrete time
 sensor_IC_subset<-subset(sensor_data,datetime %in% DIC_bottle_data$datetime)
