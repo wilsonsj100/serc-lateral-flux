@@ -4,9 +4,9 @@ NEON RH, https://doi.org/10.48443/kjyf-eq90
 NEON precip, https://doi.org/10.48443/43q7-9670
 FATE Monitoring DIC/DOC, https://doi.org/10.25573/serc.34701435
 L1 v2-1 COMPASS Synoptic sensor data, doi:10.15485/2588616
+FATE Monitoring TA, https://doi.org/10.25573/serc.34736070
 Sonde, will be up soon 
 Sontek, will be up soon 
-FATE Monitoring TA, will be up soon 
 Tidal Survey DIC/DOC/TA, will be up soon
 GPP, Abby Lewis's paper?  
 
