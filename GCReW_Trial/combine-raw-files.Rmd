@@ -288,8 +288,8 @@ mon_TA_23 <- read.csv("raw-chem-data/data_2023.csv")
 mon_TA_24 <- read.csv("raw-chem-data/data_2024.csv")
 mon_TA_25 <- read.csv("raw-chem-data/data_2025.csv")
 mon_TA <- bind_rows(mon_TA_23, mon_TA_24, mon_TA_25) %>% 
-  mutate(sample_datetime_utc = gsub("2025-08-13 12:18:00", "2025-08-13 11:03:00", sample_datetime_utc)) %>% 
-  mutate(sample_datetime_local = ymd_hms(sample_datetime_utc, tz = "America/New_York")) #%>% ##It looks like the utc is actually est
+  mutate(sample_datetime = gsub("2025-08-13 12:18:00", "2025-08-13 11:03:00", sample_datetime)) %>% 
+  mutate(sample_datetime_local = ymd_hms(sample_datetime, tz = "America/New_York")) #%>% ##It looks like the utc is actually est
   # select(sample_datetime, alk_umol_kgsw_avg)
 
 mon_data <- merge(mon_dic_doc, mon_TA, by = "sample_datetime_local", all = T) %>% 
