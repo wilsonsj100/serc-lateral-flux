@@ -302,8 +302,12 @@ sontek_bolt_elevation = rtk_dat %>%
 ##   Took the sontek out of the water and measured with a meter tape: 176 cm from sensors to bolt hole 
 sontek_sensor_to_bolt = 1.76
 
+overtopping_sontek_to_bank = 1.12
+
 #To calculate the sensor's elevation which we can then offset the data for elevations we have to subtract the length from sensor to bolt from the bolt elevation
 sontek_sensor_elevation = sontek_bolt_elevation - sontek_sensor_to_bolt
+
+sontek_overtopping_elevation = 
 
 
 #Now we can offset the water level measurements of depth and make a new column in the sontek dataset called water_elevation_NAVD88 in m 
@@ -328,7 +332,7 @@ overtopping_sd = bank_elevations$combined_sd - (sontek_sensor_elevation)
 sontek_we_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_elevation), color="water_elevation")) + 
                       geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Elevation (m)") + ylim(-1,2) + 
                       scale_color_manual(values = c("darkblue")) + theme(legend.position = "none") +
-                      #geom_hline(yintercept=0.33) + 
+                      #geom_hline(yintercept=0.426) + 
                       xlim(as.POSIXct("2023-01-01 00:00:00"), as.POSIXct("2027-01-01 00:00:00"))
 sontek_we_chkplot
 
