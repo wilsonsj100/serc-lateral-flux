@@ -1,0 +1,1046 @@
+---
+title: "Clean Sontek Files - IOOS_QARTOD Informed"
+author: "Zoe Read"
+date: "10-08-2026"
+output: html_document
+---
+
+#Set up
+```{r setup, include=FALSE}
+
+# Load necessary packages 
+require(pacman)
+p_load(tidyverse, lubridate,  janitor, parsedate,  data.table, readxl,
+       cowplot,ggpubr, plotrix, here, dplyr, purrr, arrow, zoo)
+
+## Set a common timezone, so even if your computer switches timezones, everything is static
+common_tz = "Etc/GMT+5"
+
+```
+
+## Combine all raw sontek files from Dropbox into L0 combined - only do this once!
+```{#r combine data into L0 file}
+
+##Dropbox shared url in case it is needed
+# dropbox_url <- "https://www.dropbox.com/scl/fo/g6t7g8mcq64wtv9fwqxvd/AMqe_jDI5xyMf0T0tyEsbfE?rlkey=q6pcb76vybzko19uahrc5kgsy&st=jfy0ig2e&dl=0"
+
+##Change path to your dropbox 
+path <- "C:/Users/readz/Smithsonian Dropbox/Zoe Read/GCREW_LOGGERNET_DATA/archive_data"
+#path <- "C:/Users/wilsonsj/Smithsonian Dropbox/Stephanie Wilson/GCREW_LOGGERNET_DATA/archive_data"
+
+##Create a list of all sontek files in the archive
+sontek_files <- dir(pattern = "Sontek.*\\.dat$", path = path, full.names = TRUE, recursive = TRUE)
+
+##Read in Sontek files
+combined_data <- sontek_files %>%
+  map(~ read.table(.x, header = TRUE, stringsAsFactors = FALSE, skip = 1, sep = ",") %>%
+        rename_with(~ gsub("velocity_x_zx_l", "velocity_x_zxl", .x)) %>% 
+        rename_with(~ gsub("velocity_x_zx_r", "velocity_x_zxr", .x))) %>% 
+  bind_rows(.id = "file_id") # .id tracks which row came from which file index
+
+##Process Sontek files to remove rows with units, clean up column names, and set column types
+sontek <- combined_data %>% 
+  dplyr::slice(3:dplyr::n()) %>%
+  janitor::clean_names() %>% 
+  dplyr::mutate(
+      # Ensure consistent types for datetime columns
+      yyyy       = as.character(yyyy),
+      mm         = as.character(mm),
+      dd         = as.character(dd),
+      hh         = as.character(hh),
+      minute     = as.character(minute),
+      ss         = as.character(ss),
+      
+      # Also force sample_number and sontek_id to character
+      sample_number = as.character(sample_number),
+      sontek_id     = as.character(sontek_id),
+
+      # Parse timestamp safely (adjust if needed)
+      timestamp = parsedate::parse_date(timestamp),
+      datetime_raw = lubridate::force_tz(timestamp, tzone = common_tz),
+
+      # Convert some numeric columns explicitly
+      flowrate       = as.numeric(flowrate),
+      stage          = as.numeric(stage),
+      mean_velocity  = as.numeric(mean_velocity),
+      total_volume   = as.numeric(total_volume),
+      water_depth    = as.numeric(water_depth),
+      index_velocity = as.numeric(index_velocity),
+      cross_area     = as.numeric(cross_area),
+      water_temperature = as.numeric(water_temperature)
+    )
+
+#write out the combined raw data file as a parquet file 
+write_parquet(sontek, "combined_sontek_L0_files.parquet")
+
+```
+
+## Read in the combined L0 parquet file 
+```{r}
+
+#Read in the combined data file to start the processing 
+combined_raw_data <- read_parquet("L0_data/combined_sontek_L0_files.parquet")
+
+```
+
+
+## Quick Visual Check of sontek depth data
+```{r}
+
+## Check plots
+sontek_chkplot_all <- ggplot(combined_raw_data, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+sontek_chkplot_all
+
+
+#we can see some really high water depths that do not seem possible, they are likely from not unplugging the sontek, taking the sontek out and cleaning it or something becoming stuck over the sontek, these will be flagged as Out of Range programmatically. 
+
+##Check data less than 5 meters
+sontek_chkplot <- ggplot(combined_raw_data, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,5)
+sontek_chkplot
+
+
+#we see some data points that are in 2040, these are incorrect time stamps resulting from logger restarts - we will remove these data points (n < 10)
+
+##Check data less than 5 meters and only from 2023 to 2025
+sontek_chkplot_23to26 <- ggplot(combined_raw_data, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)") + ylim(-0.5,2) + 
+                      xlim(as.POSIXct("2023-01-01 00:00:00"), as.POSIXct("2026-01-01 00:00:00")) + 
+                      geom_hline(yintercept=0.2)
+sontek_chkplot_23to26
+
+
+
+
+#there is also a time where the data are all one number constantly, this looks like a logger error or instrument error and those data should be flagged. 
+weird_data <- combined_raw_data %>%
+  subset(timestamp >= as.POSIXct("2025-04-30 11:00:00") &   
+          timestamp <= as.POSIXct("2025-07-31 12:00:00"))
+
+sontek_chkplot_weird <- ggplot(weird_data, aes(timestamp, as.numeric(water_depth))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+sontek_chkplot_weird
+
+```
+
+## Quick Visual Check of sontek index velocity data
+```{r}
+
+## Check plots
+sontek_chkplot_all_v <- ggplot(combined_raw_data, aes(timestamp, as.numeric(index_velocity))) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Index Velocity (m/s)")+ 
+                      xlim(as.POSIXct("2023-01-01 00:00:00"), as.POSIXct("2026-01-01 00:00:00")) 
+sontek_chkplot_all_v
+
+```
+
+## Quick Visual Check of sontek other data - you don't have to run this it is just one year to see if we should include or not 
+```{#r}
+
+
+# --------------------------------------------------
+# Define plotting function
+# --------------------------------------------------
+
+plot_sontek_check <- function(data, variable,
+                              y_limits = NULL,
+                              x_start = "2024-01-01 00:00:00",
+                              x_end = "2025-01-01 00:00:00") {
+
+  ggplot(data, aes( x = timestamp, y = as.numeric(.data[[variable]]))) +
+    geom_point() +
+    theme_classic() +
+    labs(
+      x = "Time Stamp",
+      y = variable
+    ) +
+    coord_cartesian(
+      xlim = as.POSIXct(
+        c(x_start, x_end),
+        tz = "UTC"
+      ),
+      ylim = y_limits
+    )
+}
+
+
+# --------------------------------------------------
+# Define variables and optional y-axis limits
+# --------------------------------------------------
+# Use c(min, max) to set limits.
+# Use NULL for automatic y-axis limits.
+
+plot_settings <- list(
+  flowrate            = c(-2, 5),
+  stage               = c(-2, 5),
+  mean_velocity       = NULL,
+  total_volume        = c(-2, 5),
+  cross_area          = c(-2, 10),
+  water_temperature   = NULL,
+  system_status       = NULL,
+  velocity_x_zxc      = NULL,
+  velocity_x_zzc      = NULL,
+  velocity_x_zxl      = NULL,
+  velocity_x_zxr      = NULL,
+  batt_vol_sontek     = NULL,
+  pitch_angle         = NULL,
+  roll_angle          = NULL,
+  perc_submergance    = NULL,
+  range_water_surface = NULL,
+  adj_water_depth     = NULL,
+  tot_vo_lpos         = NULL,
+  tot_vo_lneg         = NULL,
+  ecell               = NULL,
+  snr1                = NULL,
+  snr2                = NULL,
+  snr3                = NULL,
+  snr4                = NULL,
+  ice_score           = NULL
+)
+
+
+# --------------------------------------------------
+# Generate all plots automatically
+# --------------------------------------------------
+
+sontek_plots <- lapply(names(plot_settings), function(v) {
+
+  plot_sontek_check(
+    data = combined_raw_data,
+    variable = v,
+    y_limits = plot_settings[[v]]
+  )
+
+})
+
+names(sontek_plots) <- names(plot_settings)
+
+
+# --------------------------------------------------
+# Display individual plots when needed
+# --------------------------------------------------
+
+sontek_plots$flowrate
+sontek_plots$stage
+sontek_plots$mean_velocity
+sontek_plots$total_volume
+sontek_plots$cross_area
+sontek_plots$water_temperature
+sontek_plots$system_status
+sontek_plots$velocity_x_zxc
+sontek_plots$velocity_x_zzc
+sontek_plots$velocity_x_zxl
+sontek_plots$velocity_x_zxr
+sontek_plots$batt_vol_sontek
+sontek_plots$pitch_angle
+sontek_plots$roll_angle
+sontek_plots$perc_submergance
+sontek_plots$range_water_surface
+sontek_plots$adj_water_depth
+sontek_plots$tot_vo_lpos
+sontek_plots$tot_vo_lneg
+sontek_plots$ecell
+sontek_plots$snr1
+sontek_plots$snr2
+sontek_plots$snr3
+sontek_plots$snr4
+sontek_plots$ice_score
+
+
+# --------------------------------------------------
+# OPTIONAL: Display every plot in sequence
+# --------------------------------------------------
+
+# for (p in sontek_plots) {
+#   print(p)
+# }
+
+
+
+
+```
+
+
+## Pull in RTK Data and add Water Elevation 
+```{r}
+
+#Read in the RTK measurements 
+rtk_dat <- read.csv("Flume_RTK_measurements_202511.csv")
+
+#We need to see about getting these rtk data relative to the NAVD88 and see what GEOID we are referencing to 
+
+head(rtk_dat)
+
+#Calculate the average elevation of side A, side B, and combined sides: 
+bank_elevations <- rtk_dat %>%
+  summarise(
+    side_a_mean = mean(Elevation[grepl("side-a", Name)], na.rm = TRUE),
+    side_a_sd   = sd(Elevation[grepl("side-a", Name)], na.rm = TRUE),
+
+    side_b_mean = mean(Elevation[grepl("side-b", Name)], na.rm = TRUE),
+    side_b_sd   = sd(Elevation[grepl("side-b", Name)], na.rm = TRUE),
+
+    combined_mean = mean(Elevation[grepl("side-[ab]", Name)], na.rm = TRUE),
+    combined_sd   = sd(Elevation[grepl("side-[ab]", Name)], na.rm = TRUE)
+  )
+
+bank_elevations
+
+#overtopping likely occurs if water levels exceed the 0.3 combined mean 
+
+
+#Pull out the elevation of the sontek bolt on the flume - see Picture: Sontek_RTK.jpeg for location of measurement 
+sontek_bolt_elevation = rtk_dat %>%
+  filter(Name == "sontek") %>%
+  pull(Elevation)
+
+
+## Stephanie J Wilson went to the flume and measured the distance from the sontek RTK point (bolt) to the sontek sensor 
+##   Took the sontek out of the water and measured with a meter tape: 176 cm from sensors to bolt hole 
+sontek_sensor_to_bolt = 1.76
+
+overtopping_sontek_to_bank = 1.12
+
+#To calculate the sensor's elevation which we can then offset the data for elevations we have to subtract the length from sensor to bolt from the bolt elevation
+sontek_sensor_elevation = sontek_bolt_elevation - sontek_sensor_to_bolt
+
+
+#Now we can offset the water level measurements of depth and make a new column in the sontek dataset called water_elevation_NAVD88 in m 
+# This should be depth - 0.694 m 
+
+sontek <- combined_raw_data %>% 
+  mutate(water_elevation = (water_depth + sontek_sensor_elevation))
+
+#Estimate what the water depth would be if there was over topping: 
+
+overtopping_mean = bank_elevations$combined_mean - (sontek_sensor_elevation)
+overtopping_sd = bank_elevations$combined_sd - (sontek_sensor_elevation)
+
+
+
+```
+
+## Check sontek data water elevations for overtopping times 
+```{r}
+
+##Check water elevation data less than 5 meters 
+sontek_we_chkplot <- ggplot(sontek, aes(timestamp, as.numeric(water_elevation), color="water_elevation")) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Elevation (m)") + ylim(-1,2) + 
+                      scale_color_manual(values = c("darkblue")) + theme(legend.position = "none") +
+                      #geom_hline(yintercept=0.426) + 
+                      xlim(as.POSIXct("2023-01-01 00:00:00"), as.POSIXct("2027-01-01 00:00:00"))
+sontek_we_chkplot
+
+```
+
+
+
+## Pull out columns that we need
+```{r}
+
+##Clean sontek data
+now()
+sontek_subset <- sontek %>% 
+  ##2040 timestamps? - remove any timestamps after current time 
+  filter(timestamp < now()) %>% 
+  
+  #Use the next line if only need data after a certain date or before a certain date 
+  #filter(timestamp > as.POSIXct("2022-12-31 23:59:59")) %>%
+  
+  ##Select necessary columns - We will remove most things that are based on user defined inputs 
+  select(c(timestamp, 
+           flowrate, 
+           stage, 
+           mean_velocity, 
+           #total_volume,   #these numbers are all negative and not informative 
+           water_depth, 
+           water_elevation, 
+           index_velocity, 
+           cross_area,       #Not sure we want to keep this it is determined by user defined metrics 
+           water_temperature, 
+           system_status, 
+           velocity_x_zxc, 
+           velocity_x_zzc, 
+           velocity_x_zxl, 
+           velocity_x_zxr, 
+           batt_vol_sontek, 
+           pitch_angle, 
+           roll_angle, 
+           perc_submergance, 
+           #range_water_surface, 
+           #adj_water_depth, 
+           #tot_vo_lpos, 
+           #tot_vo_lneg, 
+           #ecell, 
+           snr1, 
+           snr2, 
+           snr3, 
+           snr4, 
+           ice_score))
+
+
+```
+
+## Add the QARTOD Flag column: will be 2 to start, then any missing data will be 9
+```{r}
+#The NOAA QARTOD Flags for real-time data from ADCPs are as follows: 
+
+  # 1 - Pass - Data have passed critical real-time QA tests and are deemed adequate for use as preliminary data 
+  # 2 - Not Evaluated - Data have not been QC-tested, or the information on quality is not available 
+  # 3 - Suspect or Of High Interest - Data are considered to be either suspect or of high interest to operators and users. They are flagged suspect to draw further attention to them by operators. 
+  # 4 - Fail - Data are considered to have failed one (or more) critical real-time QA Checks. If they are disseminated at all, it should be readily apparent that htey are not of acceptable quality 
+  # 9 - Data are missing; used as a placeholder 
+
+#Figure out the interval at which the data is being collected each year 
+interval_summary <- sontek_subset %>%
+  arrange(timestamp) %>%
+  group_by(year = year(timestamp)) %>%
+  mutate(
+    interval_min = as.numeric(
+      difftime(timestamp, lag(timestamp), units = "mins")
+    )
+  ) %>%
+  filter(!is.na(interval_min)) %>%
+  summarise(
+    n_intervals = n(),
+    median_interval = median(interval_min),
+    minimum_interval = min(interval_min),
+    maximum_interval = max(interval_min),
+    most_common_interval = as.numeric(
+      names(which.max(table(interval_min)))
+    ),
+    unique_intervals = n_distinct(interval_min),
+    .groups = "drop"
+  )
+
+interval_summary
+
+#Add a new column with the QARTOD Flags where if there is missing data it will be 9 and all other data is set to 2 (Not Evaluated) to start 
+sontek_subset_complete <- sontek_subset %>%
+  mutate(
+    year = year(timestamp),
+    .record_exists = TRUE
+  ) %>%
+  group_by(year) %>%
+  group_modify(~ {
+
+    # Assign sampling interval based on year
+    interval <- if (.y$year <= 2021) {
+      "15 min"
+    } else {
+      "3 min"
+    }
+
+    .x %>%
+      complete(
+        timestamp = seq(
+          from = min(timestamp, na.rm = TRUE),
+          to = max(timestamp, na.rm = TRUE),
+          by = interval
+        )
+      ) %>%
+      mutate(
+        QARTOD_flag_depth = if_else(
+          is.na(.record_exists), 9L,
+          as.integer(2)
+        ),
+        QARTOD_flag_velocity = if_else(
+          is.na(.record_exists), 9L,
+          as.integer(2)
+        )
+      ) %>%
+      select(-.record_exists)
+
+  }) %>%
+  ungroup() %>%
+  select(-year) %>%
+  arrange(timestamp)
+
+
+
+```
+
+
+Lettered Flags (OOB, OOS, SSF):
+## Lettered Flag data that is out of instrument range or out of service  
+```{r}
+colnames(sontek_subset_complete)
+
+# OOB = Out of instrument's sensor bounds 
+# OOS = Out of service, when the instrument is out of water or being serviced 
+# SSF = Sontek system flag, this flag indicates that there is a system code in the system_status column 
+
+#First let's change all the loggernet NaNs to NAs that won't get plotted: 
+flagged_data <- sontek_subset_complete %>%
+  mutate(across(
+    where(is.numeric),
+    ~ replace(.x, is.nan(.x), NA)
+  ))
+
+
+#We will flag any data points that are out of the instrument's range of measurement according to: https://www.ysi.com/sontek-iq-series?srsltid=AU7gw4V9OR8OS4z9cEPSgi8mUjNUTbEjEMFYlS4bUTbEAj5btu2cOoc9
+
+flagged_data <- flagged_data %>%
+  mutate(
+    # Flag data as Out Of Range (OOR) based on instrument bounds 
+    flag_depth = case_when(
+      water_depth > 5 | water_depth < 0.05 ~ "OOB",
+      TRUE ~ NA_character_
+    ),
+
+    # Add OOS flags for depth OR specific date range
+    flag_depth = case_when(
+      (water_depth > 2 |
+         
+         #This date range there is just constant water depth data so it cannot be real - there is evidence of flatline for this time period - and needs flagged not sure what happened to the measurements at that time  
+         (timestamp >= as.POSIXct("2025-05-02 11:00:00") &   
+          timestamp <= as.POSIXct("2025-07-29 12:00:00"))) &
+        !is.na(flag_depth) ~ paste(flag_depth, "OOS", sep = ", "),
+
+      water_depth > 2 |
+        (timestamp >= as.POSIXct("2025-05-02 11:00:00") &
+          timestamp <= as.POSIXct("2025-07-29 12:00:00")) ~ "OOS",
+
+      TRUE ~ flag_depth
+    )
+  ) %>%
+  mutate(
+    # Flag data as Out Of Range (OOR) based on instrument bounds 
+    flag_velocity = case_when(
+        index_velocity > 5 | index_velocity < -5 ~ "OOB",
+      TRUE ~ NA_character_
+    ),
+
+    # Add OOS flags for depth OR specific date range
+    flag_velocity = case_when(
+      (water_depth > 2 |
+         
+         #This date range there is just constant water depth data so it cannot be real - there is evidence of flat-line for this time period - and needs flagged not sure what happened to the measurements at that time 
+         (timestamp >= as.POSIXct("2025-05-02 11:00:00") &   
+          timestamp <= as.POSIXct("2025-07-29 12:00:00"))) &
+        !is.na(flag_velocity) ~ paste(flag_velocity, "OOS", sep = ", "),
+
+      water_depth > 2 |
+        (timestamp >= as.POSIXct("2025-05-02 11:00:00") &
+          timestamp <= as.POSIXct("2025-07-29 12:00:00")) ~ "OOS",
+
+      TRUE ~ flag_velocity
+    ) 
+  )
+
+##How many are OOR? OOS? 
+
+```
+
+## Flag data when there are internal system status codes 
+```{r}
+
+#The sontek has internal flags that it will report if the data have problems 
+# These codes are explained in detail in the sontek IQ series manual, but are briefly described here 
+# The codes are additive, so a reported 5 means 1 & 4 flags are present 
+
+  # 0 - No potential problems detected 
+  # 1 - High tilt values, check IQ mount 
+  # 2 - Tilt values have changed; IQ may have moved 
+  # 4 - Recorder space low - less than 14 days remaining 
+  # 8 - No valid depth data; check for debris or burial 
+  # 16 - One or more beams may be buried 
+  # 32 - Low battery voltage 
+  # 64 - Internal recorder is full
+  # 128 - Stage is outside defined channel; no flow data will be reported 
+  # 256 - Invalid temperature data; IQ may need repair 
+  # 512 - Low SNR warning (SNR < 10 dB)
+  # 1024 - Velocity sample filtered - turbulent or low flow detected 
+  # 2048 - Pipe Size warning, dimensions are outside of recommended range 
+  # 4096 - Vertical beam range exceeded; pressure depth is greater than maximum vertical beam range 
+  # 8192 - Poor depth warning 
+
+depth_codes <- c(1, 2, 256, 4096, 8192)
+depth_all_codes <- c(1, 2, 256, 4096, 8192, 8) #8 is added here 
+velocity_codes <- c(1, 2, 16, 256, 512, 1024, 8192)
+velocity_all_codes <- c(1, 2, 16, 256, 512, 1024, 8192, 128) #128 is added here 
+
+# We will flag data if there is a non-zero system_status code, but if the code is 4, or 64 these are just warnings and we do not need to fully flag the data 
+
+flagged_data <- flagged_data %>%
+  mutate(
+    system_status = as.integer(system_status),
+    
+    # Append Internal flag to depth flags
+    flag_depth = case_when(
+      !is.na(system_status) &
+        bitwAnd(system_status, Reduce(bitwOr, depth_all_codes)) == 0L &
+        !is.na(flag_depth) ~ paste(flag_depth, "SSF", sep = ", "),
+
+      !is.na(system_status) &
+        bitwAnd(system_status, Reduce(bitwOr, depth_all_codes)) == 0L ~ "SSF",
+
+      TRUE ~ flag_depth
+    ),
+
+    # Append Internal flag to velocity flags
+    flag_velocity = case_when(
+      !is.na(system_status) &
+        bitwAnd(system_status, Reduce(bitwOr, velocity_all_codes)) == 0L &
+        !is.na(flag_velocity) ~ paste(flag_velocity, "SSF", sep = ", "),
+
+      !is.na(system_status) &
+        bitwAnd(system_status, Reduce(bitwOr, velocity_all_codes)) == 0L ~ "SSF",
+
+      TRUE ~ flag_velocity
+    )
+  )
+
+
+
+```
+
+
+NOAA QARTOD Flags:
+## QARTOD Flag data that is out of instrument range or out of service  
+```{r}
+
+# 1 = Pass - Data have passed critical real-time QA tests and are deemed adequate for use as preliminary data 
+# 2 = Not Evaluated - Data have not been QC-tested, or the information on quality is not available 
+# 3 = Suspect or Of High Interest - Data are considered to be either suspect or of high interest to operators and users. They are flagged suspect to draw further attention to them by operators.
+# 4 = Fail - Data are considered to have failed one (or more) critical real-time QA Checks. If they are disseminated at all, it should be readily apparent that they are not of acceptable quality 
+# 9 = Data are missing; used as a placeholder
+
+#Similar to before we are marking points as Failing based on instrumentation capability / bounds 
+QARTOD_flagged_data <- flagged_data %>%
+  mutate(
+    # Flag data as Out Of Range (OOR) based on instrument bounds 
+    QARTOD_flag_depth = case_when(
+      water_depth > 5 | water_depth < 0.05 ~ 4,
+      TRUE ~ QARTOD_flag_depth
+    ),
+
+    # Add OOS flags for depth OR specific date range
+    #This date range there is just constant water depth data show evidence of flatline for this time period - OOS 
+    QARTOD_flag_depth = case_when(
+      water_depth > 2 |
+        (timestamp >= as.POSIXct("2025-05-02 11:00:00") & 
+        timestamp <= as.POSIXct("2025-07-29 12:00:00")) ~ 4,
+      TRUE ~ QARTOD_flag_depth
+    )
+  ) %>%
+  mutate(
+    # Flag data as Out Of Range (OOR) based on instrument bounds 
+    QARTOD_flag_velocity = case_when(
+        index_velocity > 5 | index_velocity < -5 ~ 4,
+      TRUE ~ QARTOD_flag_velocity
+    ),
+
+    # Add OOS flags for depth OR specific date range
+    #This date range there is just constant water depth data show evidence of flatline for this time period - OOS 
+    QARTOD_flag_velocity = case_when(
+      water_depth > 2 |
+        (timestamp >= as.POSIXct("2025-05-02 11:00:00") &
+          timestamp <= as.POSIXct("2025-07-29 12:00:00")) ~ 4,
+      TRUE ~ QARTOD_flag_velocity
+    ) 
+  )
+
+```
+
+## QARTOD Flag data when there are internal system status codes 
+```{r}
+
+#The sontek internal flags are used to attach QARTOD Flags
+
+# SonTek code	flag_depth	flag_velocity	Depth QARTOD	Velocity QARTOD
+#   0	            —	            —	          1/2               1/2
+#   1	          SSF	          SSF	          3	                3
+#   2	          SSF	          SSF	          3	                3
+#   4	           -  	        -     	      1/2	              1/2
+#   8	          OOS	          -	            4	                2
+#   16	        —	            OOS	          1/2	              3
+#   32	        —	            —	            2	                2
+#   64	        —	            —	            9                 9
+#   128	        —	            —	            1/2               4
+#   256	        OOS	          OOS	          3	                3
+#   512	        —	            SSF	          1/2	              3
+#   1024	      —	            SSF	          1/2	              3
+#   2048	     SSF	          SSF	          1/2	              1/2
+#   4096	     OOS	          —	            3	                2
+#   8192	     OOS	          OOS	          3	                3
+
+# We will flag data if there is a non-zero system_status code, but if the code is 4, 32, or 64 these are just warnings and we do not need to fully flag the data 
+
+QARTOD_flagged_data <- QARTOD_flagged_data %>%
+  mutate(
+    # Change the QARTOD Flag based on the internal flag 
+    
+    #Change depth_QARTOD to 3
+    QARTOD_flag_depth = case_when(
+      !QARTOD_flag_depth %in% c(4,9) & 
+      !is.na(system_status) & 
+      bitwAnd(system_status, Reduce(bitwOr, depth_codes)) != 0L ~ 3L,
+      TRUE ~ QARTOD_flag_depth
+    ), 
+    
+    #change depth_QARTOD to 4
+    QARTOD_flag_depth = case_when(
+      !QARTOD_flag_depth %in% c(4,9) & 
+      !is.na(system_status) & 
+      bitwAnd(system_status, 8L) != 0L ~ 4L,
+      #system_status %in% c(8) ~ 4, 
+      TRUE ~ QARTOD_flag_depth
+    ),
+    
+    #Change depth_QARTOD to 3
+    QARTOD_flag_velocity = case_when(
+      !QARTOD_flag_velocity %in% c(4,9) & 
+      !is.na(system_status) & 
+      bitwAnd(system_status, Reduce(bitwOr, velocity_codes)) != 0L ~ 3L,
+      #system_status %in% c(1, 2, 16, 256, 512, 1024, 8192) ~ 3L, 
+      TRUE ~ QARTOD_flag_velocity
+    ), 
+    
+    #change depth_QARTOD to 4
+    QARTOD_flag_velocity = case_when(
+      !QARTOD_flag_velocity %in% c(4,9) & 
+      !is.na(system_status) & 
+      bitwAnd(system_status, 128L) != 0L ~ 4L,
+      #system_status %in% c(128) ~ 4, 
+      TRUE ~ QARTOD_flag_velocity
+    )
+  )
+    
+
+
+
+
+```
+
+
+Check the flags: 
+
+## Check sontek data after flagging
+```{r}
+
+##Check that flags are coming up and seem aligned by plotting the data with flags colored 
+sontek_depth_flags <- ggplot(QARTOD_flagged_data, aes(timestamp, as.numeric(water_depth), color=as.factor(system_status))) + 
+                      geom_point() + theme_classic() + labs(title="Depth Lettered Flags", x="Time Stamp", y="Water Depth (m)") +
+                      ylim(-1,5) + 
+                      theme(legend.position = "bottom", legend.title = element_blank()) 
+
+
+sontek_depth_QARTOD_flags <- ggplot(QARTOD_flagged_data, aes(timestamp, as.numeric(water_depth), color=as.factor(QARTOD_flag_depth))) + 
+                      geom_point() + theme_classic() + labs(title="Depth QARTOD Flags", x="Time Stamp", y="Water Depth (m)") + 
+                      ylim(-1,5) + 
+                      theme(legend.position = "bottom", legend.title = element_blank()) 
+
+
+
+sontek_indexvelocity_flags <- ggplot(QARTOD_flagged_data, aes(timestamp, as.numeric(index_velocity), color=flag_velocity)) + 
+                      geom_point() + theme_classic() + labs(title="Index Velocity Lettered Flags",x="Time Stamp", y="Index Velocity (m/s)") + 
+                      ylim(-1,1) + 
+                      theme(legend.position = "bottom", legend.title = element_blank())
+
+
+sontek_indexvelocity_QARTOD_flags <- ggplot(QARTOD_flagged_data, aes(timestamp, as.numeric(index_velocity), color=as.factor(QARTOD_flag_velocity))) + 
+                      geom_point() + theme_classic() + labs(title="Index Velocity QARTOD Flags", x="Time Stamp", y="Index Velocity (m/s)") + 
+                      ylim(-1,1) + 
+                      theme(legend.position = "bottom", legend.title = element_blank()) #+
+                      #xlim(as.POSIXct("2023-01-01 00:00:00"), as.POSIXct("2025-12-31 24:59:59"))
+
+#Print the plots 
+sontek_depth_flags
+sontek_depth_QARTOD_flags
+sontek_indexvelocity_flags
+sontek_indexvelocity_QARTOD_flags
+
+```
+
+Not all of the data that needs to be flagged is getting flagged by the programmtic checks, that is why we do manual in L2
+## Example of data that is not getting flagged at this stage: 
+```{r}
+
+chk_low_data <- QARTOD_flagged_data %>%
+  subset(timestamp >= as.POSIXct("2023-11-01 00:00:00") &   
+          timestamp <= as.POSIXct("2023-11-15 00:00:00"))
+
+sontek_chkplot_low <- ggplot(chk_low_data, aes(timestamp, as.numeric(water_depth), color=flag_depth)) + 
+                      geom_point() + theme_classic() + labs(x="Time Stamp", y="Water Depth (m)")
+sontek_chkplot_low
+
+```
+
+
+Write out L1 Data: 
+
+## Subset data and write out collated files
+```{r, echo=FALSE}
+
+L1_data_2018 <- subset(QARTOD_flagged_data, year(timestamp) == 2018)
+L1_data_2019 <- subset(QARTOD_flagged_data, year(timestamp) == 2019)
+L1_data_2020 <- subset(QARTOD_flagged_data, year(timestamp) == 2020)
+L1_data_2021 <- subset(QARTOD_flagged_data, year(timestamp) == 2021)
+L1_data_2022 <- subset(QARTOD_flagged_data, year(timestamp) == 2022)
+L1_data_2023 <- subset(QARTOD_flagged_data, year(timestamp) == 2023)
+L1_data_2024 <- subset(QARTOD_flagged_data, year(timestamp) == 2024)
+L1_data_2025 <- subset(QARTOD_flagged_data, year(timestamp) == 2025)
+#L1_data_2026 <- subset(QARTOD_flagged_data, year(timestamp) == 2026)
+
+##Write out annual data files
+write.csv(L1_data_2018, "L1_data/Sontek_2018_L1.csv", row.names = FALSE)
+write.csv(L1_data_2019, "L1_data/Sontek_2019_L1.csv", row.names = FALSE)
+write.csv(L1_data_2020, "L1_data/Sontek_2020_L1.csv", row.names = FALSE)
+write.csv(L1_data_2021, "L1_data/Sontek_2021_L1.csv", row.names = FALSE)
+write.csv(L1_data_2022, "L1_data/Sontek_2022_L1.csv", row.names = FALSE)
+write.csv(L1_data_2023, "L1_data/Sontek_2023_L1.csv", row.names = FALSE)
+write.csv(L1_data_2024, "L1_data/Sontek_2024_L1.csv", row.names = FALSE)
+write.csv(L1_data_2025, "L1_data/Sontek_2025_L1.csv", row.names = FALSE)
+#write.csv(L1_data_2026, "L1_data/Sontek_2026_L1.csv", row.names = FALSE)
+
+```
+
+
+Figshare Preparations: 
+
+## Create Data Dictionary file
+```{r make metadata, include = FALSE}
+
+colnames(QARTOD_flagged_data)
+
+#pull the column names from the all_dat1 dataframe and create a new dataframe with them
+dd <- data.frame(Column_Names = c(colnames(QARTOD_flagged_data)))
+dd
+
+dd$Unit <- ""
+dd$Definition <- ""
+dd$Column_Long_Name <- dd$Column_Names
+dd$data_type <- ""
+
+#add information about each line:
+dd$Definition <-       c("Date and time of measurement (Etc/GMT+5)", 
+                         "Flow rate (using defined channel geometry)", 
+                         "Stage (water depth of the user-defined channel)", 
+                         "Mean velocity", 
+                         #"Total water volume (based on all measured flow)", 
+                         "Water Depth (relative to the top of the instrument)", 
+                         "Water Elevation (relative to NAVD88)",
+                         "Downstream velocity in center of channel", 
+                         "Cross-sectional area of user-defined channel", 
+                         "Water temperature", 
+                         "System status", 
+                         "Center X velocity (downstream velocity in center of channel)", 
+                         "Center Z velocity (vertical velocity in center of channel)", 
+                         "Left X velocity (downstream velocity along the left bank)", 
+                         "Right X velocity (downstream velocity along the right bank)", 
+                         "Battery voltage", 
+                         "Pitch angle in degrees", 
+                         "Roll angle in degrees", 
+                         "Percentage of sample during which instrument was submerged (100% means it was submerged for entire sample)", 
+                         #"Acoustically measured distance to water surface", 
+                         #"Measurement with atmospheric pressure removed", 
+                         #"Total volume of water in the positive downstream direction", 
+                         #"Total volume of water in the negative upstream direction", 
+                         #"Distance to the farthest measurement cell", 
+                         "SNR for beam 1 (acoustic signal strength in dB)", 
+                         "SNR for beam 2 (acoustic signal strength in dB)", 
+                         "SNR for beam 3 (acoustic signal strength in dB)", 
+                         "SNR for beam 4 (acoustic signal strength in dB)", 
+                         "Values greater than 100 indicate possible surface ice", 
+                         "QARTOD Depth QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data", 
+                         "QARTOD Index Velocity QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data", 
+                         "Depth QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)",
+                         "Index Velocity QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)")
+
+dd$Unit <-             c("NA", 
+                         "m^3/s", 
+                         "m", 
+                         "m/s", 
+                         #"m^3", 
+                         "m", 
+                         "m",
+                         "m/s", 
+                         "m^2", 
+                         "degrees Celsius", 
+                         "NA", 
+                         "m/s", 
+                         "m/s", 
+                         "m/s", 
+                         "m/s", 
+                         "V", 
+                         "angle in degrees", 
+                         "angle in degrees", 
+                         "Percentage", 
+                         #"m", 
+                         #"m H2O", 
+                         #"m^3", 
+                         #"m^3", 
+                         #"m", 
+                         "dB", 
+                         "dB", 
+                         "dB", 
+                         "dB", 
+                         "NA",
+                         "NA", 
+                         "NA",
+                         "NA",
+                         "NA")
+
+dd$data_type <-        c("text", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         #"numeric", 
+                         "numeric",
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "text", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         #"numeric", 
+                         #"numeric", 
+                         #"numeric", 
+                         #"numeric", 
+                         #"numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric", 
+                         "numeric",
+                         "numeric",
+                         "text", 
+                         "text")
+
+
+#write out the data dictionary associated with the data:
+write.csv(dd, "L1_data/DataDictionary.csv", row.names = FALSE,  fileEncoding = "UTF-8")
+
+```
+
+## Data Description 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+datadescription <- "These data are measurements of water depth, velocity, and temperature made at the Smithsonian Environmental Research Center's Global Change Research Wetland (GCReW) in the Kirkpatrick Marsh along the Rhode River in Edgewater, MD, USA. Measurements were made with a Sontek IQ series acoustic doupler current profiler (ADCP) at the GCReW Flume (38.87486, -76.5465) through which a tidal creek flows. The Sontek ADCP is affixed to a PVC pipe bolted to the center of the flume that extended to just above the sediment surface. Measurements were collected every fiften (2018-2022) or three (2023-2025) minutes and recorded by a Campbell Scientific CR1000x logger as described by Wilson et al. (2026). These are L1 data, where L0 would be raw data that is received by the logger from the instrument and L1 has been processed with programmatic quality checks for depth and index velocity that flag data out that is out of the instrument bounds (OOB), out of service when the instrument is down for cleaning or servicing (OOS), or flagged because the instrument logged an internal system status code (SSF). Additionally the depth and index velocity data are flagged with QARTOD codes (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data) according to the NOAA Manual for Real-Time Quality Control of In-Situ Current Observations QARTOD manual version 2.1 (2019). The QAQC procedures and the code to produce these data from L0 are available on GitHub (link) and for further QAQC'd data (L2) are available via: LINK."
+
+
+#write to a text file 
+writeLines(datadescription, "L1_data/DataDescription.txt")
+
+
+```
+
+## Key Words 
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+keywords <- c("Lateral Flux", 
+              "Tidal Creek",
+              "Water Depth", 
+              "Water Velocity",
+              "GCReW", 
+              "ADCP",
+              "Sontek",
+              "Coastal Wetland")
+
+
+#write to a text file 
+writeLines(keywords, "L1_data/KeyWords.txt")
+
+
+```
+
+## Create Author List 
+```{r create author list}
+
+#Pull in the common synoptic authors list: 
+authors_common <- read.csv(here("Figshare/", "SERC_LateralFlux_common_author_list.csv"))
+
+
+#create a list of the last names you want to pull 
+names_we_want <- c("Wilson", "Miller", "Noyce", "Peresta","Read", "Reynolds", "Rich" , "Megonigal")
+order_of_authors <- c(1:length(names_we_want))
+
+authors <- data.frame(
+  order_of_authors = unlist(order_of_authors), 
+  last_name = unlist(names_we_want)
+)
+
+#Subset the common list for the names that we want 
+author_list <- authors %>% 
+  left_join(authors_common, by = "last_name")
+
+#if you need to add any other authors 
+others <- data.frame(
+  first_name = c("first_name1", "first_name2"), 
+  last_name = c("last_name1", "last_name2"), 
+  orcid = c("orcid_id1", "orcid_id2"), 
+  affiliation = c("affiliation1", "affiliation2"), 
+  email = c("email1", "email2"), 
+  order_of_authors = c((length(names_we_want)+1):(length(names_we_want)+2))
+)
+
+#add in the other authors 
+#author_list <- bind_rows(author_list, others)
+
+#write out the author list associated with the data:
+write.csv(author_list, "L1_data/AuthorList.csv", row.names = FALSE)
+```
+
+## Read Me with File List  
+```{r data description}
+
+#Create a text file that has the description of the data - This ideally should match the text that is in the data READ.ME 
+
+readme <- c("Dataset: L1 2018-2025 Global Change Research Wetland (GCReW) Flume Sontek Acoustic Doppler Current Profiler (ADCP)",
+            
+            "",
+
+            "Dataset Contacts: Stephanie Wilson (wilsonsj@si.edu), Patrick Megonigal (megonigalp@si.edu)",
+            
+            "",
+
+            "Any use of this dataset must include a citation. Dataset DOI: ",
+            
+            "",
+
+            "The contents of this data publication are as follows:",
+            
+            "",
+            
+            "DataDictionary.csv - Contains descriptive metadata for each column included in the data file. For each column units are clarified, variables are defined, data type is identified, and instrumentation and methodology used to determine the data are listed",
+                        
+            "",
+            
+            "Sontek_2018_L1.csv - Contains L1 2018 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            "Sontek_2019_L1.csv - Contains L1 2019 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            "Sontek_2020_L1.csv - Contains L1 2020 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",  
+            "Sontek_2021_L1.csv - Contains L1 2021 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",   
+            "Sontek_2022_L1.csv - Contains L1 2022 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            "Sontek_2023_L1.csv - Contains L1 2023 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            "Sontek_2024_L1.csv - Contains L1 2024 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            "Sontek_2025_L1.csv - Contains L1 2025 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.",
+            
+            "",
+            
+            "AuthorList.csv - Contains the list of dataset authors along with their ORCIDs, affiliations and emails.")
+
+
+#write to a text file 
+writeLines(readme, "L1_data/README.txt")
+
+
+```
+
+
+
+
+##END

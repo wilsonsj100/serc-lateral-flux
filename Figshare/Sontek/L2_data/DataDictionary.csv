@@ -24,5 +24,9 @@
 "perc_submergance","Percentage","Percentage of sample during which instrument was submerged (100% means it was submerged for entire sample)","perc_submergance","numeric"
 "ice_score","NA","Values greater than 100 indicate possible surface ice","ice_score","numeric"
 "system_status","NA","System status","system_status","text"
-"flag_depth","NA","Depth QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)","flag_depth","text"
-"flag_velocity","NA","Index Velocity QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)","flag_velocity","text"
+"flag_depth","NA","Depth QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service, 
+                            SSN = Suspected sensor noise)","flag_depth","text"
+"QARTOD_flag_depth","NA","QARTOD Depth QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data","QARTOD_flag_depth","numeric"
+"flag_velocity","NA","Index Velocity QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of
+                            service, SSN = Suspected sensor noise)","flag_velocity","text"
+"QARTOD_flag_velocity","NA","QARTOD Index Velocity QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data","QARTOD_flag_velocity","numeric"
