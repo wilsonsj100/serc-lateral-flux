@@ -22,5 +22,7 @@
 "snr3","dB","SNR for beam 3 (acoustic signal strength in dB)","snr3","numeric"
 "snr4","dB","SNR for beam 4 (acoustic signal strength in dB)","snr4","numeric"
 "ice_score","NA","Values greater than 100 indicate possible surface ice","ice_score","numeric"
+"QARTOD_flag_depth","NA","QARTOD Depth QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data","QARTOD_flag_depth","numeric"
+"QARTOD_flag_velocity","NA","QARTOD Index Velocity QAQC Flag (1=Pass, 2=Not Evaluated, 3=Suspect or Of High Interest, 4=Fail, 9=Missing Data","QARTOD_flag_velocity","numeric"
 "flag_depth","NA","Depth QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)","flag_depth","text"
 "flag_velocity","NA","Index Velocity QAQC Flag (SSF = Sontek system flag, OOB = Out of instrument bounds, ORR = Out of reasonable range, OOS = Out of service)","flag_velocity","text"

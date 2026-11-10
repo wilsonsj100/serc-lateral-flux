@@ -26,12 +26,28 @@ For questions about these data: contact Stephanie J. Wilson (wilsonsj@si.edu) or
 **Data Processing:**
 L0 Level Data: Raw data is received by the logger from the instrument. 
 
-L1 level Data: L0 data is processed with programmatic quality checks and flags depth and velocity data when those data are out of the instrument bounds (OOR), out of service when the instrument is down for cleaning or servicing (OOS), and flagged for internal system status codes (SSF). L2 data have been visualized and flagged manually to identify data that is out of reasonalbe range (ORR).
+L1 level Data: L0 data is processed with programmatic quality checks and flags depth and velocity data when those data are out of the instrument bounds (OOR), out of service when the instrument is down for cleaning or servicing (OOS), and flagged for internal system status codes (SSF).In addition, data are flagged with NOAA IOOS QARTOD flags (1,2,3,4,9) according to instrument bounds, internal system status codes, or if data is missing. 
 
-L2 level Data: L1 water depth and index velocity measurements are manually QAQC'd and data are flagged as out of reasonable range (ORR) when applicable. Those data, along with any dependent data (cross sectional area, mean velocity, flowrate) are made to be NA when flagged as ORR or if they were flagged by L1 programmtic checks.  The only exception are SSF flags 2 and 3, which indicate a change in tilt values that were input into the ADCP and flag the user so that the IQ mount should be checked. Timepoints made to be NA are retained in the dataset along with their flags. Discharge, Q (m3/s), was calculated as the cross sectional area * velocity using both index velocity and mean velocity measured by the Sontek IQ and is reported here. The QAQC procedures are outlined and the code to produce these data from L0 are available on GitHub (link
+L2 level Data: L1 water depth and index velocity measurements are manually QAQC'd and data are flagged as out of reasonable range (ORR) for this site or as suspected sensor noise (SSN) when applicable. Those data, along with any dependent data (cross sectional area, mean velocity, flowrate) are made to be NA when flagged as ORR or if they were flagged by L1 programmatic checks.  The only exception are SSF flags 2 and 3, which indicate a change in tilt values that were input into the ADCP and flag the user so that the IQ mount should be checked. In addition, data are flagged with NOAA IOOS QARTOD flags (1,2,3,4,9) according to instrument bounds, internal system status codes, if data is missing, or manually added QAQC lettered codes. Time points made to be NA are retained in the dataset along with their flags. Discharge, Q (m3/s), was calculated as the cross sectional area * velocity using both index velocity and mean velocity measured by the Sontek IQ and is reported here. The QAQC procedures are outlined and the code to produce these data from L` are available on GitHub (link). 
 
 
 <br>
+
+**QAQC Codes:**
+Lettered Codes: 
+ OOB = Out of instrument's sensor bounds 
+ OOS = Out of service, when the instrument is out of water or being serviced 
+ SSF = Sontek system flag, this flag indicates that there is a system code in the system_status column 
+ ORR = Out of reasonable range - when data are outside the reasonable range for this location 
+ SSN = Suspected sensor noise - when data appear to be noise rather than signal 
+
+
+QARTOD Codes (NOAA, IOOS, 2019):
+ 1 = Pass - Data have passed critical real-time QA tests and are deemed adequate for use as preliminary data 
+ 2 = Not Evaluated - Data have not been QC-tested, or the information on quality is not available 
+ 3 = Suspect or Of High Interest - Data are considered to be either suspect or of high interest to operators and users. They are flagged suspect to draw further attention to them by operators.
+ 4 = Fail - Data are considered to have failed one (or more) critical real-time QA Checks. If they are disseminated at all, it should be readily apparent that they are not of acceptable quality 
+ 9 = Data are missing; used as a placeholder
 
 **Data Files Available:** 
 
