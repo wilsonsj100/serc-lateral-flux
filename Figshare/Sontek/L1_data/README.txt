@@ -1,4 +1,4 @@
-Dataset: L1 2023-2025 Global Change Research Wetland (GCReW) Flume Sontek Acoustic Doppler Current Profiler (ADCP)
+Dataset: L1 2018-2025 Global Change Research Wetland (GCReW) Flume Sontek Acoustic Doppler Current Profiler (ADCP)
 
 Dataset Contacts: Stephanie Wilson (wilsonsj@si.edu), Patrick Megonigal (megonigalp@si.edu)
 
@@ -8,6 +8,11 @@ The contents of this data publication are as follows:
 
 DataDictionary.csv - Contains descriptive metadata for each column included in the data file. For each column units are clarified, variables are defined, data type is identified, and instrumentation and methodology used to determine the data are listed
 
+Sontek_2018_L1.csv - Contains L1 2018 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
+Sontek_2019_L1.csv - Contains L1 2019 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
+Sontek_2020_L1.csv - Contains L1 2020 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
+Sontek_2021_L1.csv - Contains L1 2021 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
+Sontek_2022_L1.csv - Contains L1 2022 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
 Sontek_2023_L1.csv - Contains L1 2023 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
 Sontek_2024_L1.csv - Contains L1 2024 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
 Sontek_2025_L1.csv - Contains L1 2025 continuous ADCP sensor data from the tidal creek at the Smithsonian Environmental Research Center GCReW Flume.
